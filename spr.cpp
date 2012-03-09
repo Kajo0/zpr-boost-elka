@@ -1,5 +1,10 @@
 #include <iostream>
 using namespace std;
 int main() {
-  return 0;
+	cout<<"dodamy tutaj cos";
+	for (;;) {
+		cout<<i++;
+		break;
+	}
+	return 0;
 }

@@ -1,0 +1,3 @@
+Taki log powiedzmy
+
+version 1;
