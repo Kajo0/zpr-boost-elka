@@ -5,6 +5,6 @@ int main() {
 	
 	if (alfa > 0)
 		alfa++;
-	
+	beta--  + = obiekt razy dwa
 	return 0;
 }
