@@ -1,3 +1,5 @@
 Taki log powiedzmy
 
 version 1;
+
+Nie, bo version 2!
