@@ -1,5 +1,8 @@
 Taki log powiedzmy
 
-version 1;
+version 3;
 
 Nie, bo version 2!
+
+
+Cos inne go 
