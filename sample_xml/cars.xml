@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<cars>
+	<car type="big">
+		<!-- To takie moze byc wiesz id czy name -->
+		<registration>WXW-JOOOO</registration>
+		<track>
+			<point x="1" y="1" />
+			<point x="2" y="3" />
+			<point x="5" y="4" />
+		</track>
+	</car>
+	<car type="big">
+		<registration></registration>
+		<track>
+			<point x="" y="" />
+		</track>
+	</car>
+	<car type="small">
+		<registration></registration>
+		<track>
+			<point x="" y="" />
+		</track>
+	</car>
+</cars>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<walkers>
+	<walker>
+		<!-- name Id any, oznaczenie jakiekolwiek do rozrozniania
+			chyba ze w programie id po prostu ale imie dla ludka
+			wydaje sie byc dobrym pomyslem :P -->
+		<name></name>
+		<track>
+			<point x="" y="" />
+			<point x="" y="" />
+		</track>
+	</walker>
+	<walker>
+		<name></name>
+		<track>
+			<point x="" y="" />
+			<point x="" y="" />
+		</track>
+	</walker>
+</walkers>

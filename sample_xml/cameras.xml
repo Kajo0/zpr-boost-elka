@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<cameras>
+	<camera>
+		<!-- ID name anything -->
+		<name></name>
+		<position x="" y="" />
+		<precision></precision>
+		<angle></angle>
+		<range></range>
+		<!-- co tam jeszcze moze rozklad czy ddupa jakas -->
+		<itp />
+		<itd />
+	</camera>
+	<camera>
+		<name></name>
+		<position x="" y="" />
+		<precision></precision>
+		<angle></angle>
+		<range></range>
+		<itp />
+		<itd />
+	</camera>
+</cameras>

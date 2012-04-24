@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+<streets>
+	<!-- najpierw siekniemy nody jakies  a potem laczenie i na podstawie
+		tego jakies czarne prostokaty symbolizujace kwadraty(ulice :P)
+		sie alegro sieknie -->
+	<nodes>
+		<!-- x y i id jakies do numeracji xopoIIIo ? -->
+		<node x="" y="">1</node>
+		<node x="" y="">2</node>
+		<node x="" y="">3</node>
+		<node x="" y="">4</node>
+	</nodes>
+	<edges>
+		<edge from="" to="" />
+		<edge from="" to="" />
+		<edge from="" to="" />
+	</edges>
+</streets>
