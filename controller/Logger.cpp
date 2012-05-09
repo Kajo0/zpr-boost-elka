@@ -62,11 +62,9 @@ Logger& Logger::getInstance() {
  * @param msg message to log
  */
 void Logger::message(const char* msg) const {
-	ioMutex_.lock();
+	boost::mutex::scoped_lock scoped_lock(ioMutex_);
 
 	*output_<<" "<<count_++<<":\t"<<msg<<"\n";
-	
-	ioMutex_.unlock();
 }
 
 /**
