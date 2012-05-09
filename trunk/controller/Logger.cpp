@@ -29,6 +29,7 @@ Logger::Logger(): count_(0), output_(&std::cout) {
 		output_ = out;
 	else
 		delete out;
+	// TODO a jak isopen == false to co dalej z logerem?
 }
 
 Logger::Logger(const Logger &) {}
