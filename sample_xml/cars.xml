@@ -12,6 +12,7 @@ jezeli sie zgodzisz, to wypadaloby zmienic nazwe pliku na objects.xml albo cos w
 		<parameters>
 			<weight>2000.0</weight>	<!-- kilogramy? -->
 			<size>big</size>
+			<maxspeed>75</maxspeed>
 		</parameters>
 		
 		<track>
@@ -28,6 +29,7 @@ jezeli sie zgodzisz, to wypadaloby zmienic nazwe pliku na objects.xml albo cos w
 		<parameters>
 			<weight>200.0</weight>
 			<size>small</size>
+			<maxspeed>5</maxspeed>
 		</parameters>
 		
 		<track>
