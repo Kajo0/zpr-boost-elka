@@ -1,23 +1,22 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1"?>
-<cameras>
-	<camera>
-		<!-- ID name anything -->
-		<name></name>
-		<position x="" y="" />
-		<precision></precision>
-		<angle></angle>
-		<range></range>
-		<!-- co tam jeszcze moze rozklad czy ddupa jakas -->
-		<itp />
-		<itd />
+﻿<?xml version="1.0" encoding="UTF-8"?> 	<!-- pozostanmy przy unicodzie, poza tym 8859-1 to nie jest polski. nasz jest 8859-2 -->
+
+<!--
+troszke pozmienialem ogolna skladnie; czemu tak a nie inaczej? nie wiem, taki polot i finezja; nie wiem jaka roznica miedzy atrybutami a dawaniem parametrow miedzy <> a </>, chyba ogolnie nie ma;
+dodalem kierunek patrzenia kamery i zaproponowalem format danych, jak cos masz lepszego to zmien, tylko daj mi w jakis sposob gdzies znac, albo obkomentuj;
+-->
+
+<dispatcher> 							<!-- od centrali kamer -->
+	<camera id="0"> 					<!-- moze lepiej id, bo nazwa to co by mialo byc? kamera1, 2, 3? -->
+		<position>						<!-- tu nie wiem, czy xy po mojemu czy twojemu -->
+			<x>50.0</x>
+			<y>23.7</y>
+		</position>
+		
+		<parameters>
+			<direction>0.25</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat) od patrzenia na polnoc; np. 0.5 to jest polowa 1.0 (calosci) i oznacza patrzenie na poludnie -->
+			<angle>0.10</angle> 		<!-- kat tez jako procent kata pelnego? czy wolisz stopnie, albo radiany? tak jest chyba prosciej w pliku, i do edycji, a przy wczytywaniu mozemy z tym zrobic co chcemy. -->
+			<range>20.0</range> 		<!-- zasieg w metrach; pole widzenia to oczywiscie cos zaokraglonego, wycinek kola czy cos -->
+			<precision>0.98</precision> <!-- 98% ? czy jakos inaczej, nie w procentach? -->
+		</parameters>
 	</camera>
-	<camera>
-		<name></name>
-		<position x="" y="" />
-		<precision></precision>
-		<angle></angle>
-		<range></range>
-		<itp />
-		<itd />
-	</camera>
-</cameras>
+</dispatcher>

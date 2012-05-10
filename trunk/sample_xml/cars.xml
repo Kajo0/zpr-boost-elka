@@ -1,7 +1,48 @@
-﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+troszke nazmienialem, obczaj i powiedz jak sadzisz
+jezeli sie zgodzisz, to wypadaloby zmienic nazwe pliku na objects.xml albo cos w ten desen
+-->
+
+<objects>
+	<object type="car">		<!-- fabryka abstrakcyjna -->
+		<id>WXW-JOOOO</id>	<!-- rejestracja dla samochodow, nazwisko i imie dla walkerow -->
+		
+		<parameters>
+			<weight>2000.0</weight>	<!-- kilogramy? -->
+			<size>big</size>
+		</parameters>
+		
+		<track>
+			<point x="1" y="1" /> <!-- to moze niech zostanie tak, bo krocej; co prawda w kamerach zrobilem inaczej, ale w sumie nie wiem jak lepiej -->
+			<point x="2" y="3" />
+			<point x="5" y="4" />
+		</track>
+	</object>
+	
+	<objects>
+	<object type="walker">
+		<id>Mirek Kowalski</id>
+		
+		<parameters>
+			<weight>200.0</weight>
+			<size>small</size>
+		</parameters>
+		
+		<track>
+			<point x="1" y="1" />
+			<point x="2" y="3" />
+			<point x="5" y="4" />
+		</track>
+	</object>
+</objects>
+
+
+
+<!--
 <cars>
 	<car type="big">
-		<!-- To takie moze byc wiesz id czy name -->
 		<registration>WXW-JOOOO</registration>
 		<track>
 			<point x="1" y="1" />
@@ -22,3 +63,5 @@
 		</track>
 	</car>
 </cars>
+
+-->
