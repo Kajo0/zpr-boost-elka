@@ -1,4 +1,9 @@
 ﻿<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+jak przyjmiesz rozwiazanie z cars.xml to to bedzie niepotrzebne
+-->
+
 <walkers>
 	<walker>
 		<!-- name Id any, oznaczenie jakiekolwiek do rozrozniania
