@@ -16,7 +16,7 @@
 #include <vector>
 #include <boost\shared_ptr.hpp>
 
-#include "Logger.hpp"
+#include <Logger.hpp>
 using namespace std;
 
 void loggerTest();

@@ -3,22 +3,26 @@
 
 #include "Track.hpp"
 
-/**
- * Sth about cars
- */
-class Vehicle abstract {
-protected:
-	/*
-	float mass_;
-	float velocity_;
-	float acceleration_;
-	*/
-	const std::string registration_;
-	boost::shared_ptr<Track> track_;
+namespace zpr
+	{
+	/**
+	 * Sth about cars
+	 */
 
-public:
-	Vehicle(std::string&);
-	virtual ~Vehicle();
-};
+	class Vehicle : public Voyager {
+	protected:
+		/*
+		float mass_;
+		float velocity_;
+		float acceleration_;
+		*/
+		const std::string registration_; // to pewnie tez
+		boost::shared_ptr<Track> track_; // do Voyager ?
+
+	public:
+		Vehicle(std::string&);
+		virtual ~Vehicle();
+	};
+	}
 
 #endif
