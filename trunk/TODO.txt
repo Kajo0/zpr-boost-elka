@@ -1,0 +1,1 @@
+- czy w c++ czasem naglowkow sie nie nazywa *.h ? :D to tylko tak z pedantycznej strony, mnie hpp az tak nie razi
