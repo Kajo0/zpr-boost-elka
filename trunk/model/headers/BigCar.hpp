@@ -3,10 +3,14 @@
 
 #include "Vehicle.hpp"
 
-/**
- * Sth about
- */
-class BigCar: public Vehicle {
-};
+namespace zpr
+{
+	/**
+	 * Sth about
+	 */
+	class BigCar: public Vehicle
+	{
+	};
+}
 
-#endif
+#endif // BIGCAR_HPP

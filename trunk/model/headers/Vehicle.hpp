@@ -2,15 +2,16 @@
 #define VEHICLE_HPP
 
 #include "Track.hpp"
+#include "Voyager.hpp"
 
 namespace zpr
-	{
+{
 	/**
 	 * Sth about cars
 	 */
-
-	class Vehicle : public Voyager {
-	protected:
+	class Vehicle : public Voyager
+	{
+		protected:
 		/*
 		float mass_;
 		float velocity_;
@@ -19,10 +20,10 @@ namespace zpr
 		const std::string registration_; // to pewnie tez
 		boost::shared_ptr<Track> track_; // do Voyager ?
 
-	public:
+		public:
 		Vehicle(std::string&);
 		virtual ~Vehicle();
 	};
-	}
+}
 
-#endif
+#endif // VEHICLE_HPP
