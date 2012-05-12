@@ -1,10 +1,14 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-/**
- * Sth about
- */
-class Camera {
-};
+namespace zpr
+{
+	/**
+	 * Sth about
+	 */
+	class Camera
+	{
+	};
+}
 
-#endif
+#endif // CAMERA_HPP

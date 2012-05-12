@@ -1,9 +1,8 @@
-#include "headers\Base.hpp"
+#include "Base.hpp"
 
 namespace zpr
-	{
+{
 	Point::Point(double x, double y) : x_(x), y_(y)
-		{}
-	//------------------------------------------------------------
-
+	{
 	}
+}

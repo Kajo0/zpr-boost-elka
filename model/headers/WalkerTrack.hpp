@@ -3,10 +3,14 @@
 
 #include "Track.hpp"
 
-/**
- * Sth about - acute corners
- */
-class WalkerTrack: public Track {
-};
+namespace zpr
+{
+	/**
+	 * Sth about - acute corners
+	 */
+	class WalkerTrack: public Track
+	{
+	};
+}
 
-#endif
+#endif // WALKERTRACK_HPP

@@ -14,13 +14,16 @@
 #include <boost\foreach.hpp>
 
 #include <vector>
-#include <boost\shared_ptr.hpp>
+//#include <boost\shared_ptr.hpp>
 
-#include <Logger.hpp>
+#include "Logger.hpp"
 using namespace std;
+using namespace zpr;
 
 void loggerTest();
 void thread();
+
+#include "Vehicle.hpp";
 
 
 class Car{
@@ -47,7 +50,7 @@ vector<PC> loadCars();
 
 int main() {
 	
-
+	Vehicle b();
 	//using boost::property_tree::ptree;
 
 	//ptree pt;
@@ -70,14 +73,12 @@ int main() {
 	//	cout<<e.what()<<"\n\n";
 	//}
 
-	{
-		vector<PC> v;
-		v = loadCars();
-		for (vector<PC>::const_iterator it = v.begin(); it != v.end(); ++it)
-			(**it).printTrack();
-	}
-	
-
+	//{
+	//	vector<PC> v;
+	//	v = loadCars();
+	//	for (vector<PC>::const_iterator it = v.begin(); it != v.end(); ++it)
+	//		(**it).printTrack();
+	//}
 
 	system("PAUSE");
 

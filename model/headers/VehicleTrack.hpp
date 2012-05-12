@@ -3,10 +3,14 @@
 
 #include "Track.hpp"
 
-/**
- * Sth about - bezier corners
- */
-class VehicleTrack: public Track {
-};
+namespace zpr
+{
+	/**
+	 * Sth about - bezier corners
+	 */
+	class VehicleTrack: public Track
+	{
+	};
+}
 
-#endif
+#endif // VEHICLETRACK_HPP
