@@ -19,8 +19,7 @@ namespace zpr
 		double weight_;
 		double maxSpeed_;
 		// size?
-		// trasa
-		boost::shared_ptr<Track> track_; // czemu tak? nie moze byc po prostu track bez shr_ptr?
+		Track track_;
 
 		public:
 		Voyager();
