@@ -2,7 +2,8 @@
 <!-- szablon konfiguracji kamer w miescie -->
 
 <dispatcher>
-	<camera id="0">
+	<camera>
+		<id>0</id>
 		<position x="50.0" y="23.7" />
 		<direction>93.0</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
 		<angle>20.0</angle> 		<!-- kat w stopniach -->
