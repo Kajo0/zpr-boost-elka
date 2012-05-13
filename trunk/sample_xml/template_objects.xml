@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- szablon konfiguracji pojazdow i osob przemierzajacych miasto -->
+
+<objects>
+	<object type="car">		<!-- fabryka abstrakcyjna, enum -->
+		<id>WXW-JOOOO</id>	<!-- rejestracja dla samochodow, nazwisko i imie dla walkerow -->
+		
+		<parameters>
+			<weight>2000.0</weight>		<!-- kilogramy -->
+			<size>big</size>			<!-- enum -->
+			<maxspeed>75.0</maxspeed>	<!-- km/h -->
+		</parameters>
+		
+		<track>							<!-- trasa -->
+			<point x="1.0" y="1.0" />
+			<point x="2.0" y="3.0" />
+			<point x="5.0" y="4.0" />
+		</track>
+	</object>
+	
+	<objects>
+	<object type="walker">
+		<id>Mirek Kowalski</id>
+		
+		<parameters>
+			<weight>200.0</weight>
+			<size>small</size>
+			<maxspeed>5.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="1.0" y="1.0" />
+			<point x="2.0" y="3.0" />
+			<point x="5.0" y="4.0" />
+		</track>
+	</object>
+</objects>

@@ -17,12 +17,12 @@ namespace zpr
 		/** Input Output control mutex */
 		mutable boost::mutex ioMutex_;
 
-	public:
+		public:
 		static Logger& getInstance();
 		void message(const char*) const;
 		void message(const std::string&) const;
 
-	private:
+		private:
 		Logger();
 		Logger(const Logger &);
 		~Logger();
