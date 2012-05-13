@@ -17,8 +17,7 @@
 			<point x="5.0" y="4.0" />
 		</track>
 	</object>
-	
-	<objects>
+
 	<object type="walker">
 		<id>Mirek Kowalski</id>
 		
