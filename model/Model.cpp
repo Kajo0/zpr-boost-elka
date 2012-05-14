@@ -19,7 +19,7 @@ namespace zpr
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
-		PCamera cam;
+		Dispatcher::PCamera cam;
 	
 		try
 		{
