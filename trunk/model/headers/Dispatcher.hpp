@@ -1,23 +1,24 @@
 #ifndef DISPATCHER_HPP
 #define DISPATCHER_HPP
 
-#include <vector>
+#include <map>
 #include "Camera.hpp"
 #include <boost\shared_ptr.hpp>
 
 namespace zpr
 {
-	typedef boost::shared_ptr<Camera> PCamera;
-	// moze map ? bo i tak jedno id jedna kamera trzeba jakos rozwiazac
-	// np wczytane 2 razy to samo id -> ignore ?
-	typedef std::vector<PCamera> VCamera;
-
 	/**
 	 * Holds cameras and manages them
 	 */
 	class Dispatcher
 	{
-		VCamera cameras_;
+	// typedefy ja bym dawal w klasie, zeby nie zasmiecac namespace'a; ew. moga byc publiczne, jak maja byc widziane gdzies poza metodami
+		public:
+		typedef boost::shared_ptr<Camera> PCamera;
+		typedef std::map<int, PCamera> MCamera;
+
+		private:
+		MCamera cameras_;
 
 		public:
 		Dispatcher();
