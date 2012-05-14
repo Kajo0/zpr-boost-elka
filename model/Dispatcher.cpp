@@ -10,7 +10,8 @@ namespace zpr
 	void Dispatcher::addCamera(const PCamera camera)
 	{
 		// TODO spr cos wiecej o istnieniu
-		cameras_[camera->getId()] = camera; // jezeli juz istnieje, nadpisze; przemyslec
+		if(cameras_.find(camera->getId()) != cameras_.end())
+			cameras_[camera->getId()] = camera;
 		//cameras_.push_back(camera);
 	}
 
