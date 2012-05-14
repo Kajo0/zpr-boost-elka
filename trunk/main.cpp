@@ -1,17 +1,14 @@
-#include "Model.hpp"
+#include "Simulator.hpp"
 
 #include <iostream>
-#include <string>
-
-using namespace std;
-using namespace zpr;
+#include <cstdlib>
 
 int main()
 {
-	Model m;
+	zpr::Simulator::Create(); // to chyba tyle jak na main, moze linijka wiecej
 
-	system("pause"); // bez zadnych windowsowych rozszerzen prosze ;)
-	//int i;
-	//cin >> i; 
-	return 0;
+	std::cout << "Symulacja zakonczona. Wczytanie inta konczy program." << std::endl;
+	int i;
+	std::cin >> i; 
+	return EXIT_SUCCESS;
 }

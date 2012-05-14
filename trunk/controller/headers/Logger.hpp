@@ -27,6 +27,7 @@ namespace zpr
 		private:
 		Logger();
 		Logger(const Logger &);
+		const Logger & operator=(const Logger &);
 		~Logger();
 	};
 }
