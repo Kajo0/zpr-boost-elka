@@ -12,13 +12,11 @@ namespace zpr
 	class Vehicle : public Voyager
 	{
 		protected:
-		/*
-		float mass_;
-		float velocity_;
-		float acceleration_;
-		*/
-		const std::string registration_; // to pewnie tez
-		boost::shared_ptr<Track> track_; // do Voyager ?
+		double acceleration_;
+		double weight_;
+		double maxSpeed_;
+		const std::string registration_;
+		//boost::shared_ptr<Track> track_; // do Voyager ? - kazdy ma swoja trase to po co w ogole ?!
 
 		public:
 		Vehicle(std::string&);

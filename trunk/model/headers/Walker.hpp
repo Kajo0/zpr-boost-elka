@@ -10,6 +10,9 @@ namespace zpr
 	 */
 	class Walker : public Voyager
 	{
+		protected:
+		const std::string name_;
+
 		public:
 		Walker(double weight, double maxSpeed);
 		~Walker();
