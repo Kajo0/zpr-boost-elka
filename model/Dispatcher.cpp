@@ -9,23 +9,8 @@ namespace zpr
 
 	void Dispatcher::addCamera(const PCamera camera)
 	{
-		// TODO spr cos wiecej o istnieniu
-		if(cameras_.find(camera->getId()) != cameras_.end())
-			cameras_[camera->getId()] = camera;
-		//cameras_.push_back(camera);
-	}
-
-	void Dispatcher::removeCamera(int id)
-	{
-		cameras_.erase(id);
-		/*for (VCamera::const_iterator it = cameras_.begin(); it != cameras_.end(); ++it)
-		{
-			if ((**it).getId() == id)
-			{
-				cameras_.erase(it);
-				break;
-			}
-		}*/
+		// nie duplikujemy wartosci - jak jest juz o takim id to nie zamieni
+		cameras_.insert(std::pair<int, PCamera>(camera->id(), camera));
 	}
 
 	void Dispatcher::tellMeSthAbout()

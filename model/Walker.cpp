@@ -2,10 +2,6 @@
 
 namespace zpr
 {
-	Walker::Walker(double weight, double maxSpeed): Voyager(weight, maxSpeed)
-	{
-	}
-
 	Walker::~Walker()
 	{
 	}

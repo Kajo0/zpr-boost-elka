@@ -12,18 +12,14 @@ namespace zpr
 	 */
 	class Voyager
 	{
-		private:
-		Point position_;
+		protected:
+		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
 		double velocity_;
-		double acceleration_;
-		double weight_;
-		double maxSpeed_;
-		// size?
+		// size? - nie, na razie pkty materialne :P
 		Track track_;
 
 		public:
 		Voyager();
-		Voyager(double weight, double maxSpeed);
 		virtual ~Voyager() = 0;
 		
 		const Point& Position() const;

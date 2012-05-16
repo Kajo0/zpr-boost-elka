@@ -12,7 +12,6 @@ namespace zpr
 	 */
 	class Dispatcher
 	{
-	// typedefy ja bym dawal w klasie, zeby nie zasmiecac namespace'a; ew. moga byc publiczne, jak maja byc widziane gdzies poza metodami
 		public:
 		typedef boost::shared_ptr<Camera> PCamera;
 		typedef std::map<int, PCamera> MCamera;
@@ -25,7 +24,6 @@ namespace zpr
 		virtual ~Dispatcher();
 
 		void addCamera(const PCamera);
-		void removeCamera(int);
 
 		// TODO delet e- test only
 		void tellMeSthAbout();
