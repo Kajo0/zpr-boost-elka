@@ -2,6 +2,7 @@
 #define TRACK_HPP
 
 #include <deque>
+#include <boost\shared_ptr.hpp>
 
 namespace zpr
 {
@@ -12,8 +13,12 @@ namespace zpr
 	 */
 	class Track
 	{
+		public:
+		typedef boost::shared_ptr<Segment> PSegment;
+		typedef std::deque<PSegment> DSegments;
+
 		private:
-		std::deque<Segment*> segments_; // tutaj moze przechowywac shared_ptr
+		DSegments segments_;
 	};
 }
 
