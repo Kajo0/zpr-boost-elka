@@ -4,6 +4,7 @@
 #include "Dispatcher.hpp"
 #include "Vehicle.hpp"
 #include "Walker.hpp"
+#include "Graph.hpp"
 #include <map>
 #include <boost\shared_ptr.hpp>
 
@@ -25,6 +26,7 @@ namespace zpr
 		Dispatcher dispatcher_;
 		MCar cars_;
 		MWalker walkers_;
+		Graph streets_;
 
 		public:
 			// Pytanie za 100 pkt , gdzie komentujemy metody ? przy deklaracji czy deifincji ?!
