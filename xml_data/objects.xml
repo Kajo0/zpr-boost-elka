@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<objects>
+	<object type="car">
+		<id>WXW-JOOOO</id>
+		
+		<parameters>
+			<weight>2000.0</weight>
+			<size>big</size>
+			<maxspeed>75.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="1.0" y="1.0" />
+			<point x="2.0" y="3.0" />
+			<point x="5.0" y="4.0" />
+		</track>
+	</object>
+	
+	<object type="car">
+		<id>WXW-JOOOO</id>
+		
+		<parameters>
+			<weight>1200.0</weight>
+			<size>small</size>
+			<maxspeed>100.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="10.0" y="10.0" />
+			<point x="20.0" y="30.0" />
+			<point x="30.0" y="40.0" />
+			<point x="30.0" y="50.0" />
+			<point x="20.0" y="60.0" />
+		</track>
+	</object>
+
+	<object type="walker">
+		<id>Mirek Kowalski</id>
+		
+		<parameters>
+			<maxspeed>5.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="1.0" y="1.0" />
+			<point x="2.0" y="3.0" />
+			<point x="5.0" y="4.0" />
+		</track>
+	</object>
+</objects>
