@@ -2,12 +2,29 @@
 
 namespace zpr
 {
+	/************************
+	*	Segment				*
+	************************/
 	Segment::Segment(const Point begin, const Point end): begin_(begin), end_(end)
 	{
 	}
 
 	Segment::~Segment() {}
+	
+	Point Segment::begin()
+	{
+		return begin_;
+	}
+	
+	Point Segment::end()
+	{
+		return end_;
+	}
 
+
+	/************************
+	*	BezierSegment		*
+	*************************/
 	BezierSegment::BezierSegment(const Point begin, const Point end, const Point control): control_(control), Segment(begin, end)
 	{
 	}
@@ -32,7 +49,15 @@ namespace zpr
 		return tmp;
 	}
 
+	Point BezierSegment::control()
+	{
+		return control_;
+	}
 
+
+	/************************
+	*	StraightSegment		*
+	*************************/
 	StraightSegment::StraightSegment(const Point begin, const Point end): Segment(begin, end)
 	{
 	}

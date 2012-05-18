@@ -10,6 +10,11 @@ namespace zpr
 	 */
 	class WalkerTrack: public Track
 	{
+		public:
+		WalkerTrack();
+		~WalkerTrack();
+
+		void addPoint(Point);
 	};
 }
 

@@ -10,6 +10,11 @@ namespace zpr
 	 */
 	class VehicleTrack: public Track
 	{
+		public:
+		VehicleTrack();
+		~VehicleTrack();
+
+		void addPoint(Point);
 	};
 }
 

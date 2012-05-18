@@ -2,6 +2,23 @@
 
 <objects>
 	<object type="car">
+		<id>WdXW-JOOOO</id>
+		
+		<parameters>
+			<weight>2000.0</weight>
+			<size>big</size>
+			<maxspeed>75.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="0.0" y="0" />
+			<point x="0.0" y="1.0" />
+			<point x="1.0" y="1.0" />
+			<point x="1.0" y="2.0" />
+		</track>
+	</object>
+
+	<object type="car">
 		<id>WXW-JOOOO</id>
 		
 		<parameters>

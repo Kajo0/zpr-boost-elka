@@ -9,7 +9,7 @@ namespace zpr
 	 */
 	Voyager::~Voyager() {}
 
-	const Point& Voyager::Position() const
+	const Point& Voyager::position() const
 	{
 		return position_;
 	}
