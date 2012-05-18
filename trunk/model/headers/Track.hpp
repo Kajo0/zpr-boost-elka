@@ -17,7 +17,7 @@ namespace zpr
 		typedef boost::shared_ptr<Segment> PSegment;
 		typedef std::deque<PSegment> DSegments;
 
-		private:
+		protected:
 		DSegments segments_;
 	};
 }

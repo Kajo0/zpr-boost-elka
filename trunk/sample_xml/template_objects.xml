@@ -22,8 +22,6 @@
 		<id>Mirek Kowalski</id>
 		
 		<parameters>
-			<weight>200.0</weight>
-			<size>small</size>
 			<maxspeed>5.0</maxspeed>
 		</parameters>
 		
