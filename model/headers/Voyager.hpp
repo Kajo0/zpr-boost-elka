@@ -12,17 +12,20 @@ namespace zpr
 	 */
 	class Voyager
 	{
+		public:
+		typedef boost::shared_ptr<Track> PTrack;
+
 		protected:
 		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
 		double velocity_;
 		// size? - nie, na razie pkty materialne :P
-		Track track_;
+		PTrack track_;
 
 		public:
 		Voyager();
 		virtual ~Voyager() = 0;
 		
-		const Point& Position() const;
+		const Point& position() const;
 	};
 }
 

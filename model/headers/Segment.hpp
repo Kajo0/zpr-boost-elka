@@ -11,13 +11,16 @@ namespace zpr
 	class Segment
 	{
 		protected:
-		const Point begin_;
-		const Point end_;
+		Point begin_;
+		Point end_;
 
 		public:
 		Segment(const Point, const Point);
-		virtual Point position(double) = 0;
 		virtual ~Segment() = 0;
+		
+		virtual Point position(double) = 0;
+		Point begin();
+		Point end();
 	};
 
 	class BezierSegment : public Segment // Objects move on curves
@@ -29,6 +32,7 @@ namespace zpr
 		~BezierSegment();
 
 		Point position(double);
+		Point control();
 	};
 
 	class StraightSegment : public Segment // Objects move on straight lines

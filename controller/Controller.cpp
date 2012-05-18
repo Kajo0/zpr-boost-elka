@@ -141,18 +141,12 @@ namespace zpr
 					//car.reset( new xCar(...) );
 					//model_.cars_.insert( std::pair<std::string, Model::PCar>( id, car ) );
 
-					std::cout<<v.second.get<std::string>("<xmlattr>.type")
-						<<" id: "<<id<<" weight: "<<weight<<" size: "<<size<<" speed: "<<mspeed<<"\n";
-
-
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
 					{
 						Point point( vv.second.get<double>("<xmlattr>.x"),
 									vv.second.get<double>("<xmlattr>.y") );
 
-						std::cout<<"\t"<<point<<"\n";
-						
-						//model_.cars_[car->registration_]->track_.addPoint(); lub stworzenie tutaj tracka i na konice go dodanie
+						//model_.cars_[car->registration_]->track_.addPoint();
 					}
 				}
 				else if ( v.second.get<std::string>("<xmlattr>.type") == "walker" )
@@ -163,25 +157,19 @@ namespace zpr
 					//walker.reset( new Walker(...) );
 					//model_.walkers_.insert( std::pair<std::string, Model::PWalker>( id, walker ) );
 
-					std::cout<<v.second.get<std::string>("<xmlattr>.type")
-						<<" id: "<<id<<" speed: "<<mspeed<<"\n";
-
-
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
 					{
 						Point point( vv.second.get<double>("<xmlattr>.x"),
 									vv.second.get<double>("<xmlattr>.y") );
 
-						std::cout<<"\t"<<point<<"\n";
-						
-						//model_.walkers_[walker->id_]->track_.addPoint(); lub stworzenie tutaj tracka i na konice go dodanie
+						//model_.walkers_[walker->id_]->track_.addPoint();
 					}
 				}
 			}
 		}	// TODO sprytnie jakos obsluzyc te exceptiony - moze lapac je w loopie i pytac o poprawienie albo o poprawna sciezke lub czy uruchomic bez kamer
 		catch (boost::property_tree::xml_parser_error&)
 		{
-			Logger::getInstance().message("No files with map !!");
+			Logger::getInstance().message("No files with objets !!");
 		}
 		catch (boost::property_tree::ptree_bad_path&)
 		{
