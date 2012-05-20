@@ -22,9 +22,10 @@ namespace zpr
 		PTrack track_;
 
 		public:
-		Voyager();
+		Voyager(double velocity = 0.0, Point = Point());
 		virtual ~Voyager() = 0;
 		
+		virtual const std::string& id() = 0;
 		const Point& position() const;
 	};
 }

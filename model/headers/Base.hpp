@@ -5,6 +5,9 @@
 
 namespace zpr
 {
+	// to gdzies trzeba dac w ogole do tej abstract factory
+	enum objects { WALKER, SMALLCAR, BIGCAR, CAMERA };
+
 	/** Corner division amount */
 	static const double BEZIER_DIVISION = 2;
 
