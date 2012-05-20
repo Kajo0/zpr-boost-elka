@@ -14,7 +14,7 @@ namespace zpr
 		WalkerTrack();
 		~WalkerTrack();
 
-		void addPoint(Point);
+		void addPoint(Point point);
 	};
 }
 

@@ -14,7 +14,7 @@ namespace zpr
 		const std::string name_;
 
 		public:
-		Walker(std::string&, double);
+		Walker(std::string &name, double velocity);
 		~Walker();
 		Walker(const Walker &other);
 		Walker& operator=(const Walker &other);

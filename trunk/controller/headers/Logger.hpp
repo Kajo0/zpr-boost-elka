@@ -15,19 +15,19 @@ namespace zpr
 		/** Message counter */
 		mutable int count_;
 		/** Output log stream */
-		std::ostream* output_;
+		std::ostream *output_;
 		/** Input Output control mutex */
 		mutable boost::mutex ioMutex_;
 
 		public:
 		static Logger& getInstance();
-		void message(const char*) const;
-		void message(const std::string&) const;
+		void message(const char *msg) const;
+		void message(const std::string &msg) const;
 
 		private:
 		Logger();
-		Logger(const Logger &);
-		const Logger & operator=(const Logger &);
+		Logger(const Logger &other);
+		const Logger& operator=(const Logger &other);
 		~Logger();
 	};
 }

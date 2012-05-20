@@ -22,15 +22,15 @@ namespace zpr
 	{
 		Point tmp = control;
 		
-		if ( Point::length(control, final) <= 2 * BEZIER_DIVISION )
+		if ( Point::distance(control, final) <= 2 * BEZIER_DIVISION )
 		{
 			tmp.x_ += (final.x_ - control.x_) / 2;
 			tmp.y_ += (final.y_ - control.y_) / 2;
 		}
 		else
 		{
-			tmp.x_ += (final.x_ - control.x_) * ( BEZIER_DIVISION / Point::length(control, final) );
-			tmp.y_ += (final.y_ - control.y_) * ( BEZIER_DIVISION / Point::length(control, final) );
+			tmp.x_ += (final.x_ - control.x_) * ( BEZIER_DIVISION / Point::distance(control, final) );
+			tmp.y_ += (final.y_ - control.y_) * ( BEZIER_DIVISION / Point::distance(control, final) );
 		}
 
 		return tmp;

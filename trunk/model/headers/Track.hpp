@@ -22,9 +22,9 @@ namespace zpr
 		public:
 		Track();
 		virtual ~Track();
-		virtual void addPoint(Point) = 0;
+		virtual void addPoint(Point point) = 0;
 		// to ma liczyc to rozsuniecie - takie pomocnicze //
-		static Point bezierBetween(const Point&, const Point&);
+		static Point bezierBetween(const Point &control, const Point &final);
 
 		// TODO remove it- test only
 		void showMeEverything();

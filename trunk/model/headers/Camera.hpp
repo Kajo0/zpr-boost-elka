@@ -18,7 +18,7 @@ namespace zpr
 		double precision_;
 
 		public:
-		Camera(int, Point, double, double, double, double);
+		Camera(int id, Point position, double direction, double angle, double range, double precision);
 		virtual ~Camera();
 
 		int id();

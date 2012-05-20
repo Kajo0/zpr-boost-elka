@@ -11,7 +11,7 @@ namespace zpr
 	class SmallCar: public Vehicle
 	{
 		public:
-		SmallCar(std::string&, double, double, double);
+		SmallCar(std::string &id, double acceleration, double weight, double maxSpeed);
 		~SmallCar();
 	};
 }
