@@ -2,7 +2,9 @@
 
 namespace zpr
 {
-	Voyager::Voyager() {}
+	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position) // to zerujemy i tak sie wyliczy point jako begin trasy a velocity zerowa w spoczynku
+	{
+	}
 
 	/**
 	 * Empty abstract class' destructor

@@ -17,8 +17,10 @@ namespace zpr
 		const std::string registration_;
 
 		public:
-		Vehicle(std::string&);
+		Vehicle(std::string&, double, double, double);
 		virtual ~Vehicle();
+
+		const std::string& id();
 	};
 }
 

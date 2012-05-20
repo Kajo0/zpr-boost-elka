@@ -10,6 +10,9 @@ namespace zpr
 	 */
 	class BigCar: public Vehicle
 	{
+		public:
+		BigCar(std::string&, double, double, double);
+		~BigCar();
 	};
 }
 

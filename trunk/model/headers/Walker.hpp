@@ -14,10 +14,12 @@ namespace zpr
 		const std::string name_;
 
 		public:
-		Walker(double maxSpeed);
+		Walker(std::string&, double);
 		~Walker();
 		Walker(const Walker &other);
 		Walker& operator=(const Walker &other);
+		
+		const std::string& id();
 	};
 }
 
