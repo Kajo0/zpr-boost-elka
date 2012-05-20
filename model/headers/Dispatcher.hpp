@@ -23,7 +23,7 @@ namespace zpr
 		Dispatcher();
 		virtual ~Dispatcher();
 
-		void addCamera(const PCamera);
+		void addCamera(const PCamera camera);
 
 		// TODO delet e- test only
 		void tellMeSthAbout();

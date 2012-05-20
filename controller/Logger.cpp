@@ -33,7 +33,7 @@ namespace zpr
 			delete out;
 	}
 
-	Logger::Logger(const Logger &) {}
+	Logger::Logger(const Logger &other) {}
 
 	/**
 	 * Close file stream and delete handle
@@ -62,7 +62,7 @@ namespace zpr
 	 *
 	 * @param msg message to log
 	 */
-	void Logger::message(const char* msg) const {
+	void Logger::message(const char *msg) const {
 		boost::mutex::scoped_lock scoped_lock(ioMutex_);
 
 		*output_<<" "<<count_++<<":\t"<<msg<<"\n";

@@ -29,8 +29,8 @@ namespace zpr
 		Graph();
 		virtual ~Graph();
 
-		void addVertex(const int, const Point);
-		void addEdge(const int, const int);
+		void addVertex(const int id, const Point position);
+		void addEdge(const int from, const int to);
 
 		// TODO delete it - test
 		void printAllData();
@@ -43,7 +43,7 @@ namespace zpr
 			const Point position_;
 			MVertices edges_;
 
-			Vertex(const int, const Point);
+			Vertex(const int id, const Point position);
 			virtual ~Vertex();
 
 			void addEdge(const PVertex);

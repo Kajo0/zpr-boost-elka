@@ -18,9 +18,9 @@ namespace zpr
 		void mainLoop(); // tu bym to zapetlil calosc
 
 		// parsing functions
-		void parseMap(const char*);
-		void parseDispatcher(const char*);
-		void parseObjects(const char*);
+		void parseMap(const char *path);
+		void parseDispatcher(const char *path);
+		void parseObjects(const char *path);
 	};
 }
 #endif // CONTROLLER_HPP
