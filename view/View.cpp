@@ -6,7 +6,7 @@
 
 namespace zpr
 {
-	View::View()
+	View::View(Model model): model_(model)
 	{
 		display_ = NULL;
 
@@ -50,6 +50,9 @@ namespace zpr
 		static float i = 0.5f; // test
 		ALLEGRO_EVENT ev;
 		
+		Graph g = model_.streets();
+		g.printAllData();
+
 		while (true)
 		{
 			// czeka na event 0.001 czasu a potem sieka dalej, jak X to konczy petle
@@ -64,10 +67,19 @@ namespace zpr
 
 			al_clear_to_color( al_map_rgb(0,0,0) ); // clear na czarno
 
-			al_draw_line(10, 0, 10, 60, al_map_rgb(255,255,255), 5);	// linia xD
-			al_draw_filled_circle(i, i, 10, al_map_rgba(0, 255, 0, 1));
-			i = ( i > 480 ) ? 0 : i + 0.5f;
+			//al_draw_line(10, 0, 10, 60, al_map_rgb(255,255,255), 5);	// linia xD
+			//al_draw_filled_circle(i, i, 10, al_map_rgb(0, 255, 0));
+			//i = ( i > 480 ) ? 0 : i + 0.5f;
  
+			for (Graph::MVertices::const_iterator it = g.vertices_.begin(); it != g.vertices_.end(); ++it)
+			{
+				for (Graph::MVertices::const_iterator i = it->second->edges_.begin(); i != it->second->edges_.end(); ++i)
+				{	// stala mowiaca o szerokosci drogi tez gdzies // ogolnie taki zarys bo friendem tego zrobic nie mozemy raczej :P
+					al_draw_line(it->second->position_.x_, it->second->position_.y_, i->second->position_.x_, i->second->position_.y_, al_map_rgb(200,200,200), 20);
+				}
+				al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, 15, al_map_rgb(100, 100, 100));
+			}
+
 			al_flip_display();	// swap buffers
 		}
  

@@ -32,6 +32,7 @@ namespace zpr
 	{
 		std::cout<<"id: "<<name_
 				<<" pos: "<<position_
-				<<" v: "<<velocity_<<"\n";
+				<<" v: "<<velocity_
+				<<" t.len: "<<track_->length()<<"\n";
 	}
 }

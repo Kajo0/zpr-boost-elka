@@ -3,11 +3,26 @@
 
 namespace zpr
 {
-	Track::Track()
+	Track::Track(): length_(0)
 	{
 	}
 
 	Track::~Track() {}
+
+	Point Track::start()
+	{
+		return segments_.empty() ? Point() : segments_.front()->begin();
+	}
+
+	Point Track::finish()
+	{
+		return segments_.empty() ? Point() : segments_.back()->end();
+	}
+
+	double Track::length()
+	{
+		return length_;
+	}
 
 	/**
 	 * To rozsuniecie o ktorym mowilem - tylko ze dla pary tzn. majac kropki jako pkty, da wsp. punktu albo oddalonego
@@ -55,6 +70,16 @@ namespace zpr
 			
 			e = segments_.back()->end();
 			std::cout<<e<<"\n";
+		}
+	}
+
+	void Track::recalculateLength()
+	{
+		length_ = 0;
+
+		for (DSegments::const_iterator it = segments_.begin(); it != segments_.end(); ++it)
+		{
+			length_ += (*it)->length();
 		}
 	}
 }

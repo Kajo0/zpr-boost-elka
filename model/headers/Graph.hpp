@@ -10,6 +10,7 @@ namespace zpr
 {
 	class Graph
 	{
+		friend class View; // tylko pomocnicze do view
 		// Mialem kilka koncepcji, ale nie widzialem jak to ma wygladac i sie wkurzylem robieniem tego
 		// i w ogole zostawiam to tak na razie, tgylko jedne krawedzie, bo w sumie tylko one sa nam potrzebne
 		// i jak bedzie cos trzeba zmienic to potem, bo trzeba zaczac cos robic konkretnego
@@ -39,6 +40,7 @@ namespace zpr
 		private:
 		struct Vertex
 		{
+			friend class View; // tylko pomocnicze do view
 			const int id_;
 			const Point position_;
 			MVertices edges_;

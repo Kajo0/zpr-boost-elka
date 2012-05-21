@@ -42,5 +42,7 @@ namespace zpr
 			segments_.push_back( PSegment( new BezierSegment( p1, p2, lastEnd ) ) );
 			segments_.push_back( PSegment( new StraightSegment( p2, point ) ) );
 		}
+
+		recalculateLength();
 	}
 }

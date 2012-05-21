@@ -20,4 +20,10 @@ namespace zpr
 	{
 		track_->addPoint(point);
 	}
+	
+	void Voyager::reset()
+	{
+		velocity_ = 0;
+		position_ = track_->start();
+	}
 }

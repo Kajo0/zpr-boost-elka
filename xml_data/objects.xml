@@ -2,7 +2,7 @@
 
 <objects>
 	<object type="car">
-		<id>WdXW-JOOOO</id>
+		<id>WW-JOOOO</id>
 		
 		<parameters>
 			<weight>2000.0</weight>
@@ -35,7 +35,7 @@
 	</object>
 	
 	<object type="car">
-		<id>WXW-JOOOO</id>
+		<id>WF-JOOOO</id>
 		
 		<parameters>
 			<weight>1200.0</weight>
@@ -63,6 +63,20 @@
 			<point x="1.0" y="1.0" />
 			<point x="2.0" y="3.0" />
 			<point x="5.0" y="4.0" />
+		</track>
+	</object>
+
+	<object type="walker">
+		<id>Kolo Loskowski</id>
+		
+		<parameters>
+			<maxspeed>15.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="0.0" y="0.0" />
+			<point x="0.0" y="5.0" />
+			<point x="5.0" y="5.0" />
 		</track>
 	</object>
 </objects>
