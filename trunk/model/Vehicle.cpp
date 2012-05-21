@@ -25,6 +25,7 @@ namespace zpr
 				<<" v: "<<velocity_
 				<<" a: "<<acceleration_
 				<<" weight: "<<weight_
-				<<" mSpeed: "<<maxSpeed_<<"\n";
+				<<" mSpeed: "<<maxSpeed_
+				<<" t.len: "<<track_->length()<<"\n";
 	}
 }

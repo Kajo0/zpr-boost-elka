@@ -22,5 +22,7 @@ namespace zpr
 		{
 			segments_.push_back( PSegment( new StraightSegment( segments_.back()->end(), point ) ) );
 		}
+
+		recalculateLength();
 	}
 }

@@ -3,15 +3,32 @@
 
 <map>
 	<nodes>
-		<node x="1.0" y="1.0">1</node>	<!-- x, y, nodeID -->
-		<node x="1.0" y="2.0">2</node>
-		<node x="2.0" y="2.0">3</node>
-		<node x="2.0" y="1.0">4</node>
+		<node x="0" y="100">	0</node>
+		<node x="0" y="420">	1</node>
+		<node x="150" y="100">	2</node>
+		<node x="150" y="420">	3</node>
+		<node x="150" y="480">	4</node>
+		<node x="320" y="50">	5</node>
+		<node x="500" y="0">	6</node>
+		<node x="500" y="180">	7</node>
+		<node x="500" y="320">	8</node>
+		<node x="500" y="600">	9</node>
+		<node x="640" y="180">	10</node>
+		<node x="640" y="320">	11</node>
 	</nodes>
 
 	<edges>
-		<edge from="1" to="2" />	<!-- modeFrom -> nodeTo; jednokierunkowe, graf skierowany -->
+		<edge from="0" to="2" />
+		<edge from="1" to="3" />
+		<edge from="2" to="5" />
+		<edge from="2" to="9" />
 		<edge from="2" to="3" />
 		<edge from="3" to="4" />
+		<edge from="5" to="7" />
+		<edge from="6" to="7" />
+		<edge from="7" to="10" />
+		<edge from="7" to="8" />
+		<edge from="8" to="11" />
+		<edge from="8" to="9" />
 	</edges>
 </map>

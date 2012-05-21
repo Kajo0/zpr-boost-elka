@@ -2,6 +2,7 @@
 #define CONTROLLER_HPP
 
 #include "Model.hpp"
+#include "View.hpp"
 
 namespace zpr
 {

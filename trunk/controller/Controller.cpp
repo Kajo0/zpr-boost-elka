@@ -38,6 +38,18 @@ namespace zpr
 		// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
 		// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
 		// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
+
+		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
+		std::cout<<"-----------\n";
+		model_.dispatcher_.tellMeSthAbout();
+		std::cout<<"\n";
+		model_.streets_.printAllData();
+		std::cout<<"\n";
+		model_.tellMeEverythingAboutObjects();
+		std::cout<<"\n";
+
+		View view(model_);
+		view.loop();
 	}
 
 	void Controller::parseDispatcher(const char *path)

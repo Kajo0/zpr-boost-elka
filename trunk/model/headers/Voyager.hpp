@@ -28,6 +28,7 @@ namespace zpr
 		virtual const std::string& id() = 0;
 		const Point& position() const;
 		void addTrackPoint(const Point point);
+		void reset(); // daje na poczatek i stopuje
 
 
 		// TODO delete it - test only
