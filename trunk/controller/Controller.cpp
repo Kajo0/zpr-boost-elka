@@ -159,16 +159,17 @@ namespace zpr
 				if ( v.second.get<std::string>("<xmlattr>.type") == "car" )
 				{
 					std::string id = v.second.get<std::string>("id");
+					double acceleration = v.second.get<double>("parameters.acceleration");
 					double weight = v.second.get<double>("parameters.weight");
-					std::string size = v.second.get<std::string>("parameters.size"); // potem enum jakis
+					std::string size = v.second.get<std::string>("parameters.size"); // potem enum jakis trza ogarnac
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
 					// TODO - tu wstaw fabryke jakos, ja tego nie widze za bardzo dla naszej aplikacyjki ale trzeba ladniej to zrobic :/
 					// przyspieszenie jakos z masy i max predkosci wyliczamy czy kak ?
 					if (size == "big")
-						car.reset( new BigCar( id, 0/*?!?!*/, weight, mspeed ) );
+						car.reset( new BigCar( id, acceleration, weight, mspeed ) );
 					else if (size == "small")
-						car.reset( new SmallCar( id, 0/*?!?!*/, weight, mspeed ) );
+						car.reset( new SmallCar( id, acceleration, weight, mspeed ) );
 
 					// jak nie powtorka to rob trase
 					if ( model_.cars_.insert( std::pair<std::string, Model::PCar>( id, car ) ).second )

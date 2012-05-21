@@ -15,6 +15,7 @@ namespace zpr
 		~VehicleTrack();
 
 		void addPoint(Point point);
+		Point getPosition(double percent);
 	};
 }
 

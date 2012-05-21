@@ -45,4 +45,22 @@ namespace zpr
 
 		recalculateLength();
 	}
+
+	// to tak na prawde tylko testowo napisalem do rysowania
+	// aczkolwiek tu jest wstep ze poruszamy samochod po prostej a pozycje wyliczamy z segmentow
+	Point VehicleTrack::getPosition(double percent)
+	{
+		double d = length_ * percent;
+		double l = 0;
+		for (DSegments::const_iterator it = segments_.begin(); it != segments_.end(); ++it)
+		{
+			l += (*it)->length();
+			if ( d <= l )
+			{
+				double z = 1 - ( ( l - d ) / (*it)->length() );
+				return (*it)->position(z);
+			}
+		}
+	}
+
 }
