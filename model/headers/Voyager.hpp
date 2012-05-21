@@ -27,6 +27,11 @@ namespace zpr
 		
 		virtual const std::string& id() = 0;
 		const Point& position() const;
+		void addTrackPoint(const Point point);
+
+
+		// TODO delete it - test only
+		virtual void tellMeMore(){};
 	};
 }
 

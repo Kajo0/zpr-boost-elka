@@ -35,6 +35,9 @@ namespace zpr
 			// pytanie za 300 -> kto odpowiada za komunikacje z userem. tudziez z plikami xml? controller? jezeli tak, to on powinien czytac pliki, a model tylko cos w stylu addCam(Camera cam)...
 		Model();
 		virtual ~Model();
+
+		// TODO delete it - test only
+		void tellMeEverythingAboutObjects();
 	};
 }
 

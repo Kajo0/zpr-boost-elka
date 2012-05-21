@@ -4,6 +4,10 @@
 #include <boost\property_tree\ptree.hpp>
 #include <boost\property_tree\xml_parser.hpp>
 #include <vector>
+//TODO fabryczka jakos
+#include "SmallCar.hpp"
+#include "BigCar.hpp"
+#include "Walker.hpp"
 
 namespace zpr
 {
@@ -17,14 +21,23 @@ namespace zpr
 	void Controller::mainLoop()
 	{
 		// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
-		////parseDispatcher("xml_data\\dispatcher.xml");
-		////model_.dispatcher_.tellMeSthAbout();
+		parseDispatcher("xml_data\\dispatcher.xml");
+		model_.dispatcher_.tellMeSthAbout();
+		std::cout<<"\n";
 
 		// wczytanie mapy drog
-		////parseMap("xml_data\\streets.xml");
-		////model_.streets_.printAllData();
+		parseMap("xml_data\\streets.xml");
+		model_.streets_.printAllData();
+		std::cout<<"\n";
 
+		// wczyutanie obiektow
 		parseObjects("xml_data\\objects.xml");
+		model_.tellMeEverythingAboutObjects();
+		std::cout<<"\n";
+
+		// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
+		// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
+		// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
 	}
 
 	void Controller::parseDispatcher(const char *path)
@@ -138,15 +151,23 @@ namespace zpr
 					std::string size = v.second.get<std::string>("parameters.size"); // potem enum jakis
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
-					//car.reset( new xCar(...) );
-					//model_.cars_.insert( std::pair<std::string, Model::PCar>( id, car ) );
+					// TODO - tu wstaw fabryke jakos, ja tego nie widze za bardzo dla naszej aplikacyjki ale trzeba ladniej to zrobic :/
+					// przyspieszenie jakos z masy i max predkosci wyliczamy czy kak ?
+					if (size == "big")
+						car.reset( new BigCar( id, 0/*?!?!*/, weight, mspeed ) );
+					else if (size == "small")
+						car.reset( new SmallCar( id, 0/*?!?!*/, weight, mspeed ) );
 
-					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
+					// jak nie powtorka to rob trase
+					if ( model_.cars_.insert( std::pair<std::string, Model::PCar>( id, car ) ).second )
 					{
-						Point point( vv.second.get<double>("<xmlattr>.x"),
-									vv.second.get<double>("<xmlattr>.y") );
+						BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
+						{
+							Point point( vv.second.get<double>("<xmlattr>.x"),
+										vv.second.get<double>("<xmlattr>.y") );
 
-						//model_.cars_[car->registration_]->track_.addPoint();
+							model_.cars_[id]->addTrackPoint(point);
+						}
 					}
 				}
 				else if ( v.second.get<std::string>("<xmlattr>.type") == "walker" )
@@ -154,15 +175,17 @@ namespace zpr
 					std::string id = v.second.get<std::string>("id");
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
-					//walker.reset( new Walker(...) );
-					//model_.walkers_.insert( std::pair<std::string, Model::PWalker>( id, walker ) );
-
-					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
+					walker.reset( new Walker( id, mspeed ) );
+					// jak nie powtorka to rob trase
+					if ( model_.walkers_.insert( std::pair<std::string, Model::PWalker>( id, walker ) ).second )
 					{
-						Point point( vv.second.get<double>("<xmlattr>.x"),
-									vv.second.get<double>("<xmlattr>.y") );
+						BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
+						{
+							Point point( vv.second.get<double>("<xmlattr>.x"),
+										vv.second.get<double>("<xmlattr>.y") );
 
-						//model_.walkers_[walker->id_]->track_.addPoint();
+							model_.walkers_[id]->addTrackPoint(point);
+						}
 					}
 				}
 			}
