@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <allegro5/allegro_primitives.h>
+#include "Base.hpp"
+#include "VehicleTrack.hpp"
 
 namespace zpr
 {
@@ -47,11 +49,9 @@ namespace zpr
 
 	void View::loop()
 	{
-		static float i = 0.5f; // test
 		ALLEGRO_EVENT ev;
 		
 		Graph g = model_.streets();
-		g.printAllData();
 
 		while (true)
 		{
@@ -65,20 +65,51 @@ namespace zpr
 			}
 
 
-			al_clear_to_color( al_map_rgb(0,0,0) ); // clear na czarno
+			al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
 
-			//al_draw_line(10, 0, 10, 60, al_map_rgb(255,255,255), 5);	// linia xD
-			//al_draw_filled_circle(i, i, 10, al_map_rgb(0, 255, 0));
-			//i = ( i > 480 ) ? 0 : i + 0.5f;
- 
 			for (Graph::MVertices::const_iterator it = g.vertices_.begin(); it != g.vertices_.end(); ++it)
 			{
+				// stala mowiaca o szerokosci drogi tez gdzies // ogolnie taki zarys bo friendem tego zrobic nie mozemy raczej :P
+				double w = 60;
 				for (Graph::MVertices::const_iterator i = it->second->edges_.begin(); i != it->second->edges_.end(); ++i)
-				{	// stala mowiaca o szerokosci drogi tez gdzies // ogolnie taki zarys bo friendem tego zrobic nie mozemy raczej :P
-					al_draw_line(it->second->position_.x_, it->second->position_.y_, i->second->position_.x_, i->second->position_.y_, al_map_rgb(200,200,200), 20);
+				{
+					al_draw_line(it->second->position_.x_, it->second->position_.y_, i->second->position_.x_, i->second->position_.y_, al_map_rgb(200,200,200), w);
 				}
-				al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, 15, al_map_rgb(100, 100, 100));
+				al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, w / 2, al_map_rgb(200, 200, 200));
 			}
+
+
+			// to rysuje beziera z 4 pktow jbc
+			float p[] = {150, 100, 320, 50, 320, 50, 500, 180};
+			al_draw_spline(p, al_map_rgb(255,255,0), 5);
+
+			// tam wyzej na zolto bezier od pkt do pkt a tu moj rozstapiony wierzcholek
+			VehicleTrack t, tt, ttt;
+			t.addPoint(Point(150, 100));
+			t.addPoint(Point(320, 50));
+			t.addPoint(Point(500, 180));
+			for (double i = 0; i <= 1; i += 0.01)
+				al_draw_filled_circle(t.getPosition(i).x_, t.getPosition(i).y_, 3, al_map_rgb(0,255,255));
+			
+			tt.addPoint(Point(150, 420));
+			tt.addPoint(Point(150, 100));
+			tt.addPoint(Point(500, 600));
+			for (double i = 0; i <= 1; i += 0.01)
+				al_draw_filled_circle(tt.getPosition(i).x_, tt.getPosition(i).y_, 3, al_map_rgb(255,0,0));
+			
+			ttt.addPoint(Point(0, 420));
+			ttt.addPoint(Point(150, 420));
+			ttt.addPoint(Point(150, 100));
+			ttt.addPoint(Point(500, 600));
+			ttt.addPoint(Point(500, 320));
+			ttt.addPoint(Point(640, 320));
+			ttt.addPoint(Point(640, 180));
+			ttt.addPoint(Point(500, 180));
+			ttt.addPoint(Point(320, 50));
+			for (double i = 0; i <= 1; i += 0.01)
+				al_draw_filled_circle(ttt.getPosition(i).x_, ttt.getPosition(i).y_, 3, al_map_rgb(0,0,255));
+			
+
 
 			al_flip_display();	// swap buffers
 		}

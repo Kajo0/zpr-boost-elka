@@ -6,6 +6,7 @@
 		<id>WXW-JOOOO</id>	<!-- rejestracja dla samochodow, nazwisko i imie dla walkerow -->
 		
 		<parameters>
+			<acceleration>5</acceleration>
 			<weight>2000.0</weight>		<!-- kilogramy -->
 			<size>big</size>			<!-- enum -->
 			<maxspeed>75.0</maxspeed>	<!-- km/h -->

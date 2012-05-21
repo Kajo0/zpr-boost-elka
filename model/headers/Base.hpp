@@ -9,7 +9,7 @@ namespace zpr
 	enum objects { WALKER, SMALLCAR, BIGCAR, CAMERA };
 
 	/** Corner division amount */
-	static const double BEZIER_DIVISION = 2;
+	static const double BEZIER_DIVISION = 50; // 1.0 = 1m a miasto jak robimy wielkosciowo ?
 
 	/**
 	  * Basic structure identyfing object's position

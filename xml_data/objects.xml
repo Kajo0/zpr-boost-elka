@@ -5,6 +5,7 @@
 		<id>WW-JOOOO</id>
 		
 		<parameters>
+			<acceleration>2</acceleration>
 			<weight>2000.0</weight>
 			<size>big</size>
 			<maxspeed>75.0</maxspeed>
@@ -22,6 +23,7 @@
 		<id>WXW-JOOOO</id>
 		
 		<parameters>
+			<acceleration>2</acceleration>
 			<weight>2000.0</weight>
 			<size>big</size>
 			<maxspeed>75.0</maxspeed>
@@ -38,6 +40,7 @@
 		<id>WF-JOOOO</id>
 		
 		<parameters>
+			<acceleration>5</acceleration>
 			<weight>1200.0</weight>
 			<size>small</size>
 			<maxspeed>100.0</maxspeed>
