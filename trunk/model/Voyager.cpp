@@ -15,4 +15,9 @@ namespace zpr
 	{
 		return position_;
 	}
+
+	void Voyager::addTrackPoint(const Point point)
+	{
+		track_->addPoint(point);
+	}
 }
