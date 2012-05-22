@@ -35,10 +35,7 @@ namespace zpr
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
 		void nextStep(const long elapsed_time);
 
-		Graph& streets() { return streets_; }
-
-		// TODO delete it - test only
-		void tellMeEverythingAboutObjects();
+		Graph& streets() { return streets_; } // testowe do view
 	};
 }
 

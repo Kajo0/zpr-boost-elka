@@ -12,16 +12,6 @@ namespace zpr
 	{
 	}
 
-	void Camera::tellMeSthAbout()
-	{
-		std::cout<<"Id: "<<id_
-			<<" ("<<position_.x_<<","<<position_.y_<<")"
-			<<" dir: "<<direction_
-			<<" ang: "<<angle_
-			<<" rng: "<<range_
-			<<" pre: "<<precision_<<"\n";
-	}
-
 	int Camera::id()
 	{
 		return id_;

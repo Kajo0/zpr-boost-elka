@@ -22,9 +22,6 @@ namespace zpr
 		virtual ~Camera();
 
 		int id();
-
-		// TODO delete it - test function
-		void tellMeSthAbout();
 	};
 }
 

@@ -18,7 +18,7 @@ namespace zpr
 		protected:
 		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
 		double velocity_;
-		// size? - nie, na razie pkty materialne :P
+		double percentDistanceTraveled;
 		PTrack track_;
 
 		public:
@@ -28,11 +28,8 @@ namespace zpr
 		virtual const std::string& id() = 0;
 		const Point& position() const;
 		void addTrackPoint(const Point point);
-		void reset(); // daje na poczatek i stopuje
-
-
-		// TODO delete it - test only
-		virtual void tellMeMore(){};
+		virtual void reset(); // daje na poczatek i stopuje
+		virtual void move(const long elapsed_time) = 0;	// oczywiscie w milisekundach
 	};
 }
 

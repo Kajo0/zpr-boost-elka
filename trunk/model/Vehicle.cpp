@@ -18,14 +18,13 @@ namespace zpr
 		return registration_;
 	}
 
-	void Vehicle::tellMeMore()
+	void Vehicle::move(const long elapsed_time)
 	{
-		std::cout<<"id: "<<registration_
-				<<" pos: "<<position_
-				<<" v: "<<velocity_
-				<<" a: "<<acceleration_
-				<<" weight: "<<weight_
-				<<" mSpeed: "<<maxSpeed_
-				<<" t.len: "<<track_->length()<<"\n";
+		velocity_ += acceleration_ * elapsed_time * 0.001;	// oczywiscie tu wchodzi fizyka w ktora sie teraz nie zaglebiam + zakrety
+		if (velocity_ > maxSpeed_)
+			velocity_ = maxSpeed_;
+
+		percentDistanceTraveled += ( velocity_ * elapsed_time ) / track_->length();
+		position_ = track_->positionOnTrack( percentDistanceTraveled );
 	}
 }

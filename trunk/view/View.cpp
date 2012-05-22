@@ -5,9 +5,16 @@
 #include <allegro5/allegro_primitives.h>
 #include "Base.hpp"
 #include "VehicleTrack.hpp"
+#include "Walker.hpp"
+#include "SmallCar.hpp"
 
 namespace zpr
 {
+	const int View::WINDOW_WIDTH			= 800;
+	const int View::WINDOW_HEIGHT			= 600;
+	const int View::VISUALISATION_WIDTH		= 600;
+	const int View::VISUALISATION_HEIGHT	= 600;
+
 	View::View(Model model): model_(model)
 	{
 		display_ = NULL;
@@ -18,7 +25,7 @@ namespace zpr
 			return;
 		}
 
-		display_ = al_create_display(640, 480);
+		display_ = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		if(!display_)
 		{
@@ -53,15 +60,41 @@ namespace zpr
 		
 		Graph g = model_.streets();
 
+		Walker w(std::string("Ja"), 1);
+		w.addTrackPoint( Point(10, 10) );
+		w.addTrackPoint( Point(200, 10) );
+		w.addTrackPoint( Point(100, 200) );
+		w.reset();
+		
+		SmallCar s(std::string("WF-JA"), 50, 1000, 15);
+		s.addTrackPoint(Point(0, 450));
+		s.addTrackPoint(Point(150, 450));
+		s.addTrackPoint(Point(150, 150));
+		s.addTrackPoint(Point(400, 800));
+		s.addTrackPoint(Point(500, 400));
+		s.addTrackPoint(Point(600, 400));
+		s.addTrackPoint(Point(600, 200));
+		s.addTrackPoint(Point(500, 200));
+		s.addTrackPoint(Point(300, 100));
+		s.reset();
+
+		al_install_keyboard();
+		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
+
 		while (true)
 		{
 			// czeka na event 0.001 czasu a potem sieka dalej, jak X to konczy petle
 			// trzeba bedzie obczic allegro eventy bardziej :/
 			// ogolnie to chyba wyswietlimy jedno okienko dla gui typu wprowadzanie a cala animacja bedzie w nowym
 			// bo odswierzanie bedzie robil timer i tam na eventy nie trzeba czekac a wyklikanie to te kliki bedize trzeba obsluzyc
-			if ( al_wait_for_event_timed(eventQueue_, &ev, 0.001) && ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE )
+			if ( al_wait_for_event_timed(eventQueue_, &ev, 0.01) )
 			{
-				break;
+				if ( ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE )
+					break;
+				else if ( ev.type = ALLEGRO_EVENT_KEY_DOWN ) {
+					w.reset();
+					s.reset();
+				}
 			}
 
 
@@ -79,36 +112,43 @@ namespace zpr
 			}
 
 
-			// to rysuje beziera z 4 pktow jbc
-			float p[] = {150, 100, 320, 50, 320, 50, 500, 180};
-			al_draw_spline(p, al_map_rgb(255,255,0), 5);
+			//// to rysuje beziera z 4 pktow jbc
+			//float p[] = {150, 150, 300, 100, 300, 100, 500, 200};
+			//al_draw_spline(p, al_map_rgb(255,255,0), 15);
 
-			// tam wyzej na zolto bezier od pkt do pkt a tu moj rozstapiony wierzcholek
-			VehicleTrack t, tt, ttt;
-			t.addPoint(Point(150, 100));
-			t.addPoint(Point(320, 50));
-			t.addPoint(Point(500, 180));
-			for (double i = 0; i <= 1; i += 0.01)
-				al_draw_filled_circle(t.getPosition(i).x_, t.getPosition(i).y_, 3, al_map_rgb(0,255,255));
-			
-			tt.addPoint(Point(150, 420));
-			tt.addPoint(Point(150, 100));
-			tt.addPoint(Point(500, 600));
-			for (double i = 0; i <= 1; i += 0.01)
-				al_draw_filled_circle(tt.getPosition(i).x_, tt.getPosition(i).y_, 3, al_map_rgb(255,0,0));
-			
-			ttt.addPoint(Point(0, 420));
-			ttt.addPoint(Point(150, 420));
-			ttt.addPoint(Point(150, 100));
-			ttt.addPoint(Point(500, 600));
-			ttt.addPoint(Point(500, 320));
-			ttt.addPoint(Point(640, 320));
-			ttt.addPoint(Point(640, 180));
-			ttt.addPoint(Point(500, 180));
-			ttt.addPoint(Point(320, 50));
-			for (double i = 0; i <= 1; i += 0.01)
-				al_draw_filled_circle(ttt.getPosition(i).x_, ttt.getPosition(i).y_, 3, al_map_rgb(0,0,255));
-			
+			//// tam wyzej na zolto bezier od pkt do pkt a tu moj rozstapiony wierzcholek
+			//VehicleTrack t, tt, ttt;
+			//t.addPoint(Point(150, 150));
+			//t.addPoint(Point(300, 100));
+			//t.addPoint(Point(500, 200));
+			//for (double i = 0; i <= 1; i += 0.01)
+			//	al_draw_filled_circle(t.positionOnTrack(i).x_, t.positionOnTrack(i).y_, 6, al_map_rgb(0,255,255));
+			//
+			//tt.addPoint(Point(150, 450));
+			//tt.addPoint(Point(150, 150));
+			//tt.addPoint(Point(400, 800));
+			//for (double i = 0; i <= 1; i += 0.001)
+			//	al_draw_filled_circle(tt.positionOnTrack(i).x_, tt.positionOnTrack(i).y_, 6, al_map_rgb(0,0,255));
+			//
+			//ttt.addPoint(Point(0, 450));
+			//ttt.addPoint(Point(150, 450));
+			//ttt.addPoint(Point(150, 150));
+			//ttt.addPoint(Point(400, 800));
+			//ttt.addPoint(Point(500, 400));
+			//ttt.addPoint(Point(600, 400));
+			//ttt.addPoint(Point(600, 200));
+			//ttt.addPoint(Point(500, 200));
+			//ttt.addPoint(Point(300, 100));
+			//for (double i = 0; i <= 1; i += 0.001)
+			//	al_draw_filled_circle(ttt.positionOnTrack(i).x_, ttt.positionOnTrack(i).y_, 3, al_map_rgb(255,0,0));
+
+
+			//al_clear_to_color( al_map_rgb(0,0,0) );
+
+			w.move(1);
+			al_draw_filled_circle(w.position().x_, w.position().y_, 5, al_map_rgb(0,255,0));
+			s.move(1);
+			al_draw_filled_circle(s.position().x_, s.position().y_, 5, al_map_rgb(0,0,255));
 
 
 			al_flip_display();	// swap buffers
