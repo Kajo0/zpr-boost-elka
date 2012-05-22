@@ -21,10 +21,7 @@ namespace zpr
 		virtual ~Vehicle();
 
 		const std::string& id();
-
-
-		//TODO delete it- test only
-		void tellMeMore();
+		void move(const long elapsed_time);
 	};
 }
 

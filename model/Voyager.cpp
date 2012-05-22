@@ -2,7 +2,7 @@
 
 namespace zpr
 {
-	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position) // to zerujemy i tak sie wyliczy point jako begin trasy a velocity zerowa w spoczynku
+	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position), percentDistanceTraveled(0)
 	{
 	}
 
@@ -24,6 +24,7 @@ namespace zpr
 	void Voyager::reset()
 	{
 		velocity_ = 0;
+		percentDistanceTraveled = 0;
 		position_ = track_->start();
 	}
 }

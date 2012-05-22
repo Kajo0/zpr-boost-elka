@@ -24,14 +24,10 @@ namespace zpr
 		Track();
 		virtual ~Track();
 		virtual void addPoint(Point point) = 0;
+		Point positionOnTrack(double percent);
 		Point start();
 		Point finish();
 		double length();
-		// to ma liczyc to rozsuniecie - takie pomocnicze //
-		static Point bezierBetween(const Point &control, const Point &final);
-
-		// TODO remove it- test only
-		void showMeEverything();
 
 		protected:
 		void recalculateLength();

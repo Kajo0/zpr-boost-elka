@@ -24,9 +24,6 @@ namespace zpr
 		virtual ~Dispatcher();
 
 		void addCamera(const PCamera camera);
-
-		// TODO delet e- test only
-		void tellMeSthAbout();
 	};
 }
 

@@ -22,19 +22,6 @@ namespace zpr
 			//vertices_[to]->addEdge( vertices_[from] );
 		}
 	}
-
-	void Graph::printAllData()
-	{
-		for (MVertices::const_iterator it = vertices_.begin(); it != vertices_.end(); ++it)
-		{
-			std::cout<<"Id: "<<it->second->id_<<" Pos: ("<<it->second->position_.x_<<", "<<it->second->position_.y_<<")\n";
-
-			for (MVertices::const_iterator i = it->second->edges_.begin(); i != it->second->edges_.end(); ++i)
-			{
-				std::cout<<"\tEdge to: "<<i->second->id_<<"\n";
-			}
-		}
-	}
 	
 	/************
 	*	Vertex	*

@@ -2,6 +2,8 @@
 
 namespace zpr
 {
+	const double VehicleTrack::BEZIER_DIVISION = 50;
+
 	VehicleTrack::VehicleTrack()
 	{
 	}
@@ -35,9 +37,10 @@ namespace zpr
 				realBegin = dynamic_cast<BezierSegment*>(segments_.back().get())->control();
 			}
 
-			Point p1 = Track::bezierBetween( lastEnd, realBegin );
-			Point p2 = Track::bezierBetween( lastEnd, point );
+			Point p1 = VehicleTrack::bezierBetween( lastEnd, realBegin );
+			Point p2 = VehicleTrack::bezierBetween( lastEnd, point );
 
+			// optymalizacja(jeszcze nie ma :P): jak begin i end na tym samym x'ie lub y'ku to tylko straight
 			segments_.push_back( PSegment( new StraightSegment( lastBegin, p1 ) ) );
 			segments_.push_back( PSegment( new BezierSegment( p1, p2, lastEnd ) ) );
 			segments_.push_back( PSegment( new StraightSegment( p2, point ) ) );
@@ -46,21 +49,30 @@ namespace zpr
 		recalculateLength();
 	}
 
-	// to tak na prawde tylko testowo napisalem do rysowania
-	// aczkolwiek tu jest wstep ze poruszamy samochod po prostej a pozycje wyliczamy z segmentow
-	Point VehicleTrack::getPosition(double percent)
+	/**
+	 * To rozsuniecie o ktorym mowilem - tylko ze dla pary tzn. majac kropki jako pkty, da wsp. punktu albo oddalonego
+	 * o BEZIER_DIVISION ('promien' skretu aktualnie 2)
+	 *
+	 *         .
+	 *
+	 *     ,
+	 *   .
+	 */
+	Point VehicleTrack::bezierBetween(const Point &control, const Point &final)
 	{
-		double d = length_ * percent;
-		double l = 0;
-		for (DSegments::const_iterator it = segments_.begin(); it != segments_.end(); ++it)
+		Point tmp = control;
+		
+		if ( Point::distance(control, final) <= 2 * BEZIER_DIVISION )
 		{
-			l += (*it)->length();
-			if ( d <= l )
-			{
-				double z = 1 - ( ( l - d ) / (*it)->length() );
-				return (*it)->position(z);
-			}
+			tmp.x_ += (final.x_ - control.x_) / 2;
+			tmp.y_ += (final.y_ - control.y_) / 2;
 		}
-	}
+		else
+		{
+			tmp.x_ += (final.x_ - control.x_) * ( BEZIER_DIVISION / Point::distance(control, final) );
+			tmp.y_ += (final.y_ - control.y_) * ( BEZIER_DIVISION / Point::distance(control, final) );
+		}
 
+		return tmp;
+	}
 }

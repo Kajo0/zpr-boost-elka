@@ -62,21 +62,21 @@ namespace zpr
 		else // calka chyba z beziera
 		{
 			Point a, b;
-			a.x_ = begin_.x_ - 2*control_.x_ + end_.x_;
-			a.y_ = begin_.y_ - 2*control_.y_ + end_.y_;
-			b.x_ = 2*control_.x_ - 2*begin_.x_;
-			b.y_ = 2*control_.y_ - 2*begin_.y_;
-			double A = 4*(a.x_*a.x_ + a.y_*a.y_);
-			double B = 4*(a.x_*b.x_ + a.y_*b.y_);
-			double C = b.x_*b.x_ + b.y_*b.y_;
+			a.x_ = begin_.x_ - 2 * control_.x_ + end_.x_;
+			a.y_ = begin_.y_ - 2 * control_.y_ + end_.y_;
+			b.x_ = 2 * control_.x_ - 2 * begin_.x_;
+			b.y_ = 2 * control_.y_ - 2 * begin_.y_;
+			double A = 4 * ( a.x_ * a.x_ + a.y_ * a.y_ );
+			double B = 4 * ( a.x_ * b.x_ + a.y_ * b.y_ );
+			double C = b.x_ * b.x_ + b.y_ * b.y_;
 
-			double Sabc = 2*sqrt(A+B+C);
-			double A_2 = sqrt(A);
-			double A_32 = 2*A*A_2;
-			double C_2 = 2*sqrt(C);
-			double BA = B/A_2;
+			double Sabc	= 2 * sqrt( A + B + C );
+			double A_2	= sqrt(A);
+			double A_32	= 2 * A * A_2;
+			double C_2	= 2 * sqrt(C);
+			double BA	= B / A_2;
 
-			length = ( A_32*Sabc + A_2*B*(Sabc-C_2) + (4*C*A-B*B)*log( (2*A_2+BA+Sabc)/(BA+C_2) ) )/(4*A_32);
+			length = ( A_32 * Sabc + A_2 * B * ( Sabc - C_2 ) + ( 4 * C * A - B * B ) * log( ( 2 * A_2 + BA + Sabc ) / ( BA + C_2 ) ) ) / ( 4 * A_32 );
 		}
 
 		return length;

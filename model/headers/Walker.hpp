@@ -20,10 +20,8 @@ namespace zpr
 		Walker& operator=(const Walker &other);
 		
 		const std::string& id();
-
-		
-		//TODO delete it- test only
-		void tellMeMore();
+		void reset();
+		void move(const long elapsed_time);
 	};
 }
 

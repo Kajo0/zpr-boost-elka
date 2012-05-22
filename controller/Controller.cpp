@@ -20,33 +20,20 @@ namespace zpr
 
 	void Controller::mainLoop()
 	{
-		// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
-		parseDispatcher("xml_data\\dispatcher.xml");
-		model_.dispatcher_.tellMeSthAbout();
-		std::cout<<"\n";
+		//// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
+		//parseDispatcher("xml_data\\dispatcher.xml");
 
-		// wczytanie mapy drog
+		//// wczytanie mapy drog
 		parseMap("xml_data\\streets.xml");
-		model_.streets_.printAllData();
-		std::cout<<"\n";
 
-		// wczyutanie obiektow
-		parseObjects("xml_data\\objects.xml");
-		model_.tellMeEverythingAboutObjects();
-		std::cout<<"\n";
+		//// wczyutanie obiektow
+		//parseObjects("xml_data\\objects.xml");
 
-		// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
-		// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
-		// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
+		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
+		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
+		//// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
 
-		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
-		std::cout<<"-----------\n";
-		model_.dispatcher_.tellMeSthAbout();
-		std::cout<<"\n";
-		model_.streets_.printAllData();
-		std::cout<<"\n";
-		model_.tellMeEverythingAboutObjects();
-		std::cout<<"\n";
+		//model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
 
 		View view(model_);
 		view.loop();

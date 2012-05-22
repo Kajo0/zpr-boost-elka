@@ -33,10 +33,6 @@ namespace zpr
 		void addVertex(const int id, const Point position);
 		void addEdge(const int from, const int to);
 
-		// TODO delete it - test
-		void printAllData();
-
-
 		private:
 		struct Vertex
 		{

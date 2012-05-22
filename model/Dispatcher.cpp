@@ -12,11 +12,4 @@ namespace zpr
 		// nie duplikujemy wartosci - jak jest juz o takim id to nie zamieni
 		cameras_.insert(std::pair<int, PCamera>(camera->id(), camera));
 	}
-
-	void Dispatcher::tellMeSthAbout()
-	{
-		BOOST_FOREACH(MCamera::value_type cam, cameras_) {
-			cam.second->tellMeSthAbout();
-		}
-	}
 }
