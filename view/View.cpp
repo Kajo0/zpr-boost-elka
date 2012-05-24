@@ -60,29 +60,36 @@ namespace zpr
 		
 		Graph g = model_.streets();
 
-		Walker w(std::string("Ja"), 1);
-		w.addTrackPoint( Point(10, 10) );
-		w.addTrackPoint( Point(200, 10) );
-		w.addTrackPoint( Point(100, 200) );
-		w.reset();
-		
-		SmallCar s(std::string("WF-JA"), 50, 1000, 15);
-		s.addTrackPoint(Point(0, 450));
-		s.addTrackPoint(Point(150, 450));
-		s.addTrackPoint(Point(150, 150));
-		s.addTrackPoint(Point(400, 800));
-		s.addTrackPoint(Point(500, 400));
-		s.addTrackPoint(Point(600, 400));
-		s.addTrackPoint(Point(600, 200));
-		s.addTrackPoint(Point(500, 200));
-		s.addTrackPoint(Point(300, 100));
-		s.reset();
+		//Walker w(std::string("Ja"), 5);
+		//w.addTrackPoint( Point(10, 10) );
+		//w.addTrackPoint( Point(200, 10) );
+		//w.addTrackPoint( Point(100, 200) );
+		//w.reset();
+		//
+		//SmallCar s(std::string("WF-JA"), 50, 1000, 15);
+		//s.addTrackPoint(Point(0, 450));
+		//s.addTrackPoint(Point(150, 450));
+		//s.addTrackPoint(Point(150, 150));
+		//s.addTrackPoint(Point(400, 800));
+		//s.addTrackPoint(Point(500, 400));
+		//s.addTrackPoint(Point(600, 400));
+		//s.addTrackPoint(Point(600, 200));
+		//s.addTrackPoint(Point(500, 200));
+		//s.addTrackPoint(Point(300, 100));
+		//s.reset();
 
 		al_install_keyboard();
+		al_install_mouse();
+		al_register_event_source(eventQueue_, al_get_mouse_event_source());
 		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
+
+		VehicleTrack m;	// wstep do wyklikania trasy
 
 		while (true)
 		{
+			VehicleTrack mm;
+			mm.addPoint( Point(100, 100) );
+			static int xx = 0, yy = 0;
 			// czeka na event 0.001 czasu a potem sieka dalej, jak X to konczy petle
 			// trzeba bedzie obczic allegro eventy bardziej :/
 			// ogolnie to chyba wyswietlimy jedno okienko dla gui typu wprowadzanie a cala animacja bedzie w nowym
@@ -91,12 +98,16 @@ namespace zpr
 			{
 				if ( ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE )
 					break;
-				else if ( ev.type = ALLEGRO_EVENT_KEY_DOWN ) {
-					w.reset();
-					s.reset();
+				else if ( ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN )
+					m.addPoint( Point(ev.mouse.x, ev.mouse.y) );
+				else if ( ev.type == ALLEGRO_EVENT_MOUSE_AXES ) {
+					xx = ev.mouse.x;
+					yy = ev.mouse.y;
 				}
 			}
-
+			
+			mm.addPoint( Point(xx, 100) );
+			mm.addPoint( Point(xx, yy) );
 
 			al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
 
@@ -111,6 +122,13 @@ namespace zpr
 				al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, w / 2, al_map_rgb(200, 200, 200));
 			}
 
+			// przyklad beziera jak sie zmienia bezier na prostym kacie
+			for (double i = 0; i <= 1; i += 0.01)
+				al_draw_filled_circle(mm.positionOnTrack(i).x_, mm.positionOnTrack(i).y_, 2, al_map_rgb(0,0,0));
+			
+			// dodawana recznie klikana trasa, do wyklikania ewentualnie
+			for (double i = 0; i <= 1; i += 0.01)
+				al_draw_filled_circle(m.positionOnTrack(i).x_, m.positionOnTrack(i).y_, 2, al_map_rgb(0,0,0));
 
 			//// to rysuje beziera z 4 pktow jbc
 			//float p[] = {150, 150, 300, 100, 300, 100, 500, 200};
@@ -144,12 +162,12 @@ namespace zpr
 
 
 			//al_clear_to_color( al_map_rgb(0,0,0) );
+			//Sleep(1);
 
-			w.move(1);
-			al_draw_filled_circle(w.position().x_, w.position().y_, 5, al_map_rgb(0,255,0));
-			s.move(1);
-			al_draw_filled_circle(s.position().x_, s.position().y_, 5, al_map_rgb(0,0,255));
-
+			//w.move(100);
+			//al_draw_filled_circle(w.position().x_, w.position().y_, 5, al_map_rgb(0,255,0));
+			//s.move(1);
+			//al_draw_filled_circle(s.position().x_, s.position().y_, 5, al_map_rgb(0,0,255));
 
 			al_flip_display();	// swap buffers
 		}

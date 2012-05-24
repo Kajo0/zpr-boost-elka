@@ -59,6 +59,8 @@ namespace zpr
 				return (*it)->position( 1 - ( ( temp_length - traveled_length ) / (*it)->length() ) );
 			}
 		}
+
+		return Point();
 	}
 
 	/**
