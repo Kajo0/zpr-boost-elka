@@ -34,11 +34,15 @@ namespace zpr
 			
 			if (!segments_.empty())
 			{
-				realBegin = dynamic_cast<BezierSegment*>(segments_.back().get())->control();
+				realBegin = static_cast<BezierSegment*>(segments_.back().get())->control();
 			}
 
-			Point p1 = VehicleTrack::bezierBetween( lastEnd, realBegin );
-			Point p2 = VehicleTrack::bezierBetween( lastEnd, point );
+			Point p1, p2;
+			std::pair<Point, Point> p_tmp = bothBezierBetween(lastBegin, point, lastEnd);
+			p1 = p_tmp.first;
+			p2 = p_tmp.second;	// do tej linii to jest dzielone rowno po dwoch stronach
+			//Point p1 = bezierBetween( lastEnd, realBegin );	// tu jest nie wiem czy to prblem ale jedna czesc luku moze byc minimalizowana do polowy dlugosci odcinka a druga niekoniecznie i czy chcemy to wyeliminowac czy nie? trzeba by wymuszac rozstapienie minimalne
+			//Point p2 = bezierBetween( lastEnd, point );
 
 			// optymalizacja(jeszcze nie ma :P): jak begin i end na tym samym x'ie lub y'ku to tylko straight
 			segments_.push_back( PSegment( new StraightSegment( lastBegin, p1 ) ) );
@@ -47,6 +51,33 @@ namespace zpr
 		}
 
 		recalculateLength();
+	}
+
+	// trzraba wybrac jedna z dwoch metod, zeby copy pase nie bylo ze jest ;p choc jest ;d
+	std::pair<Point, Point> VehicleTrack::bothBezierBetween(const Point &start, const Point &final, const Point &control)
+	{
+		std::pair<Point, Point> tmp = std::make_pair(control, control);
+		double p1_distance = Point::distance(control, start);
+		double p2_distance = Point::distance(control, final);
+
+		if ( p1_distance <= 2 * BEZIER_DIVISION || p2_distance <= 2 * BEZIER_DIVISION )
+		{
+			double min_distance = ( p1_distance < p2_distance ? p1_distance : p2_distance ) / 2;
+
+			tmp.first.x_ += (start.x_ - control.x_) * ( min_distance / p1_distance );
+			tmp.first.y_ += (start.y_ - control.y_) * ( min_distance / p1_distance );
+			tmp.second.x_ += (final.x_ - control.x_) * ( min_distance / p2_distance );
+			tmp.second.y_ += (final.y_ - control.y_) * ( min_distance / p2_distance );
+		}
+		else
+		{
+			tmp.first.x_ += (start.x_ - control.x_) * ( BEZIER_DIVISION / p1_distance );
+			tmp.first.y_ += (start.y_ - control.y_) * ( BEZIER_DIVISION / p1_distance );
+			tmp.second.x_ += (final.x_ - control.x_) * ( BEZIER_DIVISION / p2_distance );
+			tmp.second.y_ += (final.y_ - control.y_) * ( BEZIER_DIVISION / p2_distance );
+		}
+
+		return tmp;
 	}
 
 	/**

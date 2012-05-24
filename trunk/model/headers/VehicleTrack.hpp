@@ -19,8 +19,9 @@ namespace zpr
 
 		void addPoint(Point point);
 
+		std::pair<Point, Point> bothBezierBetween(const Point &start, const Point &final, const Point &control);
 		// to ma liczyc to rozsuniecie - takie pomocnicze //
-		static Point bezierBetween(const Point &control, const Point &final);
+		Point bezierBetween(const Point &control, const Point &final);
 	};
 }
 
