@@ -4,6 +4,8 @@
 #include "Model.hpp"
 #include "View.hpp"
 
+#include <boost/filesystem.hpp>
+
 namespace zpr
 {
 	class Controller
@@ -12,16 +14,16 @@ namespace zpr
 		View view_;
 
 		public:
-		Controller();
+		Controller(const boost::filesystem::path & path);
 		virtual ~Controller();
 
 		private:
 		void mainLoop(); // tu bym to zapetlil calosc
 
 		// parsing functions
-		void parseMap(const char *path);
-		void parseDispatcher(const char *path);
-		void parseObjects(const char *path);
+		void parseMap(const boost::filesystem::path & path);
+		void parseDispatcher(const boost::filesystem::path & path);
+		void parseObjects(const boost::filesystem::path & path);
 	};
 }
 #endif // CONTROLLER_HPP
