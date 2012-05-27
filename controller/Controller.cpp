@@ -13,8 +13,17 @@
 
 namespace zpr
 {
-	Controller::Controller()
+	Controller::Controller(const boost::filesystem::path & path)
 	{
+		//// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
+		parseDispatcher(path / "xml_data\\dispatcher.xml");
+
+		//// wczytanie mapy drog
+		parseMap(path / "xml_data\\streets.xml");
+
+		//// wczyutanie obiektow
+		parseObjects(path / "xml_data\\objects.xml");
+		
 		mainLoop();
 	}
 
@@ -22,14 +31,7 @@ namespace zpr
 
 	void Controller::mainLoop()
 	{
-		//// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
-		parseDispatcher("xml_data\\dispatcher.xml");
-
-		//// wczytanie mapy drog
-		parseMap("xml_data\\streets.xml");
-
-		//// wczyutanie obiektow
-		parseObjects("xml_data\\objects.xml");
+		
 
 		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
 		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
@@ -54,7 +56,7 @@ namespace zpr
 		}
 	}
 
-	void Controller::parseDispatcher(const char *path)
+	void Controller::parseDispatcher(const boost::filesystem::path & path)
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
@@ -62,7 +64,7 @@ namespace zpr
 	
 		try
 		{
-			read_xml(path, pt, boost::property_tree::xml_parser::no_comments);
+			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
 
 			BOOST_FOREACH( ptree::value_type &v, pt.get_child("dispatcher") )
 			{
@@ -92,14 +94,14 @@ namespace zpr
 		}
 	}
 
-	void Controller::parseMap(const char *path)
+	void Controller::parseMap(const boost::filesystem::path & path)
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
 	
 		try
 		{
-			read_xml(path, pt, boost::property_tree::xml_parser::no_comments);
+			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
 			//std::vector<std::pair<int, Point>> vertices;
 			//std::vector<std::pair<int, int>> edges;
 
@@ -145,7 +147,7 @@ namespace zpr
 		}
 	}
 
-	void Controller::parseObjects(const char *path)
+	void Controller::parseObjects(const boost::filesystem::path & path)
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
@@ -154,7 +156,7 @@ namespace zpr
 	
 		try
 		{
-			read_xml(path, pt, boost::property_tree::xml_parser::no_comments);
+			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
 
 			BOOST_FOREACH( ptree::value_type &v, pt.get_child("objects") )
 			{
