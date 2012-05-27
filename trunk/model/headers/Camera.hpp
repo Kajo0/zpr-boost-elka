@@ -9,7 +9,7 @@ namespace zpr
 	 * Class representing camera object, contains essential information about
 	 */
 	class Camera
-	{
+	{public:
 		const int id_;
 		Point position_;
 		double direction_;

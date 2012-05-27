@@ -9,7 +9,7 @@ namespace zpr
 	class Controller
 	{
 		Model model_;
-		//View view_;
+		View view_;
 
 		public:
 		Controller();

@@ -1,7 +1,7 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include <boost\thread\mutex.hpp>
+#include <boost/thread/mutex.hpp>
 
 namespace zpr
 {

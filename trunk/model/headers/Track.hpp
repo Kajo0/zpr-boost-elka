@@ -3,7 +3,7 @@
 
 #include "Segment.hpp"
 #include <deque>
-#include <boost\shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace zpr
 {

@@ -6,7 +6,7 @@
 #include "Walker.hpp"
 #include "Graph.hpp"
 #include <map>
-#include <boost\shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace zpr
 {
@@ -15,7 +15,7 @@ namespace zpr
 	 * Sth about model
 	 */
 	class Model
-	{
+	{public:
 		friend class Controller;
 		friend class View; // to tylko teraz do ulatwienia sporego testu
 
@@ -29,7 +29,7 @@ namespace zpr
 		MWalker walkers_;
 		Graph streets_;
 
-		public:
+		public: double xxx, yyy;
 		Model();
 		virtual ~Model();
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow

@@ -2,8 +2,8 @@
 #include <fstream>
 #include <ctime>
 #include <string>
-#include <boost\lexical_cast.hpp>
-#include <boost\thread\mutex.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/thread/mutex.hpp>
 #include "Logger.hpp"
 
 namespace zpr
@@ -25,7 +25,7 @@ namespace zpr
 		path += boost::lexical_cast<std::string>(time(0));
 		path += ".txt";
 
-		out->open(path, std::ios_base::app);
+		out->open(path.c_str(), std::ios_base::app);
 
 		if (out->is_open())
 			output_ = out;
