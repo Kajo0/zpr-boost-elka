@@ -22,6 +22,8 @@ namespace zpr
 		}
 		else
 		{
+			if ( segments_.back()->end() == point )
+				return;
 			// Mowiac krotko jak jest jeden segment to jest StraightSegment
 			// jak dodajemy trzeci punkt to juz mozna beziera zrobic, wiec jest : straight -> bezier -> straight
 			// jak kolejny dajemy to jest : straight -> bezier -> straight(mozliwe ze o zerowej dlugosci jak nie wyrabia sie zakretowo) -> bezier -> straight

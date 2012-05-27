@@ -20,7 +20,7 @@ namespace zpr
 
 	void Vehicle::move(const long elapsed_time)
 	{
-		velocity_ += acceleration_ * elapsed_time * 0.001;	// oczywiscie tu wchodzi fizyka w ktora sie teraz nie zaglebiam + zakrety
+		velocity_ += acceleration_ * elapsed_time * 0.00001;	// oczywiscie tu wchodzi fizyka w ktora sie teraz nie zaglebiam + zakrety
 		if (velocity_ > maxSpeed_)
 			velocity_ = maxSpeed_;
 

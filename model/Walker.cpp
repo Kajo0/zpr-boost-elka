@@ -35,7 +35,7 @@ namespace zpr
 
 	void Walker::move(const long elapsed_time)
 	{
-		percentDistanceTraveled += ( velocity_ * elapsed_time ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
+		percentDistanceTraveled += ( velocity_ * elapsed_time * 0.1 / 3.6 ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
 		position_ = track_->positionOnTrack( percentDistanceTraveled );
 	}
 }

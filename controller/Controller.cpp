@@ -1,9 +1,11 @@
 #include "Controller.hpp"
 #include "Logger.hpp"
-#include <boost\foreach.hpp>
-#include <boost\property_tree\ptree.hpp>
-#include <boost\property_tree\xml_parser.hpp>
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 #include <vector>
+#include <boost/thread/thread.hpp>
+#include <boost/bind/bind.hpp>
 //TODO fabryczka jakos
 #include "SmallCar.hpp"
 #include "BigCar.hpp"
@@ -21,22 +23,35 @@ namespace zpr
 	void Controller::mainLoop()
 	{
 		//// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
-		//parseDispatcher("xml_data\\dispatcher.xml");
+		parseDispatcher("xml_data\\dispatcher.xml");
 
 		//// wczytanie mapy drog
 		parseMap("xml_data\\streets.xml");
 
 		//// wczyutanie obiektow
-		//parseObjects("xml_data\\objects.xml");
+		parseObjects("xml_data\\objects.xml");
 
 		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
 		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
 		//// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
 
-		//model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
+		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
+		// a wczytanie zapetlic az beda jakies obiekty
 
-		View view(model_);
-		view.loop();
+		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
+		view_.model(&model_);
+		model_.xxx = 0;
+		model_.yyy = 100;
+		
+
+		while (1)
+		{
+			Sleep(1); // timer
+			model_.nextStep(1);
+			model_.xxx += 1;
+			model_.yyy += 1;
+			view_.refresh();
+		}
 	}
 
 	void Controller::parseDispatcher(const char *path)
@@ -54,8 +69,8 @@ namespace zpr
 				// get cam parameteres
 				int id = v.second.get<int>("id");
 				Point position( v.second.get<double>("position.<xmlattr>.x"), v.second.get<double>("position.<xmlattr>.y") );
-				double direction = v.second.get<double>("direction") / 360.0;
-				double angle = v.second.get<double>("angle") / 360;
+				double direction = v.second.get<double>("direction");
+				double angle = v.second.get<double>("angle");
 				double range = v.second.get<double>("range");
 				double precision = v.second.get<double>("precision");
 

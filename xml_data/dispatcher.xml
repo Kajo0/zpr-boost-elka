@@ -3,26 +3,26 @@
 <dispatcher>
 	<camera>
 		<id>0</id>
-		<position x="50.0" y="23.7" />
-		<direction>93.0</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
+		<position x="500.0" y="500" />
+		<direction>225</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
 		<angle>20.0</angle> 		<!-- kat w stopniach -->
-		<range>20.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
+		<range>100.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
 		<precision>0.98</precision> <!-- 98% precyzji -->
 	</camera>
 	<camera>
 		<id>1</id>
-		<position x="20.0" y="13.7" />
-		<direction>193.0</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
-		<angle>6.0</angle> 		<!-- kat w stopniach -->
-		<range>10.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
+		<position x="450.0" y="250" />
+		<direction>0</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
+		<angle>30.0</angle> 		<!-- kat w stopniach -->
+		<range>150.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
 		<precision>0.48</precision> <!-- 98% precyzji -->
 	</camera>
 	<camera>
-		<id>0</id>
-		<position x="50.0" y="23.7" />
-		<direction>93.0</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
-		<angle>20.0</angle> 		<!-- kat w stopniach -->
-		<range>20.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
+		<id>3</id>
+		<position x="100.0" y="100" />
+		<direction>45</direction> <!-- kierunek w ktorym patrzy kamera, a kat dzieli sie po polowie na obie strony tego kierunku; niech kierunek bedzie odchyleniem (kat w stopniach) od patrzenia na polnoc zgodnie z ruchem wskazowek zegara;-->
+		<angle>120.0</angle> 		<!-- kat w stopniach -->
+		<range>200.0</range> 		<!-- zasieg w metrach; pole widzenia zaokraglone - wycinek kola-->
 		<precision>0.98</precision> <!-- 98% precyzji -->
 	</camera>
 </dispatcher>

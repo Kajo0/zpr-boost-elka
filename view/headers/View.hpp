@@ -16,12 +16,15 @@ namespace zpr
 		ALLEGRO_DISPLAY *display_; // tu mamy nasz frame i wsio chyba w jednym
 		ALLEGRO_EVENT_QUEUE *eventQueue_; // tu eventy typu tez X on close
 		
-		Model model_;
+		Model *model_;
 
 		public:
-		View(Model model); // tylko to tesow gui
+		View(); // tylko to tesow gui
 		virtual ~View();
 
+		void model(Model *model) { model_ = model; }
+
+		void refresh();
 		void loop();
 	};
 }

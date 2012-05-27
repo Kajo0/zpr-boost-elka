@@ -3,7 +3,7 @@
 
 #include <map>
 #include "Camera.hpp"
-#include <boost\shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace zpr
 {
@@ -16,7 +16,7 @@ namespace zpr
 		typedef boost::shared_ptr<Camera> PCamera;
 		typedef std::map<int, PCamera> MCamera;
 
-		private:
+	private:public:
 		MCamera cameras_;
 
 		public:
