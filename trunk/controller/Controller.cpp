@@ -15,14 +15,53 @@ namespace zpr
 {
 	Controller::Controller(const boost::filesystem::path & path)
 	{
-		//// wczytanie pathow, odpalenie symulacji, ewentualnie przed wyklikanie, proste menu tu na razie, potem zdarzenia z view jakos tu przewalic
-		parseDispatcher(path / "xml_data\\dispatcher.xml");
+		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
-		//// wczytanie mapy drog
-		parseMap(path / "xml_data\\streets.xml");
+		std::string paths[] = { "xml_data/dispatcher.xml", "xml_data/streets.xml", "xml_data/objects.xml" };
+		std::string mesgs[] = { "Retype path (ex. '", "') or type 'q' to exti:\n\t", "No matching path like: " };
+		
+		// to na razie
+		for (int i = 0; i < 3; ++i)
+		{
+			while ( !boost::filesystem::exists(path / paths[i]) )
+			{
+				std::string msg = mesgs[2];
+				msg.append(paths[i]);
 
-		//// wczyutanie obiektow
-		parseObjects(path / "xml_data\\objects.xml");
+				Logger::getInstance().message(msg);
+
+				std::cout<<mesgs[0]<<paths[i]<<mesgs[1];
+				std::cin>>paths[i];
+
+				if (paths[i] == "q")
+				{
+					msg = "Quit without starting application while trying to load ";
+					msg.append(paths[i]);
+
+					Logger::getInstance().message(msg);
+
+					exit(0);
+				}
+			}
+		}
+
+		try
+		{
+			parseDispatcher(path / paths[0]);
+
+			parseMap(path / paths[1]);
+
+			parseObjects(path / paths[2]);
+		}
+		catch(std::exception &e)
+		{
+			Logger::getInstance().message(e.what());
+
+			std::cout<<"Please check log";
+
+			exit(0);
+		}
+
 		
 		mainLoop();
 	}
@@ -79,18 +118,15 @@ namespace zpr
 				// add camera
 				model_.dispatcher_.addCamera( Dispatcher::PCamera(new Camera(id, position, direction, angle, range, precision)) );
 			}
-		}	// TODO sprytnie jakos obsluzyc te exceptiony - moze lapac je w loopie i pytac o poprawienie albo o poprawna sciezke lub czy uruchomic bez kamer
-		catch (boost::property_tree::xml_parser_error&)
-		{
-			Logger::getInstance().message("No files with cameras !!");
 		}
-		catch (boost::property_tree::ptree_bad_path&)
+		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			Logger::getInstance().message("Error while reading tree nodes: node doesn't exist !");
-		}
-		catch (std::exception &e)
-		{
-			Logger::getInstance().message(e.what());
+			std::string msg = e.what();
+			msg.append(" : in file (");
+			msg.append(path.string());
+			msg.append(")");
+
+			throw std::exception(msg.c_str());
 		}
 	}
 
@@ -132,18 +168,15 @@ namespace zpr
 					}
 				}
 			}
-		}	// TODO sprytnie jakos obsluzyc te exceptiony - moze lapac je w loopie i pytac o poprawienie albo o poprawna sciezke lub czy uruchomic bez kamer
-		catch (boost::property_tree::xml_parser_error&)
-		{
-			Logger::getInstance().message("No files with map !!");
 		}
-		catch (boost::property_tree::ptree_bad_path&)
+		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			Logger::getInstance().message("Error while reading tree nodes: node doesn't exist !");
-		}
-		catch (std::exception &e)
-		{
-			Logger::getInstance().message(e.what());
+			std::string msg = e.what();
+			msg.append(" : in file (");
+			msg.append(path.string());
+			msg.append(")");
+
+			throw std::exception(msg.c_str());
 		}
 	}
 
@@ -206,18 +239,15 @@ namespace zpr
 					}
 				}
 			}
-		}	// TODO sprytnie jakos obsluzyc te exceptiony - moze lapac je w loopie i pytac o poprawienie albo o poprawna sciezke lub czy uruchomic bez kamer
-		catch (boost::property_tree::xml_parser_error&)
-		{
-			Logger::getInstance().message("No files with objets !!");
 		}
-		catch (boost::property_tree::ptree_bad_path&)
+		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			Logger::getInstance().message("Error while reading tree nodes: node doesn't exist !");
-		}
-		catch (std::exception &e)
-		{
-			Logger::getInstance().message(e.what());
+			std::string msg = e.what();
+			msg.append(" : in file (");
+			msg.append(path.string());
+			msg.append(")");
+
+			throw std::exception(msg.c_str());
 		}
 	}
 }
