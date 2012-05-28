@@ -15,7 +15,10 @@ namespace zpr
 	 * Sth about model
 	 */
 	class Model
-	{public:
+	{
+	
+	public:
+		static const long long int TIME_SCALE = 1000; // 1ms symulacji == 1s prawdziwa
 		friend class Controller;
 		friend class View; // to tylko teraz do ulatwienia sporego testu
 
