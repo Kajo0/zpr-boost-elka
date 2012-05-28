@@ -64,6 +64,8 @@ namespace zpr
 				model->nextStep(10);
 				model->xxx += 1;
 				model->yyy += 1;
+
+				view->ScheduleRefresh();
 				/*DEBUG*/// std::cout << "ModelUpdater model updated." << std::endl;
 				//view->refresh();
 				/*DEBUG*/// std::cout << "ModelUpdater done." << std::endl;
@@ -71,7 +73,7 @@ namespace zpr
 		}
 	}
 
-	Controller::Controller(const boost::filesystem::path & path)
+	Controller::Controller(const boost::filesystem::path & path) : view_(model_)
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
@@ -138,27 +140,33 @@ namespace zpr
 		// a wczytanie zapetlic az beda jakies obiekty
 		
 		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
-		view_.model(&model_);
+		//view_.model(&model_);
 		model_.xxx = 0;
 		model_.yyy = 100;
 		
+		//View view(model_);
+		viewThread = boost::thread(boost::ref(view_));
+
 		ModelUpdater m;
 		m.model = &model_;
 		m.view = &view_;
 		modelUpdater = boost::thread(m);
 
+		
 		Timer mainTimer(boost::chrono::milliseconds(10));
 		mainTimer.AddListener(modelUpdater);
 		timer = boost::thread(mainTimer);
 
-		while (1)
-		{
-			Sleep(1); // timer
+		viewThread.join();
+		std::cout << "View thread joined." << std::endl;
+		//while (1)
+		//{
+		//	Sleep(1); // timer
 			/*model_.nextStep(1);
 			model_.xxx += 1;
 			model_.yyy += 1;*/
-			view_.refresh();
-		}
+			//view_.refresh();
+		//}
 	}
 
 	void Controller::parseDispatcher(const boost::filesystem::path & path)
