@@ -4,7 +4,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <vector>
-#include <boost/thread/thread.hpp>
+#include <boost/foreach.hpp>
 #include <boost/bind/bind.hpp>
 //TODO fabryczka jakos
 #include "SmallCar.hpp"
@@ -13,6 +13,64 @@
 
 namespace zpr
 {
+	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency)
+	{}
+
+	void Timer::AddListener(boost::thread & listener)
+	{
+		listeners_.push_back(&listener);
+	}
+
+	Timer::TimePoint Timer::Now() const
+	{
+		return boost::chrono::high_resolution_clock::now();
+	}
+
+	Timer::Duration Timer::Elapsed(const TimePoint & since) const
+	{
+		return Now() - since;
+	}
+
+	void Timer::operator()()
+	{
+		/*DEBUG*/ std::cout << "Timer starts." << std::endl;
+		while(!boost::this_thread::interruption_requested())
+		{
+			/**/ TimePoint prev = Now();
+			TimePoint nextTick = Now() + frequency_;
+			while(nextTick > Now())
+				;//boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+
+			/*DEBUG*/// std::cout << "Timer:\t" << boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev) << " -> " << Now() << std::endl;
+
+			BOOST_FOREACH(boost::thread * current, listeners_)
+				current->interrupt();
+		}
+		/*DEBUG*/ std::cout << "Timer gracefully ends." << std::endl;
+	}
+
+	void ModelUpdater::operator()()
+	{
+		while(1)
+		{
+			try
+			{
+				/*DEBUG*/// std::cout << "ModelUpdater sleeps." << std::endl;
+				boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+			}
+			catch(boost::thread_interrupted)
+			{
+				/*DEBUG*/// std::cout << "ModelUpdater woken." << std::endl;
+				model->nextStep(10);
+				model->xxx += 1;
+				model->yyy += 1;
+				/*DEBUG*/// std::cout << "ModelUpdater model updated." << std::endl;
+				//view->refresh();
+				/*DEBUG*/// std::cout << "ModelUpdater done." << std::endl;
+			}
+		}
+	}
+
 	Controller::Controller(const boost::filesystem::path & path)
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
@@ -78,19 +136,27 @@ namespace zpr
 
 		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
 		// a wczytanie zapetlic az beda jakies obiekty
-
+		
 		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
 		view_.model(&model_);
 		model_.xxx = 0;
 		model_.yyy = 100;
 		
+		ModelUpdater m;
+		m.model = &model_;
+		m.view = &view_;
+		modelUpdater = boost::thread(m);
+
+		Timer mainTimer(boost::chrono::milliseconds(10));
+		mainTimer.AddListener(modelUpdater);
+		timer = boost::thread(mainTimer);
 
 		while (1)
 		{
 			Sleep(1); // timer
-			model_.nextStep(1);
+			/*model_.nextStep(1);
 			model_.xxx += 1;
-			model_.yyy += 1;
+			model_.yyy += 1;*/
 			view_.refresh();
 		}
 	}
