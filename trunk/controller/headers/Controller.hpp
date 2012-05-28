@@ -6,7 +6,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
-#include <boost/signal.hpp>
+//#include <boost/signal.hpp>
 #include <boost/chrono.hpp>
 
 namespace zpr
@@ -45,7 +45,7 @@ namespace zpr
 	{
 		Model model_;
 		View view_;
-		boost::thread timer, modelUpdater;
+		boost::thread timer, modelUpdater, viewThread;
 
 		public:
 		Controller(const boost::filesystem::path & path);

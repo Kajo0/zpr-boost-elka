@@ -1,8 +1,9 @@
 #ifndef VIEW_HPP
 #define VIEW_HPP
 
-#include <allegro5/allegro.h>
 #include "Model.hpp"
+#include <allegro5/allegro.h>
+#include <boost/thread.hpp>
 
 namespace zpr
 {
@@ -16,16 +17,27 @@ namespace zpr
 		ALLEGRO_DISPLAY *display_; // tu mamy nasz frame i wsio chyba w jednym
 		ALLEGRO_EVENT_QUEUE *eventQueue_; // tu eventy typu tez X on close
 		
-		Model *model_;
+		Model & model_;
+
+		void InitializeGraphics();
+		void CloseGraphics();
+		void refresh();
+
+		boost::condition_variable refreshCondition_;
+		bool doRefresh_;
+		boost::mutex refreshMutex_;
 
 		public:
-		View(); // tylko to tesow gui
-		virtual ~View();
+		View(Model & model); // tylko to tesow gui
+		~View();
 
-		void model(Model *model) { model_ = model; }
+		//void model(Model *model) { model_ = model; }
+		//void loop();
 
-		void refresh();
-		void loop();
+		void operator()();
+		void ScheduleRefresh();
+
+		friend void OnCLose();
 	};
 }
 #endif // VIEW_HPP

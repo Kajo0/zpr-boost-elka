@@ -10,15 +10,16 @@
 
 namespace zpr
 {
-	const int View::WINDOW_WIDTH			= 800;
-	const int View::WINDOW_HEIGHT			= 600;
-	const int View::VISUALISATION_WIDTH		= 600;
+	const int View::WINDOW_WIDTH		= 800;
+	const int View::WINDOW_HEIGHT		= 600;
+	const int View::VISUALISATION_WIDTH	= 600;
 	const int View::VISUALISATION_HEIGHT	= 600;
 
-	View::View()
-	{
-		display_ = NULL;
+	View::View(Model & model) : model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)
+	{}
 
+	void View::InitializeGraphics()
+	{
 		if(!al_init()) // there is no view :(
 		{
 			fprintf(stderr, "failed to initialize allegro!\n");
@@ -53,17 +54,78 @@ namespace zpr
 		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
 	}
 
-	View::~View()
+	void View::CloseGraphics()
 	{
 		al_destroy_event_queue(eventQueue_);
 		al_destroy_display(display_);
+	}
+
+	View::~View()
+	{
+		//CloseGraphics();
+		//al_destroy_event_queue(eventQueue_);
+		//al_destroy_display(display_);
+	}
+
+	void View::ScheduleRefresh()
+	{
+		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
+			boost::lock_guard<boost::mutex> lock(refreshMutex_);
+			doRefresh_ = true;
+		}
+		refreshCondition_.notify_one();
+	}
+
+	void View::operator()()
+	{
+		try
+		{
+			InitializeGraphics();
+			
+			while(1)
+			{
+				{
+					boost::unique_lock<boost::mutex> lock(refreshMutex_);
+					while(!doRefresh_)
+						refreshCondition_.timed_wait(lock, boost::posix_time::milliseconds(10));
+
+					if(doRefresh_)
+					{
+						doRefresh_ = false;
+						refresh();
+					}
+				}
+
+				ALLEGRO_EVENT ev;
+				ALLEGRO_TIMEOUT timeout;
+				al_init_timeout(&timeout, 0.001);
+ 
+				bool get_event = al_wait_for_event_until(eventQueue_, &ev, &timeout);
+ 
+				if(get_event && ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+				{
+					std::cout << "Close pressed" << std::endl;
+					break;
+				}
+			}
+		}
+		catch(boost::thread_interrupted)
+		{
+			// thread interruption
+		}
+		catch(...)
+		{
+			// report and close gracefully
+		}
+		CloseGraphics();
+		std::cout << "View thread ending." << std::endl;
 	}
 
 
 	// taki zarys tylk ozmienic dostep do tych rzeczy i mamy wizualizacje
 	void View::refresh()
 	{
-		Graph g = model_->streets();
+		Graph g = model_.streets();
 			
 		al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
 
@@ -77,13 +139,13 @@ namespace zpr
 			al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, w / 2, al_map_rgb(200, 200, 200));
 		}
 		
-		for (Model::MCar::const_iterator it = model_->cars_.begin(); it != model_->cars_.end(); ++it)
+		for (Model::MCar::const_iterator it = model_.cars_.begin(); it != model_.cars_.end(); ++it)
 			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
 
-		for (Model::MWalker::const_iterator it = model_->walkers_.begin(); it != model_->walkers_.end(); ++it)
+		for (Model::MWalker::const_iterator it = model_.walkers_.begin(); it != model_.walkers_.end(); ++it)
 			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(200, 53, 206));
 
-		for (Dispatcher::MCamera::const_iterator it = model_->dispatcher_.cameras_.begin(); it != model_->dispatcher_.cameras_.end(); ++it)
+		for (Dispatcher::MCamera::const_iterator it = model_.dispatcher_.cameras_.begin(); it != model_.dispatcher_.cameras_.end(); ++it)
 		{
 			al_draw_filled_circle(it->second->position_.x_, it->second->position_.y_, 5, al_map_rgb(255,0,0));
 
@@ -93,7 +155,7 @@ namespace zpr
 		}
 
 
-		al_draw_filled_circle(model_->xxx, model_->yyy, 20, al_map_rgb(255,255,255));
+		al_draw_filled_circle(model_.xxx, model_.yyy, 20, al_map_rgb(255,255,255));
 
 		al_flip_display();	// swap buffers
 	}
