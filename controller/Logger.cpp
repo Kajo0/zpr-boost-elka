@@ -4,6 +4,7 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <boost/thread/mutex.hpp>
+#include <boost/filesystem.hpp>
 #include "Logger.hpp"
 
 namespace zpr
@@ -18,14 +19,12 @@ namespace zpr
 	Logger::Logger(): count_(0), output_(&std::cout) {
 
 		std::ofstream *out = new std::ofstream();
+		
+		boost::filesystem::path log_path("C:/Users/Acer/Desktop");//__FILE__);
+		log_path /= boost::lexical_cast<std::string>(time(0));
+		log_path.replace_extension(".txt");
 
-		//TODO zmienic na wzgledna ale ja lubie miec wsio
-		//		na pulpicie jak tego uzywam czesto :P
-		std::string path = "C:\\Users\\Acer\\Desktop\\";
-		path += boost::lexical_cast<std::string>(time(0));
-		path += ".txt";
-
-		out->open(path.c_str(), std::ios_base::app);
+		out->open(log_path.c_str(), std::ios_base::app);
 
 		if (out->is_open())
 			output_ = out;
