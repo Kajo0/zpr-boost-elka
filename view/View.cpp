@@ -1,9 +1,11 @@
+#include "Controller.hpp"
 #include "View.hpp"
 #include "Logger.hpp"
 
 #include <iostream>
 #include <stdio.h>
 #include <allegro5/allegro_primitives.h>
+#include <boost/make_shared.hpp>
 #include "Base.hpp"
 #include "VehicleTrack.hpp"
 #include "Walker.hpp"
@@ -33,7 +35,7 @@ namespace zpr
 		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color);
 	}
 
-	View::View(Model & model) :	model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)					
+	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)					
 	{
 		menuArea = AllegroRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
@@ -118,6 +120,7 @@ namespace zpr
 					//std::cout << "event" << std::endl;
 					if(allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 					{
+						controller_.scheduleEvent(boost::make_shared<EventClose>());
 						std::cout << "Close pressed" << std::endl;
 						run = false;
 					}
@@ -125,6 +128,7 @@ namespace zpr
 					{
 						if(allegroEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 						{
+							controller_.scheduleEvent(boost::make_shared<EventClose>());
 							std::cout << "Escape pressed" << std::endl;
 							run = false;
 						}
@@ -133,12 +137,12 @@ namespace zpr
 					{
 						Point p(allegroEvent.mouse.x, allegroEvent.mouse.y);
 						if(startButton.inside(p))
-							std::cout << "Start clicked" << std::endl;
+							controller_.scheduleEvent(boost::make_shared<EventStart>());
 						if(stopButton.inside(p))
-							std::cout << "Stop clicked" << std::endl;
+							controller_.scheduleEvent(boost::make_shared<EventStop>());
 						if(exitButton.inside(p))
 						{
-							std::cout << "Exit clicked" << std::endl;
+							controller_.scheduleEvent(boost::make_shared<EventClose>());
 							run = false;
 						}
 					}

@@ -15,7 +15,7 @@
 
 namespace zpr
 {
-	Controller::Controller(const boost::filesystem::path & path) : view_(model_)
+	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
@@ -58,6 +58,15 @@ namespace zpr
 		mainTimer.AddListener(boost::bind(&View::scheduleRefresh, &view_));
 		timerThread = boost::thread(mainTimer);
 	}
+	
+	void Controller::scheduleEvent(const boost::shared_ptr<Event> & newEvent)
+	{
+		{
+			boost::lock_guard<boost::mutex> lock(eventMutex_);
+			eventQueue_.push(newEvent);
+		}
+		eventCondition_.notify_one();
+	}
 
 	void Controller::start()
 	{
@@ -68,7 +77,17 @@ namespace zpr
 		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
 		// a wczytanie zapetlic az beda jakies obiekty
 				
-
+		while(run_)
+		{
+			
+			boost::unique_lock<boost::mutex> lock(eventMutex_);
+			while(eventQueue_.empty())
+				eventCondition_.wait(lock);
+					
+			boost::shared_ptr<Event> ev = eventQueue_.front();
+			eventQueue_.pop();
+			ev->accept(*this);
+		}
 
 		viewThread.join(); //// ends with user request
 		timerThread.interrupt();
@@ -80,6 +99,22 @@ namespace zpr
 		std::cout << "Timer thread joined." << std::endl;
 		modelThread.join();
 		std::cout << "Model thread joined. Simulation ending." << std::endl;
+	}
+
+	void Controller::Process(EventStart&)
+	{
+		std::cout << "Start event." << std::endl;
+	}
+
+	void Controller::Process(EventStop&)
+	{
+		std::cout << "Stop event." << std::endl;
+	}
+
+	void Controller::Process(EventClose&)
+	{
+		std::cout << "Close event." << std::endl;
+		run_ = false;
 	}
 
 	void Controller::parseDispatcher(const boost::filesystem::path & path)
