@@ -4,6 +4,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <vector>
+#include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/bind/bind.hpp>
 //TODO fabryczka jakos
@@ -16,9 +17,9 @@ namespace zpr
 	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency)
 	{}
 
-	void Timer::AddListener(boost::thread & listener)
+	void Timer::AddListener(boost::function<void ()> listener)
 	{
-		listeners_.push_back(&listener);
+		listeners_.push_back(listener);
 	}
 
 	Timer::TimePoint Timer::Now() const
@@ -39,38 +40,17 @@ namespace zpr
 			/**/ TimePoint prev = Now();
 			TimePoint nextTick = Now() + frequency_;
 			while(nextTick > Now())
-				;//boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+			{
+				boost::this_thread::yield();
+				boost::this_thread::sleep(boost::posix_time::milliseconds(1)); // DEBUG! tylko zeby zmniejszyc zuzycie procka, trzeba ladniej wymyslic
+			}
 
 			/*DEBUG*/// std::cout << "Timer:\t" << boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev) << " -> " << Now() << std::endl;
 
-			BOOST_FOREACH(boost::thread * current, listeners_)
-				current->interrupt();
+			BOOST_FOREACH(boost::function<void ()> & current, listeners_)
+				current();
 		}
 		/*DEBUG*/ std::cout << "Timer gracefully ends." << std::endl;
-	}
-
-	void ModelUpdater::operator()()
-	{
-		while(1)
-		{
-			try
-			{
-				/*DEBUG*/// std::cout << "ModelUpdater sleeps." << std::endl;
-				boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
-			}
-			catch(boost::thread_interrupted)
-			{
-				/*DEBUG*/// std::cout << "ModelUpdater woken." << std::endl;
-				model->nextStep(10);
-				model->xxx += 1;
-				model->yyy += 1;
-
-				view->ScheduleRefresh();
-				/*DEBUG*/// std::cout << "ModelUpdater model updated." << std::endl;
-				//view->refresh();
-				/*DEBUG*/// std::cout << "ModelUpdater done." << std::endl;
-			}
-		}
 	}
 
 	Controller::Controller(const boost::filesystem::path & path) : view_(model_)
@@ -78,7 +58,7 @@ namespace zpr
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
 		std::string paths[] = { "xml_data/dispatcher.xml", "xml_data/streets.xml", "xml_data/objects.xml" };
-		std::string mesgs[] = { "Retype path (ex. '", "') or type 'q' to exti:\n\t", "No matching path like: " };
+		std::string mesgs[] = { "Retype path (ex. '", "') or type 'q' to exit:\n\t", "No matching path like: " };
 		
 		// to na razie
 		for (int i = 0; i < 3; ++i)
@@ -97,76 +77,48 @@ namespace zpr
 				{
 					msg = "Quit without starting application while trying to load ";
 					msg.append(paths[i]);
-
-					Logger::getInstance().message(msg);
-
-					exit(0);
+					throw(std::exception(msg.c_str()));
 				}
 			}
 		}
 
-		try
-		{
-			parseDispatcher(path / paths[0]);
-
-			parseMap(path / paths[1]);
-
-			parseObjects(path / paths[2]);
-		}
-		catch(std::exception &e)
-		{
-			Logger::getInstance().message(e.what());
-
-			std::cout<<"Please check log";
-
-			exit(0);
-		}
-
-		
+		// punkt wyjscia z programu jest jeden, zandych exit(0); stad wyjatki poleca do maina
+		parseDispatcher(path / paths[0]);
+		parseMap(path / paths[1]);
+		parseObjects(path / paths[2]);
+				
 		mainLoop();
 	}
 
-	Controller::~Controller() {}
-
 	void Controller::mainLoop()
 	{
-		
-
 		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
 		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
 		//// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
 
 		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
 		// a wczytanie zapetlic az beda jakies obiekty
-		
+
 		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
 		//view_.model(&model_);
-		model_.xxx = 0;
-		model_.yyy = 100;
 		
 		//View view(model_);
 		viewThread = boost::thread(boost::ref(view_));
-
-		ModelUpdater m;
-		m.model = &model_;
-		m.view = &view_;
-		modelUpdater = boost::thread(m);
-
-		
+		modelThread = boost::thread(boost::ref(model_));
+				
 		Timer mainTimer(boost::chrono::milliseconds(10));
-		mainTimer.AddListener(modelUpdater);
+		mainTimer.AddListener(boost::bind(&Model::scheduleUpdate, &model_));
+		mainTimer.AddListener(boost::bind(&View::scheduleRefresh, &view_));
 		timer = boost::thread(mainTimer);
 
-		viewThread.join();
+		viewThread.join(); //// ends with user request
 		std::cout << "View thread joined." << std::endl;
-		//while (1)
-		//{
-		//	Sleep(1); // timer
-			/*model_.nextStep(1);
-			model_.xxx += 1;
-			model_.yyy += 1;*/
-			//view_.refresh();
-		//}
+		timer.interrupt();
+		timer.join();
+		std::cout << "Timer thread joined." << std::endl;
+		modelThread.interrupt();
+		modelThread.join();
+		std::cout << "Model thread joined. Simulation ending." << std::endl;
 	}
 
 	void Controller::parseDispatcher(const boost::filesystem::path & path)

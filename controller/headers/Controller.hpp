@@ -6,7 +6,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
-//#include <boost/signal.hpp>
+#include <boost/function.hpp>
 #include <boost/chrono.hpp>
 
 namespace zpr
@@ -21,35 +21,23 @@ namespace zpr
 		TimePoint Now() const;
 		Duration Elapsed(const TimePoint & since) const;
 		
-		void AddListener(boost::thread & listener);
+		void AddListener(boost::function<void ()> listener);
 		void operator()();
 		
 	private:
 		Duration frequency_;
-		std::deque<boost::thread*> listeners_;
-	};
-
-	class ModelUpdater
-	{
-	public:
-		//ModelUpdater();
-		Model *model;
-		View *view;
-		void operator()();
-
-	private:
-		//boost::signal<void ()> process_;
+		//std::deque<boost::thread*> listeners_;
+		std::deque<boost::function<void ()> > listeners_;
 	};
 
 	class Controller
 	{
 		Model model_;
 		View view_;
-		boost::thread timer, modelUpdater, viewThread;
+		boost::thread timer, modelThread, viewThread;
 
 		public:
 		Controller(const boost::filesystem::path & path);
-		virtual ~Controller();
 
 		private:
 		void mainLoop(); // tu bym to zapetlil calosc
