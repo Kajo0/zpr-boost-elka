@@ -11,37 +11,17 @@
 
 namespace zpr
 {
-	class Timer
-	{
-	public:
-		typedef boost::chrono::high_resolution_clock::time_point TimePoint;
-		typedef boost::chrono::high_resolution_clock::duration Duration;
-
-		Timer(const Duration & frequency);
-		TimePoint Now() const;
-		Duration Elapsed(const TimePoint & since) const;
-		
-		void AddListener(boost::function<void ()> listener);
-		void operator()();
-		
-	private:
-		Duration frequency_;
-		//std::deque<boost::thread*> listeners_;
-		std::deque<boost::function<void ()> > listeners_;
-	};
-
 	class Controller
 	{
 		Model model_;
 		View view_;
-		boost::thread timer, modelThread, viewThread;
+		boost::thread timerThread, modelThread, viewThread;
 
 		public:
 		Controller(const boost::filesystem::path & path);
+		void start(); // tu bym to zapetlil calosc
 
 		private:
-		void mainLoop(); // tu bym to zapetlil calosc
-
 		// parsing functions
 		void parseMap(const boost::filesystem::path & path);
 		void parseDispatcher(const boost::filesystem::path & path);
