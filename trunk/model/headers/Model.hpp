@@ -7,6 +7,7 @@
 #include "Graph.hpp"
 #include <map>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 
 namespace zpr
 {
@@ -32,13 +33,20 @@ namespace zpr
 		MWalker walkers_;
 		Graph streets_;
 
-		public: double xxx, yyy;
+		boost::condition_variable updateCondition_;
+		bool doUpdate_;
+		boost::mutex updateMutex_;
+
+		public:
 		Model();
 		virtual ~Model();
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
 		void nextStep(const long elapsed_time);
 
 		Graph& streets() { return streets_; } // testowe do view
+
+		void operator()();
+		void scheduleUpdate();
 	};
 }
 

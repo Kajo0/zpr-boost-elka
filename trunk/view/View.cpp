@@ -1,4 +1,5 @@
 #include "View.hpp"
+#include "Logger.hpp"
 
 #include <iostream>
 #include <stdio.h>
@@ -14,60 +15,48 @@ namespace zpr
 	const int View::WINDOW_HEIGHT		= 600;
 	const int View::VISUALISATION_WIDTH	= 600;
 	const int View::VISUALISATION_HEIGHT	= 600;
+	const int View::ALLEGRO_EVENT_TIMEOUT	= 10;
+
+	AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str())
+	{}
 
 	View::View(Model & model) : model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)
 	{}
 
-	void View::InitializeGraphics()
+	void View::initializeGraphics()
 	{
 		if(!al_init()) // there is no view :(
-		{
-			fprintf(stderr, "failed to initialize allegro!\n");
-			return;
-		}
+			throw AllegroException("Failed to initialize allegro!");
 
 		display_ = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
-
 		if(!display_)
-		{
-			fprintf(stderr, "failed to create display!\n");
-			return;
-		}
+			throw AllegroException("Failed to create display!");
 
 		eventQueue_ = al_create_event_queue();
-
 		if(!eventQueue_)
-		{
-			fprintf(stderr, "failed to create event_queue!\n");
-			al_destroy_display(display_);
-			return;
-		}
+			throw AllegroException("Failed to create event_queue!");
 		
-		al_set_window_title(display_, "Our great fancy View frame");
-		al_init_primitives_addon();	// init dla prymitowow
+		if(!al_init_primitives_addon())	// init dla prymitowow
+			throw AllegroException("Failed to initialize addons!");
 
+		if(!al_install_keyboard())
+			throw AllegroException("Failed to install keyboard!");
+		if(!al_install_mouse())
+			throw AllegroException("Failed to install mouse!");
+
+		al_set_window_title(display_, "ZPR::Symulator");
 		al_register_event_source(eventQueue_, al_get_display_event_source(display_)); // bind displaya do eventow kolejki
-
-		al_install_keyboard();
-		al_install_mouse();
 		al_register_event_source(eventQueue_, al_get_mouse_event_source());
 		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
 	}
 
-	void View::CloseGraphics()
+	void View::closeGraphics()
 	{
 		al_destroy_event_queue(eventQueue_);
 		al_destroy_display(display_);
 	}
 
-	View::~View()
-	{
-		//CloseGraphics();
-		//al_destroy_event_queue(eventQueue_);
-		//al_destroy_display(display_);
-	}
-
-	void View::ScheduleRefresh()
+	void View::scheduleRefresh()
 	{
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
 			boost::lock_guard<boost::mutex> lock(refreshMutex_);
@@ -80,14 +69,16 @@ namespace zpr
 	{
 		try
 		{
-			InitializeGraphics();
+			initializeGraphics();
 			
+			ALLEGRO_EVENT allegroEvent;
 			while(1)
 			{
+				//// Waiting for refresh signal
 				{
 					boost::unique_lock<boost::mutex> lock(refreshMutex_);
 					while(!doRefresh_)
-						refreshCondition_.timed_wait(lock, boost::posix_time::milliseconds(10));
+						refreshCondition_.timed_wait(lock, boost::posix_time::milliseconds(ALLEGRO_EVENT_TIMEOUT));
 
 					if(doRefresh_)
 					{
@@ -95,19 +86,30 @@ namespace zpr
 						refresh();
 					}
 				}
+				
 
-				ALLEGRO_EVENT ev;
-				ALLEGRO_TIMEOUT timeout;
-				al_init_timeout(&timeout, 0.001);
- 
-				bool get_event = al_wait_for_event_until(eventQueue_, &ev, &timeout);
- 
-				if(get_event && ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+				//// Allegro event queue checking
+				if(al_get_next_event(eventQueue_, &allegroEvent))
 				{
-					std::cout << "Close pressed" << std::endl;
-					break;
+					if(allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+					{
+						std::cout << "Close pressed" << std::endl;
+						break;
+					}
+					else if(allegroEvent.type == ALLEGRO_EVENT_KEY_UP)
+					{
+						if(allegroEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
+						{
+							std::cout << "Escape pressed" << std::endl;
+							break;
+						}
+					}
 				}
 			}
+		}
+		catch(zpr::AllegroException & e)
+		{
+			Logger::getInstance().message(e.what());
 		}
 		catch(boost::thread_interrupted)
 		{
@@ -115,9 +117,9 @@ namespace zpr
 		}
 		catch(...)
 		{
-			// report and close gracefully
+			Logger::getInstance().message("Unknown View exception.");
 		}
-		CloseGraphics();
+		closeGraphics();
 		std::cout << "View thread ending." << std::endl;
 	}
 
@@ -153,9 +155,6 @@ namespace zpr
 						it->second->direction_ - it->second->angle_ / 2, it->second->angle_,
 						al_map_rgba(200,0,0,10));
 		}
-
-
-		al_draw_filled_circle(model_.xxx, model_.yyy, 20, al_map_rgb(255,255,255));
 
 		al_flip_display();	// swap buffers
 	}
