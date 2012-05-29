@@ -2,6 +2,7 @@
 #define VIEW_HPP
 
 #include "Model.hpp"
+#include "Base.hpp"
 #include <allegro5/allegro.h>
 #include <boost/thread.hpp>
 
@@ -11,6 +12,17 @@ namespace zpr
 	{
 	public:
 		AllegroException(const std::string & message);
+	};
+
+	struct AllegroRectangle
+	{
+	public:
+		Point topLeft_, bottomRight_;
+		AllegroRectangle(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0);
+		AllegroRectangle(const Point & topLeft, const Point & bottomRight);
+		
+		bool inside(const Point & check) const;
+		void drawFilled(const ALLEGRO_COLOR & color) const ;
 	};
 
 	class View
@@ -29,10 +41,13 @@ namespace zpr
 		void initializeGraphics();
 		void closeGraphics();
 		void refresh();
+		void drawMenu();
 
 		boost::condition_variable refreshCondition_;
 		bool doRefresh_;
 		boost::mutex refreshMutex_;
+
+		AllegroRectangle menuArea, startButton, stopButton, exitButton;
 
 		public:
 		View(Model & model); // tylko to tesow gui

@@ -20,8 +20,32 @@ namespace zpr
 	AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str())
 	{}
 
-	View::View(Model & model) : model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)
-	{}
+	AllegroRectangle::AllegroRectangle(const Point & topLeft, const Point & bottomRight) :topLeft_(topLeft), bottomRight_(bottomRight) {}
+	AllegroRectangle::AllegroRectangle(int x1, int y1, int x2, int y2) :topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)) {}
+
+	bool AllegroRectangle::inside(const Point & check) const
+	{
+		return inRange(topLeft_.x_, bottomRight_.x_, check.x_) && inRange(topLeft_.y_, bottomRight_.y_, check.y_);
+	}
+
+	void AllegroRectangle::drawFilled(const ALLEGRO_COLOR & color) const
+	{
+		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color);
+	}
+
+	View::View(Model & model) :	model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)					
+	{
+		menuArea = AllegroRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		
+		int xMargin = 20, yMargin = 20, height = 40;
+		int yOffset = yMargin;
+		startButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
+		yOffset += height + yMargin;
+		stopButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
+		yOffset += height + yMargin;
+		exitButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
+		yOffset += height + yMargin;
+	}
 
 	void View::initializeGraphics()
 	{
@@ -72,7 +96,8 @@ namespace zpr
 			initializeGraphics();
 			
 			ALLEGRO_EVENT allegroEvent;
-			while(1)
+			bool run = true;
+			while(run)
 			{
 				//// Waiting for refresh signal
 				{
@@ -87,21 +112,34 @@ namespace zpr
 					}
 				}
 				
-
 				//// Allegro event queue checking
-				if(al_get_next_event(eventQueue_, &allegroEvent))
+				while(al_get_next_event(eventQueue_, &allegroEvent))
 				{
+					//std::cout << "event" << std::endl;
 					if(allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 					{
 						std::cout << "Close pressed" << std::endl;
-						break;
+						run = false;
 					}
 					else if(allegroEvent.type == ALLEGRO_EVENT_KEY_UP)
 					{
 						if(allegroEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 						{
 							std::cout << "Escape pressed" << std::endl;
-							break;
+							run = false;
+						}
+					}
+					else if(allegroEvent.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+					{
+						Point p(allegroEvent.mouse.x, allegroEvent.mouse.y);
+						if(startButton.inside(p))
+							std::cout << "Start clicked" << std::endl;
+						if(stopButton.inside(p))
+							std::cout << "Stop clicked" << std::endl;
+						if(exitButton.inside(p))
+						{
+							std::cout << "Exit clicked" << std::endl;
+							run = false;
 						}
 					}
 				}
@@ -156,7 +194,17 @@ namespace zpr
 						al_map_rgba(200,0,0,10));
 		}
 
+		drawMenu();
 		al_flip_display();	// swap buffers
+	}
+
+	void View::drawMenu()
+	{
+		al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, al_map_rgb(0, 0, 0));
+		startButton.drawFilled(al_map_rgb(255,0,0));
+		stopButton.drawFilled(al_map_rgb(255,0,0));
+		exitButton.drawFilled(al_map_rgb(255,0,0));
+
 	}
 
 	//void View::loop()

@@ -11,48 +11,10 @@
 #include "SmallCar.hpp"
 #include "BigCar.hpp"
 #include "Walker.hpp"
+#include "Timer.hpp"
 
 namespace zpr
 {
-	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency)
-	{}
-
-	void Timer::AddListener(boost::function<void ()> listener)
-	{
-		listeners_.push_back(listener);
-	}
-
-	Timer::TimePoint Timer::Now() const
-	{
-		return boost::chrono::high_resolution_clock::now();
-	}
-
-	Timer::Duration Timer::Elapsed(const TimePoint & since) const
-	{
-		return Now() - since;
-	}
-
-	void Timer::operator()()
-	{
-		/*DEBUG*/ std::cout << "Timer starts." << std::endl;
-		while(!boost::this_thread::interruption_requested())
-		{
-			/**/ TimePoint prev = Now();
-			TimePoint nextTick = Now() + frequency_;
-			while(nextTick > Now())
-			{
-				boost::this_thread::yield();
-				boost::this_thread::sleep(boost::posix_time::milliseconds(1)); // DEBUG! tylko zeby zmniejszyc zuzycie procka, trzeba ladniej wymyslic
-			}
-
-			/*DEBUG*/// std::cout << "Timer:\t" << boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev) << " -> " << Now() << std::endl;
-
-			BOOST_FOREACH(boost::function<void ()> & current, listeners_)
-				current();
-		}
-		/*DEBUG*/ std::cout << "Timer gracefully ends." << std::endl;
-	}
-
 	Controller::Controller(const boost::filesystem::path & path) : view_(model_)
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
@@ -86,11 +48,18 @@ namespace zpr
 		parseDispatcher(path / paths[0]);
 		parseMap(path / paths[1]);
 		parseObjects(path / paths[2]);
-				
-		mainLoop();
+
+		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
+		viewThread = boost::thread(boost::ref(view_));
+		modelThread = boost::thread(boost::ref(model_));
+
+		Timer mainTimer(boost::chrono::milliseconds(10));
+		mainTimer.AddListener(boost::bind(&Model::scheduleUpdate, &model_));
+		mainTimer.AddListener(boost::bind(&View::scheduleRefresh, &view_));
+		timerThread = boost::thread(mainTimer);
 	}
 
-	void Controller::mainLoop()
+	void Controller::start()
 	{
 		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
 		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
@@ -98,25 +67,17 @@ namespace zpr
 
 		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
 		// a wczytanie zapetlic az beda jakies obiekty
-
-		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
-		//view_.model(&model_);
-		
-		//View view(model_);
-		viewThread = boost::thread(boost::ref(view_));
-		modelThread = boost::thread(boost::ref(model_));
 				
-		Timer mainTimer(boost::chrono::milliseconds(10));
-		mainTimer.AddListener(boost::bind(&Model::scheduleUpdate, &model_));
-		mainTimer.AddListener(boost::bind(&View::scheduleRefresh, &view_));
-		timer = boost::thread(mainTimer);
+
 
 		viewThread.join(); //// ends with user request
-		std::cout << "View thread joined." << std::endl;
-		timer.interrupt();
-		timer.join();
-		std::cout << "Timer thread joined." << std::endl;
+		timerThread.interrupt();
 		modelThread.interrupt();
+		
+		std::cout << "View thread joined." << std::endl;
+		
+		timerThread.join();
+		std::cout << "Timer thread joined." << std::endl;
 		modelThread.join();
 		std::cout << "Model thread joined. Simulation ending." << std::endl;
 	}

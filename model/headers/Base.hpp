@@ -22,6 +22,12 @@ namespace zpr
 		// TODO - remove it test only
 		friend std::ostream& operator<<(std::ostream&, Point &point);
 	};
+
+	template<typename T>
+	bool inRange(const T & downBound, const T & upBound, const T & value)
+	{
+		return downBound <= value && value <= upBound;
+	}
 }
 
 #endif // BASE_HPP
