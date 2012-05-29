@@ -8,6 +8,8 @@
 
 namespace zpr
 {
+	class Controller;
+
 	class AllegroException : public std::exception
 	{
 	public:
@@ -36,6 +38,7 @@ namespace zpr
 		ALLEGRO_DISPLAY *display_; // tu mamy nasz frame i wsio chyba w jednym
 		ALLEGRO_EVENT_QUEUE *eventQueue_; // tu eventy typu tez X on close
 		
+		Controller & controller_; // moze to jeszcze jakos inaczej, moze funkcja globalna
 		Model & model_;
 
 		void initializeGraphics();
@@ -50,7 +53,7 @@ namespace zpr
 		AllegroRectangle menuArea, startButton, stopButton, exitButton;
 
 		public:
-		View(Model & model); // tylko to tesow gui
+		View(Controller & controller, Model & model); // tylko to tesow gui
 
 		//void model(Model *model) { model_ = model; }
 		//void loop();
