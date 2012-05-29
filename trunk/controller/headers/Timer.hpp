@@ -14,15 +14,19 @@ namespace zpr
 		typedef boost::chrono::high_resolution_clock::duration Duration;
 
 		Timer(const Duration & frequency);
-		TimePoint Now() const;
-		Duration Elapsed(const TimePoint & since) const;
 		
-		void AddListener(boost::function<void ()> listener);
+		void start();
+		void stop();
+		
+		void AddListener(boost::function<void (long long int)> listener); // microseconds
 		void operator()();
 		
 	private:
+		TimePoint Now() const;
+		
+		bool active_;
 		Duration frequency_;
-		std::deque<boost::function<void ()> > listeners_;
+		std::deque<boost::function<void (long long int)> > listeners_;
 	};
 }
 #endif // TIMER_HPP

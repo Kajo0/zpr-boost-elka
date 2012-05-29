@@ -7,10 +7,20 @@
 
 namespace zpr
 {
-	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency)
+	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency), active_(true)
 	{}
 
-	void Timer::AddListener(boost::function<void ()> listener)
+	void Timer::start()
+	{
+		active_ = true;
+	}
+
+	void Timer::stop()
+	{
+		active_ = false;
+	}
+
+	void Timer::AddListener(boost::function<void (long long int)> listener)
 	{
 		listeners_.push_back(listener);
 	}
@@ -20,18 +30,13 @@ namespace zpr
 		return boost::chrono::high_resolution_clock::now();
 	}
 
-	Timer::Duration Timer::Elapsed(const TimePoint & since) const
-	{
-		return Now() - since;
-	}
-
 	void Timer::operator()()
 	{
 		/*DEBUG*/ std::cout << "Timer starts." << std::endl;
 		while(!boost::this_thread::interruption_requested())
 		{
-			/**/ TimePoint prev = Now();
-			TimePoint nextTick = Now() + frequency_;
+			TimePoint prev = Now();
+			TimePoint nextTick = prev + frequency_;
 			while(nextTick > Now())
 			{
 				boost::this_thread::yield();
@@ -39,9 +44,12 @@ namespace zpr
 			}
 
 			/*DEBUG*/// std::cout << "Timer:\t" << boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev) << " -> " << Now() << std::endl;
-
-			BOOST_FOREACH(boost::function<void ()> & current, listeners_)
-				current();
+			if(active_)
+			{
+				long long int elapsed = boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev).count();
+				BOOST_FOREACH(boost::function<void (long long int)> & current, listeners_)
+					current(elapsed);
+			}
 		}
 		/*DEBUG*/ std::cout << "Timer gracefully ends." << std::endl;
 	}
