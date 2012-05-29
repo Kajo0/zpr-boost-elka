@@ -34,7 +34,7 @@ namespace zpr
 		Graph streets_;
 
 		boost::condition_variable updateCondition_;
-		bool doUpdate_;
+		long long int elapsedMicroseconds_;
 		boost::mutex updateMutex_;
 
 		public:
@@ -46,7 +46,7 @@ namespace zpr
 		Graph& streets() { return streets_; } // testowe do view
 
 		void operator()();
-		void scheduleUpdate();
+		void scheduleUpdate(long long int elapsedMicroseconds);
 	};
 }
 

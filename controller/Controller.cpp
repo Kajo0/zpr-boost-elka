@@ -15,7 +15,7 @@
 
 namespace zpr
 {
-	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)
+	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true), timer_(boost::chrono::milliseconds(10))
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
@@ -50,13 +50,10 @@ namespace zpr
 		parseObjects(path / paths[2]);
 
 		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
-		viewThread = boost::thread(boost::ref(view_));
-		modelThread = boost::thread(boost::ref(model_));
-
-		Timer mainTimer(boost::chrono::milliseconds(10));
-		mainTimer.AddListener(boost::bind(&Model::scheduleUpdate, &model_));
-		mainTimer.AddListener(boost::bind(&View::scheduleRefresh, &view_));
-		timerThread = boost::thread(mainTimer);
+		
+		timer_.AddListener(boost::bind(&Model::scheduleUpdate, &model_, _1));
+		timer_.AddListener(boost::bind(&View::scheduleRefresh, &view_, _1));
+		
 	}
 	
 	void Controller::scheduleEvent(const boost::shared_ptr<Event> & newEvent)
@@ -68,15 +65,32 @@ namespace zpr
 		eventCondition_.notify_one();
 	}
 
-	void Controller::start()
+	
+	void Controller::runThreads()
 	{
-		//// tu mamy wczytane niby wsio, trza upieknic komunikacje pomiedzy modulami,
-		//// wypada uruchomic jakos timera i zeby rozpoczynal symulacje gdzies itp
-		//// ogolnie to czytanie tych xmli , fabryka, tworzenie obiektow do modelu trzeba pokminic i ladnie to zrobic
+		viewThread = boost::thread(boost::ref(view_));
+		modelThread = boost::thread(boost::ref(model_));
+		timerThread = boost::thread(boost::ref(timer_));
+	}
 
-		// po wczytaniu recznym mozliwosc wyklikania wlasego i start aplikacji -> tak to widze zeby nie komplikowac
-		// a wczytanie zapetlic az beda jakies obiekty
-				
+	void Controller::endThreads()
+	{
+		viewThread.join();
+		timerThread.interrupt();
+		modelThread.interrupt();
+		
+		std::cout << "View thread joined." << std::endl;
+		
+		timerThread.join();
+		std::cout << "Timer thread joined." << std::endl;
+
+		modelThread.join();
+		std::cout << "Model thread joined. Simulation ending." << std::endl;
+	}
+
+	void Controller::run()
+	{
+		runThreads();
 		while(run_)
 		{
 			
@@ -88,27 +102,19 @@ namespace zpr
 			eventQueue_.pop();
 			ev->accept(*this);
 		}
-
-		viewThread.join(); //// ends with user request
-		timerThread.interrupt();
-		modelThread.interrupt();
-		
-		std::cout << "View thread joined." << std::endl;
-		
-		timerThread.join();
-		std::cout << "Timer thread joined." << std::endl;
-		modelThread.join();
-		std::cout << "Model thread joined. Simulation ending." << std::endl;
+		endThreads();
 	}
 
 	void Controller::Process(EventStart&)
 	{
 		std::cout << "Start event." << std::endl;
+		timer_.start();
 	}
 
 	void Controller::Process(EventStop&)
 	{
 		std::cout << "Stop event." << std::endl;
+		timer_.stop();
 	}
 
 	void Controller::Process(EventClose&)

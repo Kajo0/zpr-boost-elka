@@ -47,7 +47,7 @@ namespace zpr
 		void drawMenu();
 
 		boost::condition_variable refreshCondition_;
-		bool doRefresh_;
+		long long int elapsedMicroseconds_;
 		boost::mutex refreshMutex_;
 
 		AllegroRectangle menuArea, startButton, stopButton, exitButton;
@@ -59,7 +59,7 @@ namespace zpr
 		//void loop();
 
 		void operator()();
-		void scheduleRefresh();
+		void scheduleRefresh(long long int elapsedMicroseconds);
 	};
 }
 #endif // VIEW_HPP

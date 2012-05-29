@@ -3,17 +3,17 @@
 
 namespace zpr
 {
-	Model::Model() : doUpdate_(false)
+	Model::Model() : elapsedMicroseconds_(-1)
 	{
 	}
 
 	Model::~Model() {}
 
-	void Model::scheduleUpdate()
+	void Model::scheduleUpdate(long long int elapsedMicroseconds)
 	{
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
-			doUpdate_ = true;
+			elapsedMicroseconds_ = elapsedMicroseconds;
 		}
 		updateCondition_.notify_one();
 	}
@@ -27,11 +27,11 @@ namespace zpr
 				//// Waiting for update signal
 				{
 					boost::unique_lock<boost::mutex> lock(updateMutex_);
-					while(!doUpdate_)
+					while(elapsedMicroseconds_ < 0)
 						updateCondition_.wait(lock);
 					
-					doUpdate_ = false;
-					nextStep(10);
+					nextStep(elapsedMicroseconds_/1000);
+					elapsedMicroseconds_ = -1;
 				}
 			}
 		}

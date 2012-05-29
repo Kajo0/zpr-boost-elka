@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	{
 		boost::filesystem::path applicationPath(argv[0]);
 		zpr::Controller controller(applicationPath.remove_filename());
-		controller.start();
+		controller.run();
 
 		std::cout << "\n\nSymulacja zakonczona. Wczytanie inta konczy program." << std::endl;
 	}

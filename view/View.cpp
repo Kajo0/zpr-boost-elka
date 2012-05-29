@@ -35,7 +35,7 @@ namespace zpr
 		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color);
 	}
 
-	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), doRefresh_(false)					
+	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), elapsedMicroseconds_(-1)					
 	{
 		menuArea = AllegroRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
@@ -82,11 +82,11 @@ namespace zpr
 		al_destroy_display(display_);
 	}
 
-	void View::scheduleRefresh()
+	void View::scheduleRefresh(long long int elapsedMicroseconds)
 	{
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
 			boost::lock_guard<boost::mutex> lock(refreshMutex_);
-			doRefresh_ = true;
+			elapsedMicroseconds_ = elapsedMicroseconds;
 		}
 		refreshCondition_.notify_one();
 	}
@@ -104,12 +104,12 @@ namespace zpr
 				//// Waiting for refresh signal
 				{
 					boost::unique_lock<boost::mutex> lock(refreshMutex_);
-					while(!doRefresh_)
+					//while(elapsedMicroseconds_ < 0)
 						refreshCondition_.timed_wait(lock, boost::posix_time::milliseconds(ALLEGRO_EVENT_TIMEOUT));
 
-					if(doRefresh_)
+					if(elapsedMicroseconds_ >= 0)
 					{
-						doRefresh_ = false;
+						elapsedMicroseconds_ = -1;
 						refresh();
 					}
 				}
