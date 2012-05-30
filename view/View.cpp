@@ -11,7 +11,7 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 #include "Base.hpp"
-#include "VehicleTrack.hpp"
+#include "Track.hpp"
 #include "Walker.hpp"
 #include "SmallCar.hpp"
 

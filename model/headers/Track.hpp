@@ -22,7 +22,7 @@ namespace zpr
 
 		public:
 		Track();
-		virtual ~Track();
+		virtual ~Track() = 0;
 		virtual void addPoint(Point point) = 0;
 		Point positionOnTrack(double percent);
 		Point start();
@@ -31,6 +31,31 @@ namespace zpr
 
 		protected:
 		void recalculateLength();
+	};
+
+	/**
+	 * Sth about - bezier corners
+	 */
+	class VehicleTrack : public Track
+	{
+		public:
+		/** Corner division amount */
+		static const double BEZIER_DIVISION; // 1.0 = 1m a miasto jak robimy wielkosciowo ?
+
+		void addPoint(Point point);
+
+		std::pair<Point, Point> bothBezierBetween(const Point &start, const Point &final, const Point &control);
+		// to ma liczyc to rozsuniecie - takie pomocnicze //
+		Point bezierBetween(const Point &control, const Point &final);
+	};
+
+	/**
+	 * Sth about - acute corners
+	 */
+	class WalkerTrack : public Track
+	{
+		public:
+		void addPoint(Point point);
 	};
 }
 
