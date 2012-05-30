@@ -16,14 +16,17 @@ namespace zpr
 		double x_, y_;
 
 		Point(double x = 0.0, double y = 0.0);
-		bool operator==(const Point &other);
-		static double distance(const Point &p1, const Point &p2);
-		static double angle(const Point &p1, const Point &p2);
+		bool operator==(const Point & other);
+		Point & operator+=(const Point & add);
+		static double distance(const Point &p1, const Point & p2);
+		static double angle(const Point &p1, const Point & p2);
 
 		std::string str() const;
 		// TODO - remove it test only
-		friend std::ostream& operator<<(std::ostream&, const Point &point);
+		friend std::ostream& operator<<(std::ostream&, const Point & point);
 	};
+
+	Point operator+(Point p1, const Point & p2);
 
 	template<typename T>
 	bool inRange(const T & downBound, const T & upBound, const T & value)

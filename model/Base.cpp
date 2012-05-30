@@ -13,6 +13,13 @@ namespace zpr
 		return ( x_ == other.x_ && y_ == other.y_ );
 	}
 
+	Point & Point::operator+=(const Point & add)
+	{
+		x_ += add.x_;
+		y_ += add.y_;
+		return *this;
+	}
+
 	double Point::distance(const Point &p1, const Point &p2)
 	{
 		return sqrt( fabs( (p2.x_ - p1.x_) * (p2.x_ - p1.x_) + (p2.y_ - p1.y_) * (p2.y_ - p1.y_) ) );
@@ -20,8 +27,12 @@ namespace zpr
 
 	double Point::angle(const Point &p1, const Point &p2)
 	{
-		static const double PI = 3.14159265358979323846;
-		return std::atan2(p2.y_ - p1.y_, p2.x_ - p1.x_) * 180.0 / PI;
+		return std::atan2(p2.y_ - p1.y_, p2.x_ - p1.x_);
+	}
+
+	Point operator+(Point p1, const Point & p2)
+	{
+		return p1 += p2;
 	}
 
 	std::string Point::str() const
