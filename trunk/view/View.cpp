@@ -115,6 +115,9 @@ namespace zpr
 			
 			ALLEGRO_EVENT allegroEvent;
 			bool run = true;
+
+			refresh();
+
 			while(run)
 			{
 				//// Waiting for refresh signal

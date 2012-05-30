@@ -7,7 +7,7 @@
 
 namespace zpr
 {
-	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency), active_(true)
+	Timer::Timer(const Timer::Duration & frequency) : frequency_(frequency), active_(false)
 	{}
 
 	void Timer::start()
@@ -18,6 +18,12 @@ namespace zpr
 	void Timer::stop()
 	{
 		active_ = false;
+	}
+	
+	void Timer::step(long long int elapsed)
+	{
+		BOOST_FOREACH(boost::function<void (long long int)> & current, listeners_)
+			current(elapsed);
 	}
 
 	void Timer::AddListener(boost::function<void (long long int)> listener)
@@ -48,7 +54,7 @@ namespace zpr
 			{
 				long long int elapsed = boost::chrono::duration_cast<boost::chrono::microseconds>(Now() - prev).count();
 				BOOST_FOREACH(boost::function<void (long long int)> & current, listeners_)
-					current(elapsed);
+					current(elapsed);	// timer ma wolac model co jakis czas a view co inny mniejszy czas - think about it czy zostawiamy jak jest
 			}
 		}
 		/*DEBUG*/ std::cout << "Timer gracefully ends." << std::endl;

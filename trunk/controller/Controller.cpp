@@ -63,7 +63,6 @@ namespace zpr
 		}
 		eventCondition_.notify_one();
 	}
-
 	
 	void Controller::runThreads()
 	{
@@ -119,6 +118,7 @@ namespace zpr
 	void Controller::Process(EventRestart&)
 	{
 		std::cout << "Restart event." << std::endl;
+		timer_.step(0);
 		model_.start();
 	}
 
