@@ -22,4 +22,9 @@ namespace zpr
 	{
 		c.Process(*this);
 	}
+
+	void EventLoop::accept(Controller & c)
+	{
+		c.Process(*this);
+	}
 }

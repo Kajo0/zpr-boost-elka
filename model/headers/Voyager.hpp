@@ -21,6 +21,8 @@ namespace zpr
 		double percentDistanceTraveled;
 		PTrack track_;
 
+		bool finished_;	// czy skonczyl trase
+
 		public:
 		Voyager(double velocity = 0.0, Point position = Point());
 		virtual ~Voyager() = 0;
@@ -30,6 +32,7 @@ namespace zpr
 		void addTrackPoint(const Point point);
 		virtual void reset(); // daje na poczatek i stopuje
 		virtual void move(long long int elapsed_time) = 0;	// oczywiscie w milisekundach
+		bool finished();
 	};
 }
 

@@ -29,5 +29,12 @@ namespace zpr
 	{
 		virtual void accept(Controller & c);
 	};
+
+	struct EventLoop : public Event
+	{
+		virtual void accept(Controller & c);
+	};
+
 }
+
 #endif // EVENTS_HPP

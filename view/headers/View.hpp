@@ -52,7 +52,7 @@ namespace zpr
 		long long int elapsedMicroseconds_;
 		boost::mutex refreshMutex_;
 
-		AllegroRectangle menuArea, startButton, stopButton, restartButton, exitButton;
+		AllegroRectangle menuArea, startButton, stopButton, restartButton, loopButton, exitButton;
 
 		public:
 		View(Controller & controller, Model & model); // tylko to tesow gui
