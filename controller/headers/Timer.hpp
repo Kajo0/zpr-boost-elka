@@ -17,6 +17,7 @@ namespace zpr
 		
 		void start();
 		void stop();
+		void step(long long int elapsed);
 		
 		void AddListener(boost::function<void (long long int)> listener); // microseconds
 		void operator()();
