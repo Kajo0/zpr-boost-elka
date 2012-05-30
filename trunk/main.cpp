@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	}
 	catch(std::exception & e)
 	{
-		zpr::Logger::getInstance().message(e.what());
+		std::cout<<e.what()<<std::endl;
 	}
 	catch(...)
 	{

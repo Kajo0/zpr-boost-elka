@@ -41,7 +41,7 @@ namespace zpr
 		}
 		catch(...)
 		{
-			Logger::getInstance().message("Unknown Model exception.");
+			std::cout<<"Unknown Model exception.\n";
 		}
 		std::cout << "Model thread ending." << std::endl;
 	}
