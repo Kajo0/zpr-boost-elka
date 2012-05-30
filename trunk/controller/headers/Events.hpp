@@ -20,6 +20,11 @@ namespace zpr
 		virtual void accept(Controller & c);
 	};
 
+	struct EventRestart : public Event
+	{
+		virtual void accept(Controller & c);
+	};
+
 	struct EventClose : public Event
 	{
 		virtual void accept(Controller & c);

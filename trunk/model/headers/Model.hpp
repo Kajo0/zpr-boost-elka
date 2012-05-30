@@ -41,7 +41,7 @@ namespace zpr
 		Model();
 		virtual ~Model();
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
-		void nextStep(const long elapsed_time);
+		void nextStep(long long int elapsed_time);
 
 		Graph& streets() { return streets_; } // testowe do view
 

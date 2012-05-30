@@ -117,6 +117,12 @@ namespace zpr
 		timer_.stop();
 	}
 
+	void Controller::Process(EventRestart&)
+	{
+		std::cout << "Restart event." << std::endl;
+		model_.start();
+	}
+
 	void Controller::Process(EventClose&)
 	{
 		std::cout << "Close event." << std::endl;

@@ -29,6 +29,7 @@ namespace zpr
 
 		void Process(EventStart&);	// process start event
 		void Process(EventStop&);	// process stop event
+		void Process(EventRestart&);	// process restart event
 		void Process(EventClose&);	// process close event
 
 		private:

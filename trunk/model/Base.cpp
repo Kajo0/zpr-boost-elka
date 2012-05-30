@@ -1,5 +1,5 @@
 #include "Base.hpp"
-#include <math.h>
+#include <cmath>
 
 namespace zpr
 {
@@ -15,6 +15,12 @@ namespace zpr
 	double Point::distance(const Point &p1, const Point &p2)
 	{
 		return sqrt( fabs( (p2.x_ - p1.x_) * (p2.x_ - p1.x_) + (p2.y_ - p1.y_) * (p2.y_ - p1.y_) ) );
+	}
+
+	double Point::angle(const Point &p1, const Point &p2)
+	{
+		static const double PI = 3.14159265358979323846;
+		return std::atan2(p2.y_ - p1.y_, p2.x_ - p1.x_) * 180.0 / PI;
 	}
 	
 	std::ostream& operator<<(std::ostream &os, Point &point)
