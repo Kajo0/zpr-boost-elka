@@ -22,7 +22,7 @@ namespace zpr
 		return *this;
 	}
 
-	const std::string& Walker::id()
+	const std::string& Walker::id() const
 	{
 		return name_;
 	}
@@ -33,9 +33,12 @@ namespace zpr
 		position_ = track_->start();
 	}
 
-	void Walker::move(const long elapsed_time)
+	void Walker::move(long long int elapsed_time)
 	{
 		percentDistanceTraveled += ( velocity_ * elapsed_time * 0.1 / 3.6 ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
 		position_ = track_->positionOnTrack( percentDistanceTraveled );
+
+		if(percentDistanceTraveled > 1.0)
+			reset(); // petla
 	}
 }

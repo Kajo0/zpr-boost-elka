@@ -5,7 +5,11 @@
 #include <iostream>
 #include <stdio.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_ttf.h>
 #include <boost/make_shared.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/format.hpp>
+#include <boost/filesystem.hpp>
 #include "Base.hpp"
 #include "VehicleTrack.hpp"
 #include "Walker.hpp"
@@ -35,7 +39,7 @@ namespace zpr
 		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color);
 	}
 
-	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), elapsedMicroseconds_(-1)					
+	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), font_(NULL), elapsedMicroseconds_(-1)					
 	{
 		menuArea = AllegroRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		
@@ -45,8 +49,9 @@ namespace zpr
 		yOffset += height + yMargin;
 		stopButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 		yOffset += height + yMargin;
-		exitButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
+		restartButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 		yOffset += height + yMargin;
+		exitButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 	}
 
 	void View::initializeGraphics()
@@ -64,6 +69,15 @@ namespace zpr
 		
 		if(!al_init_primitives_addon())	// init dla prymitowow
 			throw AllegroException("Failed to initialize addons!");
+		al_init_font_addon();
+		if(!al_init_ttf_addon())
+			throw AllegroException("Failed to initialize TTF addon!");
+		//al_init_image_addon();
+
+		// ponizej z nieznanych przyczyn current_path mi zwraca sciezke do katalogu z projektem a nie o poziom dalej do /debug...
+		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 10, 0);//al_load_ttf_font("times.ttf", 12, 0);
+		if(!font_)
+			throw AllegroException("Failed to initialize font!");
 
 		if(!al_install_keyboard())
 			throw AllegroException("Failed to install keyboard!");
@@ -140,6 +154,8 @@ namespace zpr
 							controller_.scheduleEvent(boost::make_shared<EventStart>());
 						if(stopButton.inside(p))
 							controller_.scheduleEvent(boost::make_shared<EventStop>());
+						if(restartButton.inside(p))
+							controller_.scheduleEvent(boost::make_shared<EventRestart>());
 						if(exitButton.inside(p))
 						{
 							controller_.scheduleEvent(boost::make_shared<EventClose>());
@@ -184,10 +200,26 @@ namespace zpr
 		}
 		
 		for (Model::MCar::const_iterator it = model_.cars_.begin(); it != model_.cars_.end(); ++it)
+		{
 			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
+			
+			int height = al_get_font_line_height(font_);
+			std::string position = "x = " + (boost::format("%6.3f") % it->second->position().x_).str() + " y = " + (boost::format("%6.3f") % it->second->position().y_).str();
+			std::string velocity = "v = " + (boost::format("%6.3f") % it->second->velocity_).str() + " maxV = " + (boost::format("%6.3f") % it->second->maxSpeed_).str();
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_, ALLEGRO_ALIGN_CENTRE, it->second->id().c_str());
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_ + height, ALLEGRO_ALIGN_CENTRE, position.c_str());
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_ + height + height, ALLEGRO_ALIGN_CENTRE, velocity.c_str());
+		}
 
 		for (Model::MWalker::const_iterator it = model_.walkers_.begin(); it != model_.walkers_.end(); ++it)
+		{
 			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(200, 53, 206));
+
+			int height = al_get_font_line_height(font_);
+			std::string description = "x = " + (boost::format("%6.3f") % it->second->position().x_).str() + " y = " + (boost::format("%6.3f") % it->second->position().y_).str();
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_, ALLEGRO_ALIGN_CENTRE, it->second->id().c_str());
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_ + height, ALLEGRO_ALIGN_CENTRE, description.c_str());
+		}
 
 		for (Dispatcher::MCamera::const_iterator it = model_.dispatcher_.cameras_.begin(); it != model_.dispatcher_.cameras_.end(); ++it)
 		{
@@ -196,6 +228,7 @@ namespace zpr
 			al_draw_filled_pieslice(it->second->position_.x_, it->second->position_.y_, it->second->range_,
 						it->second->direction_ - it->second->angle_ / 2, it->second->angle_,
 						al_map_rgba(200,0,0,10));
+			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position_.x_, it->second->position_.y_, ALLEGRO_ALIGN_CENTRE, boost::lexical_cast<std::string>(it->second->id()).c_str());
 		}
 
 		drawMenu();
@@ -207,8 +240,13 @@ namespace zpr
 		al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, al_map_rgb(0, 0, 0));
 		startButton.drawFilled(al_map_rgb(255,0,0));
 		stopButton.drawFilled(al_map_rgb(255,0,0));
+		restartButton.drawFilled(al_map_rgb(255,0,0));
 		exitButton.drawFilled(al_map_rgb(255,0,0));
 
+		al_draw_text(font_, al_map_rgb(255,255,255), startButton.topLeft_.x_, startButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Start");
+		al_draw_text(font_, al_map_rgb(255,255,255), stopButton.topLeft_.x_, stopButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Stop");
+		al_draw_text(font_, al_map_rgb(255,255,255), restartButton.topLeft_.x_, restartButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Restart");
+		al_draw_text(font_, al_map_rgb(255,255,255), exitButton.topLeft_.x_, exitButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Koniec");
 	}
 
 	//void View::loop()

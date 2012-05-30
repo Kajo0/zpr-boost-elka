@@ -4,6 +4,7 @@
 #include "Model.hpp"
 #include "Base.hpp"
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
 #include <boost/thread.hpp>
 
 namespace zpr
@@ -24,7 +25,7 @@ namespace zpr
 		AllegroRectangle(const Point & topLeft, const Point & bottomRight);
 		
 		bool inside(const Point & check) const;
-		void drawFilled(const ALLEGRO_COLOR & color) const ;
+		void drawFilled(const ALLEGRO_COLOR & color) const;
 	};
 
 	class View
@@ -37,6 +38,7 @@ namespace zpr
 
 		ALLEGRO_DISPLAY *display_; // tu mamy nasz frame i wsio chyba w jednym
 		ALLEGRO_EVENT_QUEUE *eventQueue_; // tu eventy typu tez X on close
+		ALLEGRO_FONT *font_;
 		
 		Controller & controller_; // moze to jeszcze jakos inaczej, moze funkcja globalna
 		Model & model_;
@@ -50,7 +52,7 @@ namespace zpr
 		long long int elapsedMicroseconds_;
 		boost::mutex refreshMutex_;
 
-		AllegroRectangle menuArea, startButton, stopButton, exitButton;
+		AllegroRectangle menuArea, startButton, stopButton, restartButton, exitButton;
 
 		public:
 		View(Controller & controller, Model & model); // tylko to tesow gui

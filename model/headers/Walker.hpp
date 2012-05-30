@@ -19,9 +19,9 @@ namespace zpr
 		Walker(const Walker &other);
 		Walker& operator=(const Walker &other);
 		
-		const std::string& id();
+		const std::string& id() const;
 		void reset();
-		void move(const long elapsed_time);
+		void move(long long int elapsed_time);
 	};
 }
 

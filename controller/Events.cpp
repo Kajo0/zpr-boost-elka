@@ -13,6 +13,11 @@ namespace zpr
 		c.Process(*this);
 	}
 
+	void EventRestart::accept(Controller & c)
+	{
+		c.Process(*this);
+	}
+
 	void EventClose::accept(Controller & c)
 	{
 		c.Process(*this);

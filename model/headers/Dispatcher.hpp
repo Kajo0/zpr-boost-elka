@@ -3,6 +3,7 @@
 
 #include <map>
 #include "Camera.hpp"
+#include "Voyager.hpp"
 #include <boost/shared_ptr.hpp>
 
 namespace zpr
@@ -24,6 +25,7 @@ namespace zpr
 		virtual ~Dispatcher();
 
 		void addCamera(const PCamera camera);
+		void reportObject(const Voyager & object);
 	};
 }
 

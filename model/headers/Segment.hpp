@@ -29,6 +29,7 @@ namespace zpr
 		Point control_;
 		public:
 			// tu pytanie czy robic , begin end controlPoint, czy po kolei begin controlPoint end ? 
+			// m: czy to ma znaczenie? jak mam wybierac to niech bedzie b -> control -> e
 		BezierSegment(const Point begin, const Point end, const Point control);
 		~BezierSegment();
 
