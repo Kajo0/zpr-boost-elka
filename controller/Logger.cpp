@@ -16,11 +16,11 @@ namespace zpr
 	 * Creates file named as ${actual timestamp}.txt
 	 * if succeeded write log there, otherwise write onto std::cout
 	 */
-	Logger::Logger(): count_(0), output_(&std::cout) {
-
+	Logger::Logger(): count_(0), output_(&std::cout)
+	{
 		std::ofstream *out = new std::ofstream();
 		
-		boost::filesystem::path log_path("C:/Users/Acer/Desktop");//__FILE__);
+		boost::filesystem::path log_path(__FILE__);
 		log_path /= boost::lexical_cast<std::string>(time(0));
 		log_path.replace_extension(".txt");
 
@@ -37,20 +37,20 @@ namespace zpr
 	/**
 	 * Close file stream and delete handle
 	 */
-	Logger::~Logger() {
-		try {
+	Logger::~Logger()
+	{
+		try
+		{
 			dynamic_cast<std::ofstream&>(*output_).close();
 			delete output_;
-
-		} catch(std::exception &) {
-			//was cout, do nothing
-		}
+		} catch(std::exception &) {} //was cout, do nothing
 	}
 
 	/**
 	 * @return Logger instance
 	 */
-	Logger& Logger::getInstance() {
+	Logger& Logger::getInstance()
+	{
 		static Logger instance;
 		return instance;
 	}
@@ -61,7 +61,8 @@ namespace zpr
 	 *
 	 * @param msg message to log
 	 */
-	void Logger::message(const char *msg) const {
+	void Logger::message(const char *msg) const
+	{
 		boost::mutex::scoped_lock scoped_lock(ioMutex_);
 
 		*output_<<" "<<count_++<<":\t"<<msg<<"\n";
@@ -72,7 +73,8 @@ namespace zpr
 	 *
 	 * @param msg message to log
 	 */
-	void Logger::message(const std::string &msg) const {
+	void Logger::message(const std::string &msg) const
+	{
 		message(msg.c_str());
 	}
 }
