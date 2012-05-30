@@ -19,8 +19,10 @@ namespace zpr
 		bool operator==(const Point &other);
 		static double distance(const Point &p1, const Point &p2);
 		static double angle(const Point &p1, const Point &p2);
+
+		std::string str() const;
 		// TODO - remove it test only
-		friend std::ostream& operator<<(std::ostream&, Point &point);
+		friend std::ostream& operator<<(std::ostream&, const Point &point);
 	};
 
 	template<typename T>

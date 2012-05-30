@@ -208,7 +208,7 @@ namespace zpr
 			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
 			
 			int height = al_get_font_line_height(font_);
-			std::string position = "x = " + (boost::format("%6.3f") % it->second->position().x_).str() + " y = " + (boost::format("%6.3f") % it->second->position().y_).str();
+			std::string position = it->second->position().str();
 			std::string velocity = "v = " + (boost::format("%6.3f") % it->second->velocity_).str() + " maxV = " + (boost::format("%6.3f") % it->second->maxSpeed_).str();
 			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_, ALLEGRO_ALIGN_CENTRE, it->second->id().c_str());
 			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_, it->second->position().y_ + height, ALLEGRO_ALIGN_CENTRE, position.c_str());

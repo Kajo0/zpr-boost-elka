@@ -10,8 +10,8 @@ int main(int argc, char **argv)
 {
 	try
 	{
-		boost::filesystem::path applicationPath(argv[0]);
-		zpr::Controller controller(applicationPath.remove_filename());
+		boost::filesystem::path applicationPath = boost::filesystem::path(__FILE__).remove_filename();
+		zpr::Controller controller(applicationPath);
 		controller.run();
 
 		std::cout << "\n\nSymulacja zakonczona. Wczytanie inta konczy program." << std::endl;
