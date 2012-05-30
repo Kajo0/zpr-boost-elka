@@ -171,7 +171,7 @@ namespace zpr
 		}
 		catch(zpr::AllegroException & e)
 		{
-			Logger::getInstance().message(e.what());
+			std::cout<<e.what()<<std::endl;
 		}
 		catch(boost::thread_interrupted)
 		{

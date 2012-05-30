@@ -11,6 +11,8 @@
 #include "SmallCar.hpp"
 #include "BigCar.hpp"
 #include "Walker.hpp"
+#include "Voyager.hpp"
+#include "Track.hpp"
 #include "Timer.hpp"
 
 namespace zpr
@@ -27,17 +29,14 @@ namespace zpr
 		{
 			while ( !boost::filesystem::exists(path / paths[i]) )
 			{
-				std::string msg = mesgs[2];
-				msg.append(paths[i]);
-
-				Logger::getInstance().message(msg);
+				std::cout<<mesgs[2]<<paths[i]<<std::endl;
 
 				std::cout<<mesgs[0]<<paths[i]<<mesgs[1];
 				std::cin>>paths[i];
 
 				if (paths[i] == "q")
 				{
-					msg = "Quit without starting application while trying to load ";
+					std::string msg = "Quit without starting application while trying to load ";
 					msg.append(paths[i]);
 					throw(std::exception(msg.c_str()));
 				}
@@ -226,6 +225,7 @@ namespace zpr
 		ptree pt;
 		Model::PCar car;
 		Model::PWalker walker;
+		Voyager::PTrack track;
 	
 		try
 		{
@@ -247,8 +247,10 @@ namespace zpr
 						car.reset( new BigCar( id, acceleration, weight, mspeed ) );
 					else if (size == "small")
 						car.reset( new SmallCar( id, acceleration, weight, mspeed ) );
-
-					// jak nie powtorka to rob trase
+					
+					track.reset(new VehicleTrack());
+					car->track(track);
+						// jak nie powtorka to rob trase
 					if ( model_.cars_.insert( std::pair<std::string, Model::PCar>( id, car ) ).second )
 					{
 						BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
@@ -256,7 +258,7 @@ namespace zpr
 							Point point( vv.second.get<double>("<xmlattr>.x"),
 										vv.second.get<double>("<xmlattr>.y") );
 
-							model_.cars_[id]->addTrackPoint(point);
+							track->addPoint(point);
 						}
 					}
 				}
@@ -266,15 +268,17 @@ namespace zpr
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
 					walker.reset( new Walker( id, mspeed ) );
-					// jak nie powtorka to rob trase
+					track.reset(new WalkerTrack());
+					walker->track(track);
+						// jak nie powtorka to rob trase
 					if ( model_.walkers_.insert( std::pair<std::string, Model::PWalker>( id, walker ) ).second )
 					{
 						BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
 						{
 							Point point( vv.second.get<double>("<xmlattr>.x"),
 										vv.second.get<double>("<xmlattr>.y") );
-
-							model_.walkers_[id]->addTrackPoint(point);
+							
+							track->addPoint(point);
 						}
 					}
 				}

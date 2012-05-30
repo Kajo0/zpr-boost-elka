@@ -16,9 +16,9 @@ namespace zpr
 		return position_;
 	}
 
-	void Voyager::addTrackPoint(const Point point)
+	void Voyager::track(const PTrack track)
 	{
-		track_->addPoint(point);
+		track_ = track;
 	}
 	
 	void Voyager::reset()
