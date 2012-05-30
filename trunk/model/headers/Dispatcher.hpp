@@ -13,6 +13,8 @@ namespace zpr
 	 */
 	class Dispatcher
 	{
+		static const double CAMERA_DISTORTION_RATIO;
+
 		public:
 		typedef boost::shared_ptr<Camera> PCamera;
 		typedef std::map<int, PCamera> MCamera;
@@ -21,9 +23,6 @@ namespace zpr
 		MCamera cameras_;
 
 		public:
-		Dispatcher();
-		virtual ~Dispatcher();
-
 		void addCamera(const PCamera camera);
 		void reportObject(const Voyager & object);
 	};

@@ -3,17 +3,28 @@
 
 namespace zpr
 {
-	Camera::Camera(int id, Point position, double direction, double angle, double range, double precision):
-						id_(id), position_(position), direction_(direction * 3.141 / 180.0), angle_(angle * 3.141 / 180.0), range_(range), precision_(precision)
+	
+
+	Camera::Camera(int id, Point position, double direction, double angle, double range, double precision)
+		: id_(id), position_(position), direction_(direction * 3.141 / 180.0), angle_(angle * 3.141 / 180.0), range_(range), precision_(precision)
 	{
 	}
 
-	Camera::~Camera()
-	{
-	}
-
-	int Camera::id()
+	int Camera::id() const
 	{
 		return id_;
+	}
+
+	bool Camera::spotted(const Voyager & object) const
+	{
+		if(range_ >= Point::distance(position_, object.position()))
+			if(inRange(direction_ - angle_ / 2.0, direction_ + angle_ / 2.0, Point::angle(position_, object.position())))
+				return true;
+		return false;
+	}
+
+	double Camera::noise() const
+	{
+		return 1.0 - precision_;
 	}
 }
