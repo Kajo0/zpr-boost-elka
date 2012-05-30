@@ -129,6 +129,12 @@ namespace zpr
 		run_ = false;
 	}
 
+	void Controller::Process(EventLoop&)
+	{
+		std::cout << "Loop event." << std::endl;
+		model_.switchLoop();
+	}
+
 	void Controller::parseDispatcher(const boost::filesystem::path & path)
 	{
 		using boost::property_tree::ptree;

@@ -51,6 +51,8 @@ namespace zpr
 		yOffset += height + yMargin;
 		restartButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 		yOffset += height + yMargin;
+		loopButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
+		yOffset += height + yMargin;
 		exitButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 	}
 
@@ -161,6 +163,8 @@ namespace zpr
 							controller_.scheduleEvent(boost::make_shared<EventClose>());
 							run = false;
 						}
+						if(loopButton.inside(p))
+							controller_.scheduleEvent(boost::make_shared<EventLoop>());
 					}
 				}
 			}
@@ -241,11 +245,13 @@ namespace zpr
 		startButton.drawFilled(al_map_rgb(255,0,0));
 		stopButton.drawFilled(al_map_rgb(255,0,0));
 		restartButton.drawFilled(al_map_rgb(255,0,0));
+		loopButton.drawFilled(al_map_rgb(255,0,0));
 		exitButton.drawFilled(al_map_rgb(255,0,0));
 
 		al_draw_text(font_, al_map_rgb(255,255,255), startButton.topLeft_.x_, startButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Start");
 		al_draw_text(font_, al_map_rgb(255,255,255), stopButton.topLeft_.x_, stopButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Stop");
 		al_draw_text(font_, al_map_rgb(255,255,255), restartButton.topLeft_.x_, restartButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Restart");
+		al_draw_text(font_, al_map_rgb(255,255,255), loopButton.topLeft_.x_, loopButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Zapetlenie");
 		al_draw_text(font_, al_map_rgb(255,255,255), exitButton.topLeft_.x_, exitButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Koniec");
 	}
 

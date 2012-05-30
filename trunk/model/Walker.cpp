@@ -29,6 +29,7 @@ namespace zpr
 
 	void Walker::reset()
 	{
+		finished_ = false;
 		percentDistanceTraveled = 0;
 		position_ = track_->start();
 	}
@@ -39,6 +40,7 @@ namespace zpr
 		position_ = track_->positionOnTrack( percentDistanceTraveled );
 
 		if(percentDistanceTraveled > 1.0)
-			reset(); // petla
+			finished_ = true;
+		//	reset(); // petla -> mozliwosc zapetlenia a nie zapetlenie.
 	}
 }

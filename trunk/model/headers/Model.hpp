@@ -33,6 +33,8 @@ namespace zpr
 		MWalker walkers_;
 		Graph streets_;
 
+		bool loop_; // zapetlenie wlasnie
+
 		boost::condition_variable updateCondition_;
 		long long int elapsedMicroseconds_;
 		boost::mutex updateMutex_;
@@ -41,6 +43,7 @@ namespace zpr
 		Model();
 		virtual ~Model();
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
+		void switchLoop();
 		void nextStep(long long int elapsed_time);
 
 		Graph& streets() { return streets_; } // testowe do view

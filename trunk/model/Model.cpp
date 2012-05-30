@@ -3,7 +3,7 @@
 
 namespace zpr
 {
-	Model::Model() : elapsedMicroseconds_(-1)
+	Model::Model() : elapsedMicroseconds_(-1), loop_(false)
 	{
 	}
 
@@ -59,17 +59,32 @@ namespace zpr
 		}
 	}
 
+	void Model::switchLoop()
+	{
+		loop_ = !loop_;
+	}
+
 	void Model::nextStep(long long int elapsed_time)
 	{
 		for (MCar::const_iterator it = cars_.begin(); it != cars_.end(); ++it)
 		{
-			it->second->move(elapsed_time);
+			if (loop_ && it->second->finished())
+				it->second->reset();
+
+			if (!it->second->finished())
+				it->second->move(elapsed_time);
+
 			dispatcher_.reportObject(*it->second.get());
 		}
 
 		for (MWalker::const_iterator it = walkers_.begin(); it != walkers_.end(); ++it)
 		{
-			it->second->move(elapsed_time);
+			if (loop_ && it->second->finished())
+				it->second->reset();
+
+			if (!it->second->finished())
+				it->second->move(elapsed_time);
+
 			dispatcher_.reportObject(*it->second.get());
 		}
 	}

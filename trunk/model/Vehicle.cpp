@@ -29,6 +29,7 @@ namespace zpr
 		position_ = track_->positionOnTrack( percentDistanceTraveled );
 
 		if(percentDistanceTraveled > 1.0)
-			reset(); // petla
+			finished_ = true;
+		//	reset(); // petla -> mialabyc 'mozliwosc' zapetlenia, domyslnie powinno tylko raz przeleciec
 	}
 }

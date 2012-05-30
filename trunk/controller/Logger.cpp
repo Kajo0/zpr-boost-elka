@@ -24,7 +24,7 @@ namespace zpr
 		log_path /= boost::lexical_cast<std::string>(time(0));
 		log_path.replace_extension(".txt");
 
-		out->open(log_path.c_str(), std::ios_base::app);
+		out->open(log_path.string().c_str(), std::ios_base::app);
 
 		if (out->is_open())
 			output_ = out;
