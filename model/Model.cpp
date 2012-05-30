@@ -73,7 +73,7 @@ namespace zpr
 
 			if (!it->second->finished())
 				it->second->move(elapsed_time);
-
+			
 			dispatcher_.reportObject(*it->second.get());
 		}
 
