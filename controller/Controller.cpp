@@ -73,17 +73,13 @@ namespace zpr
 
 	void Controller::endThreads()
 	{
-		viewThread.join();
+		viewThread.interrupt();
 		timerThread.interrupt();
 		modelThread.interrupt();
 		
-		std::cout << "View thread joined." << std::endl;
-		
+		viewThread.join();
 		timerThread.join();
-		std::cout << "Timer thread joined." << std::endl;
-
 		modelThread.join();
-		std::cout << "Model thread joined. Simulation ending." << std::endl;
 	}
 
 	void Controller::run()
@@ -105,32 +101,27 @@ namespace zpr
 
 	void Controller::Process(EventStart&)
 	{
-		std::cout << "Start event." << std::endl;
 		timer_.start();
 	}
 
 	void Controller::Process(EventStop&)
 	{
-		std::cout << "Stop event." << std::endl;
 		timer_.stop();
 	}
 
 	void Controller::Process(EventRestart&)
 	{
-		std::cout << "Restart event." << std::endl;
 		timer_.step(0);
 		model_.start();
 	}
 
 	void Controller::Process(EventClose&)
 	{
-		std::cout << "Close event." << std::endl;
 		run_ = false;
 	}
 
 	void Controller::Process(EventLoop&)
 	{
-		std::cout << "Loop event." << std::endl;
 		model_.switchLoop();
 	}
 
