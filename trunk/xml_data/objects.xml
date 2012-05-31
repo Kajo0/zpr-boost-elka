@@ -5,7 +5,7 @@
 		<id>WW-JOOOO</id>
 		
 		<parameters>
-			<acceleration>2</acceleration>
+			<acceleration>3</acceleration>
 			<weight>2000.0</weight>
 			<size>big</size>
 			<maxspeed>75.0</maxspeed>
@@ -13,7 +13,11 @@
 		
 		<track>
 			<point x="500" y="20" />
-			<point x="300" y="30" />
+			<point x="350" y="50" />
+			<point x="550" y="80" />
+			<point x="350" y="110" />
+			<point x="550" y="140" />
+			<point x="300" y="90" />
 			<point x="100" y="500" />
 			<point x="500" y="100" />
 		</track>
@@ -40,7 +44,7 @@
 		<id>WF-JOOOO</id>
 		
 		<parameters>
-			<acceleration>5</acceleration>
+			<acceleration>50</acceleration>
 			<weight>1200.0</weight>
 			<size>small</size>
 			<maxspeed>100.0</maxspeed>

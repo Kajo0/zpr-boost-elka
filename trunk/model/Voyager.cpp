@@ -2,7 +2,7 @@
 
 namespace zpr
 {
-	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position), percentDistanceTraveled(0), finished_(false)
+	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position), angle_(0), percentDistanceTraveled_(0), finished_(false)
 	{
 	}
 
@@ -16,6 +16,11 @@ namespace zpr
 		return position_;
 	}
 
+	double Voyager::angle() const
+	{
+		return angle_;
+	}
+
 	void Voyager::track(const PTrack track)
 	{
 		track_ = track;
@@ -25,7 +30,7 @@ namespace zpr
 	{
 		finished_ = false;
 		velocity_ = 0;
-		percentDistanceTraveled = 0;
+		percentDistanceTraveled_ = 0;
 		position_ = track_->start();
 	}
 

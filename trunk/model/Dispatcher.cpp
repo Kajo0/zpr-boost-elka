@@ -27,7 +27,7 @@ namespace zpr
 			{
 				double noise = it.second->noise() * CAMERA_DISTORTION_RATIO;
 				std::string msg = "czas: "; // tu wziac time z timera jak tam liczy w ogole , a jak nie to musi liczyc
-				msg += 
+				//msg += 
 				msg += "Camera (";
 				msg += boost::lexical_cast<std::string>(it.second->id());
 				msg += ") saw: ";
@@ -36,7 +36,7 @@ namespace zpr
 
 				Logger::getInstance().message(msg);
 
-				std::cout << "Camera " << it.second->id() << " logged " << object.id() << std::endl;
+				//std::cout << "Camera " << it.second->id() << " logged " << object.id() << std::endl;
 			}
 	}
 }

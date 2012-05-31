@@ -30,16 +30,18 @@ namespace zpr
 	void Walker::reset()
 	{
 		finished_ = false;
-		percentDistanceTraveled = 0;
+		percentDistanceTraveled_ = 0;
 		position_ = track_->start();
 	}
 
 	void Walker::move(long long int elapsed_time)
 	{
-		percentDistanceTraveled += ( velocity_ * elapsed_time * 0.1 / 3.6 ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
-		position_ = track_->positionOnTrack( percentDistanceTraveled );
+		Point prev_position = position_;
+		percentDistanceTraveled_ += ( velocity_ * elapsed_time * 0.05 / 3.6 ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
+		position_ = track_->positionOnTrack( percentDistanceTraveled_ ).first;
+		angle_ = Point::angle(prev_position, position_);
 
-		if(percentDistanceTraveled > 1.0)
+		if(percentDistanceTraveled_ > 1.0)
 			finished_ = true;
 		//	reset(); // petla -> mozliwosc zapetlenia a nie zapetlenie.
 	}

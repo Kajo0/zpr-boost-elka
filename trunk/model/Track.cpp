@@ -39,9 +39,9 @@ namespace zpr
 	 * Calculates position on track from given track percent
 	 *
 	 * @param percent Percent of track
-	 * @return Request position
+	 * @return Request position, on bezier segment or not
 	 */
-	Point Track::positionOnTrack(double percent)
+	std::pair<Point, double> Track::positionOnTrack(double percent)
 	{
 		if ( percent < 0 )
 			percent = 0;
@@ -58,11 +58,11 @@ namespace zpr
 			if ( traveled_length <= temp_length )
 			{
 				// zwraca pozycje z wyliczonego procenta procenta segmetnu na ktorym sie znajduje na tym zadanym procencie
-				return (*it)->position( 1 - ( ( temp_length - traveled_length ) / (*it)->length() ) );
+				return std::make_pair((*it)->position( 1 - ( ( temp_length - traveled_length ) / (*it)->length() ) ), (*it)->bezier());
 			}
 		}
 
-		return Point();
+		return std::make_pair(Point(), 0);
 	}
 
 	/**

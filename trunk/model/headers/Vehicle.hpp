@@ -15,6 +15,7 @@ namespace zpr
 		double weight_;
 		double maxSpeed_;
 		const std::string registration_;
+		bool break_;
 
 		public:
 		Vehicle(std::string &id, double acceleration, double weight, double maxSpeed);

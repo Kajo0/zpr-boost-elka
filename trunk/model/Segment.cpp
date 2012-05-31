@@ -21,7 +21,6 @@ namespace zpr
 		return end_;
 	}
 
-
 	/************************
 	*	BezierSegment		*
 	*************************/
@@ -87,6 +86,16 @@ namespace zpr
 		return control_;
 	}
 
+	double BezierSegment::bezier()
+	{
+		Point between = begin_;
+		between.x_ += (end_.x_ - begin_.x_) / 2;
+		between.y_ += (end_.y_ - begin_.y_) / 2;
+		double angle = asin(Point::distance(between, begin_) / Point::distance(control_, begin_)) * 2;
+
+		return angle;
+	}
+
 
 	/************************
 	*	StraightSegment		*
@@ -119,5 +128,10 @@ namespace zpr
 	double StraightSegment::length()
 	{
 		return Point::distance(begin_, end_);
+	}
+
+	double StraightSegment::bezier()
+	{
+		return 0;
 	}
 }
