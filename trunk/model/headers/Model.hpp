@@ -41,7 +41,7 @@ namespace zpr
 
 		public:
 		Model();
-		virtual ~Model();
+
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
 		void switchLoop();
 		void nextStep(long long int elapsed_time);

@@ -18,6 +18,7 @@ namespace zpr
 		void start();
 		void stop();
 		void step(long long int elapsed);
+		long long int elapsed() const; // microseconds
 		
 		void AddListener(boost::function<void (long long int)> listener); // microseconds
 		void operator()();
@@ -27,6 +28,7 @@ namespace zpr
 		
 		bool active_;
 		Duration frequency_;
+		TimePoint started_;
 		std::deque<boost::function<void (long long int)> > listeners_;
 	};
 }

@@ -7,8 +7,6 @@ namespace zpr
 	{
 	}
 
-	Model::~Model() {}
-
 	void Model::scheduleUpdate(long long int elapsedMicroseconds)
 	{
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.

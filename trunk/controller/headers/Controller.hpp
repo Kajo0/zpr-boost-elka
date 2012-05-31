@@ -16,11 +16,6 @@ namespace zpr
 {
 	class Controller
 	{
-		Model model_;
-		View view_;
-		Timer timer_;
-		boost::thread timerThread, modelThread, viewThread;
-
 		public:
 		Controller(const boost::filesystem::path & path);	// prepare simulation data
 		void scheduleEvent(const boost::shared_ptr<Event> & newEvent);	// add new event to queue
@@ -45,6 +40,11 @@ namespace zpr
 
 		void start();	// make the simulation active
 		void stop();	// pause the simulation
+
+		Model model_;
+		View view_;
+		Timer timer_;
+		boost::thread timerThread, modelThread, viewThread;
 
 		boost::condition_variable eventCondition_;
 		std::queue<boost::shared_ptr<Event> > eventQueue_;

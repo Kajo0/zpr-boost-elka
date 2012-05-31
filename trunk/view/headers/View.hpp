@@ -28,6 +28,15 @@ namespace zpr
 		void drawFilled(const ALLEGRO_COLOR & color) const;
 	};
 
+	struct AllegroButton
+	{
+	public:
+		AllegroRectangle area_;
+		std::string title_;
+		// TODO
+		void draw(const ALLEGRO_COLOR & color) const;
+	};
+
 	class View
 	{
 		const static int WINDOW_WIDTH;
