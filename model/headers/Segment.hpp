@@ -20,6 +20,7 @@ namespace zpr
 		
 		virtual Point position(double percent) = 0;
 		virtual double length() = 0;
+		virtual double bezier() = 0;
 		Point begin();
 		Point end();
 	};
@@ -35,6 +36,7 @@ namespace zpr
 
 		Point position(double percent);
 		double length();
+		double bezier();
 		Point control();
 	};
 
@@ -45,6 +47,7 @@ namespace zpr
 		~StraightSegment();
 		
 		double length();
+		double bezier();
 		Point position(double percent);
 	};
 }

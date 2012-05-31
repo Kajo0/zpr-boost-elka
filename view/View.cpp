@@ -193,6 +193,7 @@ namespace zpr
 	void View::refresh()
 	{
 		Graph g = model_.streets();
+		ALLEGRO_TRANSFORM rotate_transformation;
 			
 		al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
 
@@ -208,7 +209,20 @@ namespace zpr
 		
 		for (Model::MCar::const_iterator it = model_.cars_.begin(); it != model_.cars_.end(); ++it)
 		{
-			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
+			//al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
+			// to wywale do funkcji jakos ale zeby rozroznialo obiekt to mozna byc tez rysowanie wywalic do funkcji
+			al_identity_transform(&rotate_transformation);
+			al_translate_transform(&rotate_transformation, -it->second->position().x_, -it->second->position().y_);
+			al_rotate_transform(&rotate_transformation, it->second->angle());
+			al_translate_transform(&rotate_transformation, it->second->position().x_, it->second->position().y_);
+			al_use_transform(&rotate_transformation);
+
+			al_draw_filled_rectangle(it->second->position().x_ - 7, it->second->position().y_ - 4,
+										it->second->position().x_ + 7, it->second->position().y_ + 4,
+										al_map_rgb(0, 53, 206));
+			
+			al_identity_transform(&rotate_transformation);
+			al_use_transform(&rotate_transformation);
 			
 			int height = al_get_font_line_height(font_);
 			std::string position = it->second->position().str();
@@ -220,7 +234,21 @@ namespace zpr
 
 		for (Model::MWalker::const_iterator it = model_.walkers_.begin(); it != model_.walkers_.end(); ++it)
 		{
-			al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(200, 53, 206));
+			//al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(200, 53, 206));
+			//TODO copy pase remove
+			al_identity_transform(&rotate_transformation);
+			al_translate_transform(&rotate_transformation, -it->second->position().x_, -it->second->position().y_);
+			al_rotate_transform(&rotate_transformation, it->second->angle());
+			al_translate_transform(&rotate_transformation, it->second->position().x_, it->second->position().y_);
+			al_use_transform(&rotate_transformation);
+			
+			al_draw_filled_triangle(it->second->position().x_ - 5, it->second->position().y_ - 5,
+									it->second->position().x_ + 10, it->second->position().y_,
+									it->second->position().x_ - 5, it->second->position().y_ + 5,
+									al_map_rgb(200, 53, 206));
+			
+			al_identity_transform(&rotate_transformation);
+			al_use_transform(&rotate_transformation);
 
 			int height = al_get_font_line_height(font_);
 			std::string description = "x = " + (boost::format("%6.3f") % it->second->position().x_).str() + " y = " + (boost::format("%6.3f") % it->second->position().y_).str();

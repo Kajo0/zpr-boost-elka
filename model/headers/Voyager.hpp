@@ -18,7 +18,8 @@ namespace zpr
 	public://protected:
 		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
 		double velocity_;
-		double percentDistanceTraveled;
+		double angle_;
+		double percentDistanceTraveled_;
 		PTrack track_;
 
 		bool finished_;	// czy skonczyl trase
@@ -29,6 +30,7 @@ namespace zpr
 		
 		virtual const std::string& id() const = 0;
 		const Point& position() const;
+		double angle() const;
 		void track(const PTrack track);
 		virtual void reset(); // daje na poczatek i stopuje
 		virtual void move(long long int elapsed_time) = 0;	// oczywiscie w milisekundach

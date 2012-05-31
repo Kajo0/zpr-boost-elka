@@ -24,7 +24,7 @@ namespace zpr
 		Track();
 		virtual ~Track() = 0;
 		virtual void addPoint(Point point) = 0;
-		Point positionOnTrack(double percent);
+		std::pair<Point, double> positionOnTrack(double percent);
 		Point start();
 		Point finish();
 		double length();
