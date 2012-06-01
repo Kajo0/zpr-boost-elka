@@ -5,8 +5,8 @@
 
 namespace zpr
 {
-	Vehicle::Vehicle(std::string &id, double acceleration, double weight, double maxSpeed): // przyspieszenie zbilem do ms, predkosc do m / s (chyba)
-						registration_(id), acceleration_(acceleration * 0.000001), weight_(weight), maxSpeed_(maxSpeed * 0.277777777), break_(false)
+	Vehicle::Vehicle(std::string &id, double acceleration, double weight, double maxSpeed):
+						registration_(id), acceleration_(acceleration), weight_(weight), maxSpeed_(maxSpeed * (10.0 / 36.0)), break_(false)
 	{
 		track_ = PTrack( new VehicleTrack() );
 	}
@@ -27,23 +27,11 @@ namespace zpr
 		position_ = track_->start();
 	}
 
-	void Vehicle::move(long long int elapsed_time) // co 10 ms
+	void Vehicle::move(long long int elapsed_time)
 	{
-		double on_bezier = track_->positionOnTrack( percentDistanceTraveled_ ).second;
+		double dt = (double) elapsed_time / 1000;
 
-		// nie jest na bezierze i nie hamuje to zwieksza
-		if (!on_bezier && !break_)
-		{
-			velocity_ += acceleration_ * elapsed_time;
-		} // nie jest na bezierze i hamuje to zmniejsza predkosc
-		else if (!on_bezier && break_)
-		{
-			velocity_ -= acceleration_ * elapsed_time;
-		} // na bezierze nie hamuj juz, tylko jedzie stala predkoscia
-		else if (on_bezier)
-		{
-			break_ = false;
-		}
+		double on_bezier = track_->positionOnTrack( percentDistanceTraveled_ ).second;
 		
 		// spr hamowanie ale tylko jak nie hamuje juz i nie jest na bezierze
 		if (!break_ && !on_bezier)
@@ -55,9 +43,9 @@ namespace zpr
 			// tu mam procent drogi oznaczajacy poczatek beziera i kat zakretu (ostrzejszy zakret -> mniejszy kat)
 			std::pair<double, double> nextangle = track_->nextBezierDistanceAngle(percentDistanceTraveled_);
 
-			double max_velocity_on_bezier = nextangle.second * 0.01;
+			double max_velocity_on_bezier = maxSpeed_ * (nextangle.second / 3.141); // % zakretu % maxSpeeda - do tylu ma zwolnic
 			// licze tu czas jak dlugo hamuje z liniowy hamowaniem- > hamuje tak szybko jak przyspiesza
-			long long int breaking_time = (velocity_ - max_velocity_on_bezier) / acceleration_;
+			double breaking_time = (velocity_ - max_velocity_on_bezier) / acceleration_; //zfizykuj to !!!!!!!!!!!!!!!
 
 			if (velocity_ > max_velocity_on_bezier)
 			{
@@ -74,12 +62,30 @@ namespace zpr
 			}
 		}
 
+		// nie jest na bezierze i nie hamuje to zwieksza
+		if (!on_bezier && !break_)
+		{
+			velocity_ += acceleration_ * dt;
+		} // nie jest na bezierze i hamuje to zmniejsza predkosc
+		else if (!on_bezier && break_)
+		{
+			velocity_ -= acceleration_ * dt;
+		} // na bezierze nie hamuj juz, tylko jedzie stala predkoscia
+		else if (on_bezier)
+		{
+			break_ = false;
+		}
+
 		if (velocity_ > maxSpeed_)
 			velocity_ = maxSpeed_;
+		if (velocity_ <= 0) {
+			velocity_ = 0.001;
+			break_ = false;
+		}
 
 		Point prev_position = position_;
 
-		percentDistanceTraveled_ += ( velocity_ * elapsed_time ) / track_->length();
+		percentDistanceTraveled_ += ( velocity_ * dt ) / track_->length();
 		position_ = track_->positionOnTrack( percentDistanceTraveled_ ).first;
 		
 		angle_ = Point::angle(prev_position, position_);
