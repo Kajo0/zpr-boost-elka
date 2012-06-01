@@ -2,7 +2,7 @@
 
 namespace zpr
 {
-	Voyager::Voyager(double velocity, Point position): velocity_(velocity), position_(position), angle_(0), percentDistanceTraveled_(0), finished_(false)
+	Voyager::Voyager(double velocity, Point position): velocity_(velocity * (10 / 36)), position_(position), angle_(0), percentDistanceTraveled_(0), finished_(false)
 	{
 	}
 

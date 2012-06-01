@@ -36,9 +36,13 @@ namespace zpr
 
 	void Walker::move(long long int elapsed_time)
 	{
+		double dt = (double) elapsed_time / 1000;
+
 		Point prev_position = position_;
-		percentDistanceTraveled_ += ( velocity_ * elapsed_time * 0.05 / 3.6 ) / track_->length();	// oczywiscie wypada udoskonalic bo czas to milisenkundy
+
+		percentDistanceTraveled_ += (velocity_ * dt) / track_->length();
 		position_ = track_->positionOnTrack( percentDistanceTraveled_ ).first;
+
 		angle_ = Point::angle(prev_position, position_);
 
 		if(percentDistanceTraveled_ > 1.0)
