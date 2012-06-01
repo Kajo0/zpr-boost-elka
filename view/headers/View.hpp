@@ -44,6 +44,7 @@ namespace zpr
 		const static int VISUALISATION_WIDTH;	// damy kwadrat do dyspozycji wizualizacji i po prawo jakies menu typu timer aktualny, stop, start itp
 		const static int VISUALISATION_HEIGHT;
 		const static int ALLEGRO_EVENT_TIMEOUT; //// in milliseconds
+		const static int SCALER;
 
 		ALLEGRO_DISPLAY *display_; // tu mamy nasz frame i wsio chyba w jednym
 		ALLEGRO_EVENT_QUEUE *eventQueue_; // tu eventy typu tez X on close

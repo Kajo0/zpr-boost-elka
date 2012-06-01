@@ -3,18 +3,18 @@
 
 <map>
 	<nodes>
-		<node x="0" y="150">	0</node>
-		<node x="0" y="450">	1</node>
-		<node x="150" y="150">	2</node>
-		<node x="150" y="450">	3</node>
-		<node x="150" y="600">	4</node>
-		<node x="300" y="100">	5</node>
-		<node x="500" y="0">	6</node>
-		<node x="500" y="200">	7</node>
-		<node x="500" y="400">	8</node>
-		<node x="400" y="800">	9</node>
-		<node x="600" y="200">	10</node>
-		<node x="600" y="400">	11</node>
+		<node x="0" y="50">	0</node>
+		<node x="0" y="150">	1</node>
+		<node x="50" y="50">	2</node>
+		<node x="50" y="150">	3</node>
+		<node x="50" y="200">	4</node>
+		<node x="100" y="33">	5</node>
+		<node x="166" y="0">	6</node>
+		<node x="166" y="66">	7</node>
+		<node x="166" y="133">	8</node>
+		<node x="133" y="266">	9</node>
+		<node x="200" y="66">	10</node>
+		<node x="200" y="133">	11</node>
 	</nodes>
 
 	<edges>

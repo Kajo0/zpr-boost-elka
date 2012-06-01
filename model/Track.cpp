@@ -3,7 +3,7 @@
 
 namespace zpr
 {
-	const double VehicleTrack::BEZIER_DIVISION = 50;
+	const double VehicleTrack::BEZIER_DIVISION = 10;
 
 	Track::Track() : length_(0.0)
 	{
