@@ -41,6 +41,7 @@ namespace zpr
 	 * @param percent Percent of track
 	 * @return Request position, on bezier segment or not
 	 */
+	// zwraca pozycje i czy jest na bezierze czy nie
 	std::pair<Point, double> Track::positionOnTrack(double percent)
 	{
 		if ( percent < 0 )
@@ -63,6 +64,31 @@ namespace zpr
 		}
 
 		return std::make_pair(Point(), 0);
+	}
+
+	// zwraca procend trasy do najblizszego beziera i kat jego
+	std::pair<double, double> Track::nextBezierDistanceAngle(double percent)
+	{
+		if ( percent < 0 )
+			percent = 0;
+		else if ( percent > 1 )
+			percent = 1;
+		
+		double traveled_length = length_ * percent;
+		double temp_length = 0;
+
+		for (DSegments::const_iterator it = segments_.begin(); it != segments_.end(); ++it)
+		{
+			temp_length += (*it)->length();
+
+			if ( traveled_length <= temp_length && (*it)->bezier() )
+			{
+				// zwraca pozycje z wyliczonego procenta procenta segmetnu na ktorym sie znajduje na tym zadanym procencie
+				return std::make_pair((temp_length - (*it)->length()) / length_, (*it)->bezier());
+			}
+		}
+
+		return std::make_pair(2, 0);
 	}
 
 	/**

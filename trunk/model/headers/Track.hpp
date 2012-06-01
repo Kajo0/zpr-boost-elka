@@ -25,6 +25,7 @@ namespace zpr
 		virtual ~Track() = 0;
 		virtual void addPoint(Point point) = 0;
 		std::pair<Point, double> positionOnTrack(double percent);
+		std::pair<double, double> nextBezierDistanceAngle(double percent);
 		Point start();
 		Point finish();
 		double length();

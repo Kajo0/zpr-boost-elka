@@ -25,14 +25,6 @@ namespace zpr
 	{
 		track_ = track;
 	}
-	
-	void Voyager::reset()
-	{
-		finished_ = false;
-		velocity_ = 0;
-		percentDistanceTraveled_ = 0;
-		position_ = track_->start();
-	}
 
 	bool Voyager::finished()
 	{
