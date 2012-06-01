@@ -12,14 +12,15 @@
 		</parameters>
 		
 		<track>
-			<point x="500" y="20" />
-			<point x="350" y="50" />
-			<point x="550" y="80" />
-			<point x="350" y="110" />
-			<point x="550" y="140" />
-			<point x="300" y="90" />
-			<point x="100" y="500" />
-			<point x="500" y="100" />
+			<point x="-100" y="150" />
+			<point x="50" y="150" />
+			<point x="50" y="50" />
+			<point x="133" y="266" />
+			<point x="166" y="133" />
+			<point x="250" y="133" />
+			<point x="250" y="66" />
+			<point x="166" y="66" />
+			<point x="166" y="0" />
 		</track>
 	</object>
 
@@ -34,9 +35,12 @@
 		</parameters>
 		
 		<track>
-			<point x="100.0" y="100.0" />
-			<point x="200.0" y="300.0" />
-			<point x="500.0" y="400.0" />
+			<point x="0" y="50" />
+			<point x="50" y="50" />
+			<point x="100" y="33" />
+			<point x="166" y="66" />
+			<point x="166" y="133" />
+			<point x="133" y="266" />
 		</track>
 	</object>
 	
@@ -51,10 +55,27 @@
 		</parameters>
 		
 		<track>
-			<point x="0" y="20" />
-			<point x="300" y="30" />
-			<point x="200" y="100" />
-			<point x="10" y="500" />
+			<point x="0" y="150" />
+			<point x="50" y="150" />
+			<point x="50" y="50" />
+			<point x="-50" y="50" />
+		</track>
+	</object>
+	
+	<object type="car">
+		<id>WW-OSQ</id>
+		
+		<parameters>
+			<acceleration>7</acceleration>
+			<weight>1100.0</weight>
+			<size>small</size>
+			<maxspeed>130.0</maxspeed>
+		</parameters>
+		
+		<track>
+			<point x="210" y="133" />
+			<point x="166" y="133" />
+			<point x="133" y="266" />
 		</track>
 	</object>
 
@@ -62,13 +83,14 @@
 		<id>Mirek Kowalski</id>
 		
 		<parameters>
-			<maxspeed>5.0</maxspeed>
+			<maxspeed>50.0</maxspeed>
 		</parameters>
 		
 		<track>
-			<point x="100.0" y="10.0" />
-			<point x="250.0" y="243.0" />
-			<point x="100.0" y="4.0" />
+			<point x="30" y="190" />
+			<point x="30" y="30" />
+			<point x="180" y="30" />
+			<point x="180" y="210" />
 		</track>
 	</object>
 
@@ -80,9 +102,9 @@
 		</parameters>
 		
 		<track>
-			<point x="500.0" y="500.0" />
-			<point x="100.0" y="500.0" />
-			<point x="500.0" y="10.0" />
+			<point x="200" y="50" />
+			<point x="70" y="50" />
+			<point x="15" y="210" />
 		</track>
 	</object>
 </objects>
