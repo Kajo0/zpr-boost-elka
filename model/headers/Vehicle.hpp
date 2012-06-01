@@ -22,6 +22,7 @@ namespace zpr
 		virtual ~Vehicle();
 
 		const std::string& id() const;
+		void reset();
 		void move(long long int elapsed_time);
 	};
 }
