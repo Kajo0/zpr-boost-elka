@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 #include <iostream>
+#include <string>
 
 namespace zpr
 {

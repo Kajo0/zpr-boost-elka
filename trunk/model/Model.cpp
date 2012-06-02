@@ -60,7 +60,7 @@ namespace zpr
 	{
 		Model::VTObject tmp;
 		BOOST_FOREACH(PVoyager & voyager, objects_)
-			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type()));
+			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type(), voyager->id(), voyager->velocity()));
 
 		return tmp;
 	}

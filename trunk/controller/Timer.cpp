@@ -12,7 +12,6 @@ namespace zpr
 
 	bool TimerListener::check(const TimePoint & now)
 	{
-		
 		if((now - previousTrigger_) > frequency_)
 		{
 			listener_(boost::chrono::duration_cast<boost::chrono::microseconds>(now - previousTrigger_).count());

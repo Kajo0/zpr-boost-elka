@@ -27,7 +27,8 @@ namespace zpr
 
 	double Point::angle(const Point &p1, const Point &p2)
 	{
-		return std::atan2(p2.y_ - p1.y_, p2.x_ - p1.x_);
+		double res = std::atan2(p2.y_ - p1.y_, p2.x_ - p1.x_);
+		return (res < 0.0 ? res + 2*3.14159265 : res);
 	}
 
 	Point operator+(Point p1, const Point & p2)
