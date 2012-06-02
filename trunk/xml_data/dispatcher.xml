@@ -20,7 +20,7 @@
 	</camera>
 	
 	<camera>
-		<id>3</id>
+		<id>2</id>
 		<position x="80" y="150" />
 		<direction>315</direction>
 		<angle>15</angle>
@@ -29,16 +29,16 @@
 	</camera>
 	
 	<camera>
-		<id>4</id>
+		<id>3</id>
 		<position x="65" y="165" />
 		<direction>215</direction>
-		<angle>50</angle>
+		<angle>100</angle>
 		<range>40.0</range>
-		<precision>0.5</precision>
+		<precision>0.99</precision>
 	</camera>
 	
 	<camera>
-		<id>5</id>
+		<id>4</id>
 		<position x="100" y="50" />
 		<direction>270</direction>
 		<angle>10</angle>
@@ -47,7 +47,7 @@
 	</camera>
 	
 	<camera>
-		<id>6</id>
+		<id>5</id>
 		<position x="165" y="170" />
 		<direction>180</direction>
 		<angle>15</angle>

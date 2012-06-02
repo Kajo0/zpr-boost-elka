@@ -1,5 +1,6 @@
 #include "Model.hpp"
 #include "Logger.hpp"
+#include <boost/foreach.hpp>
 
 namespace zpr
 {
@@ -9,7 +10,7 @@ namespace zpr
 
 	void Model::scheduleUpdate(long long int elapsedMicroseconds)
 	{
-		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
+		{
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
 			elapsedMicroseconds_ = elapsedMicroseconds;
 		}
@@ -35,28 +36,21 @@ namespace zpr
 		streets_ = graph;
 	}
 
-	void Model::addCamera(const Dispatcher::PCamera camera)
+	void Model::addCamera(const Dispatcher::PCamera & camera)
 	{
 		dispatcher_.addCamera(camera); // tak wiem.. , ale nie iwem jak to inaczej :P
 	}
 
-	void Model::addObject(const PCar car)
+	void Model::addObject(const PVoyager & object)
 	{
-		cars_.insert(std::make_pair(car->id(), car));
+		objects_.push_back(object);
 	}
 
-	void Model::addObject(const PWalker walker)
-	{
-		walkers_.insert(std::make_pair(walker->id(), walker));
-	}
-
-	// position, range, direction, angle
 	Model::VTCamera Model::cameras()
 	{
 		Model::VTCamera tmp;
-
-		for (Dispatcher::MCamera::const_iterator it = dispatcher_.cameras_.begin(); it != dispatcher_.cameras_.end(); ++it)
-			tmp.push_back(boost::make_tuple(it->second->position(), it->second->range(), it->second->direction(), it->second->angle()));
+		BOOST_FOREACH(const Dispatcher::MCamera::value_type & camera, dispatcher_.cameras_)
+			tmp.push_back(boost::make_tuple(camera.second->position(), camera.second->range(), camera.second->direction(), camera.second->angle()));
 
 		return tmp;
 	}
@@ -65,12 +59,8 @@ namespace zpr
 	Model::VTObject Model::objects()
 	{
 		Model::VTObject tmp;
-
-		for (MCar::const_iterator it = cars_.begin(); it != cars_.end(); ++it)
-			tmp.push_back(boost::make_tuple(it->second->position(), it->second->angle(), it->second->type()));
-
-		for (MWalker::const_iterator it = walkers_.begin(); it != walkers_.end(); ++it)
-			tmp.push_back(boost::make_tuple(it->second->position(), it->second->angle(), it->second->type()));
+		BOOST_FOREACH(PVoyager & voyager, objects_)
+			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type()));
 
 		return tmp;
 	}
@@ -112,15 +102,7 @@ namespace zpr
 
 	void Model::start()
 	{
-		// tak zeby dzialalo, bo nei rozkminialme dokladnie binda czy tam lambdy
-		for (MCar::const_iterator it = cars_.begin(); it != cars_.end(); ++it)
-		{
-			it->second->reset();
-		}
-		for (MWalker::const_iterator it = walkers_.begin(); it != walkers_.end(); ++it)
-		{
-			it->second->reset();
-		}
+		std::for_each(objects_.begin(), objects_.end(), boost::bind(&Voyager::reset, _1));
 	}
 
 	void Model::switchLoop()
@@ -135,26 +117,13 @@ namespace zpr
 
 	void Model::nextStep(long long int elapsed_time)
 	{
-		for (MCar::const_iterator it = cars_.begin(); it != cars_.end(); ++it)
+		BOOST_FOREACH(PVoyager & voyager, objects_)
 		{
-			if (loop_ && it->second->finished())
-				it->second->reset();
-
-			if (!it->second->finished())
-				it->second->move(elapsed_time);
-			
-			dispatcher_.reportObject(*it->second.get());
-		}
-
-		for (MWalker::const_iterator it = walkers_.begin(); it != walkers_.end(); ++it)
-		{
-			if (loop_ && it->second->finished())
-				it->second->reset();
-
-			if (!it->second->finished())
-				it->second->move(elapsed_time);
-
-			dispatcher_.reportObject(*it->second.get());
+			if(!voyager->finished())
+				voyager->move(elapsed_time);
+			else if(loop_)
+				voyager->reset();
+			dispatcher_.reportObject(*voyager);
 		}
 	}
 }

@@ -222,9 +222,6 @@ namespace zpr
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
-		Model::PCar car;
-		Model::PWalker walker;
-		Voyager::PTrack track;
 	
 		try
 		{
@@ -242,12 +239,13 @@ namespace zpr
 
 					// TODO - tu wstaw fabryke jakos, ja tego nie widze za bardzo dla naszej aplikacyjki ale trzeba ladniej to zrobic :/
 					// przyspieszenie jakos z masy i max predkosci wyliczamy czy kak ?
+					Model::PCar car;
 					if (size == "big")
 						car.reset( new BigCar( id, acceleration, weight, mspeed ) );
 					else if (size == "small")
 						car.reset( new SmallCar( id, acceleration, weight, mspeed ) );
 					
-					track.reset(new VehicleTrack());
+					Voyager::PTrack track(new VehicleTrack());
 					car->track(track);
 
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
@@ -265,9 +263,7 @@ namespace zpr
 					std::string id = v.second.get<std::string>("id");
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
-					walker.reset( new Walker( id, mspeed ) );
-					track.reset(new WalkerTrack());
-					walker->track(track);
+					Voyager::PTrack track(new WalkerTrack());
 					
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
 					{
@@ -276,7 +272,9 @@ namespace zpr
 							
 						track->addPoint(point);
 					}
-
+					Model::PWalker walker(new Walker(id, mspeed));
+					walker->track(track);
+					
 					model_.addObject(walker);
 				}
 			}
