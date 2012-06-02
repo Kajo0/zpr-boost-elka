@@ -10,7 +10,7 @@ namespace zpr
 	 */
 	class Vehicle : public Voyager
 	{
-	public://protected:
+		protected:
 		double acceleration_;
 		double weight_;
 		double maxSpeed_;

@@ -14,6 +14,26 @@ namespace zpr
 	{
 		return id_;
 	}
+	
+	double Camera::range() const
+	{
+		return range_;
+	}
+	
+	double Camera::angle() const
+	{
+		return angle_;
+	}
+	
+	double Camera::direction() const
+	{
+		return direction_;
+	}
+
+	const Point Camera::position() const
+	{
+		return position_;
+	}
 
 	bool Camera::spotted(const Voyager & object) const
 	{

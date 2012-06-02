@@ -80,10 +80,10 @@
 	</object>
 
 	<object type="walker">
-		<id>Mirek Kowalski</id>
+		<id>Miro Sprinter</id>
 		
 		<parameters>
-			<maxspeed>50.0</maxspeed>
+			<maxspeed>20.0</maxspeed>
 		</parameters>
 		
 		<track>

@@ -7,4 +7,9 @@ namespace zpr
 	}
 
 	SmallCar::~SmallCar() {}
+	
+	OBJECTS SmallCar::type()
+	{
+		return OBJECTS::SMALLCAR;
+	}
 }

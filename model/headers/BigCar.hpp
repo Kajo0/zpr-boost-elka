@@ -13,6 +13,8 @@ namespace zpr
 		public:
 		BigCar(std::string &id, double acceleration, double weight, double maxSpeed);
 		~BigCar();
+		
+		OBJECTS type();
 	};
 }
 

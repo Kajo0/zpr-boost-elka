@@ -6,38 +6,41 @@
 #include "Walker.hpp"
 #include "Graph.hpp"
 #include <map>
+#include <vector>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
+#include <boost/tuple/tuple.hpp>
 
 namespace zpr
 {
-	class Controller;
 	/**
 	 * Sth about model
 	 */
 	class Model
 	{
-	
-	public:
+		public:
 		static const long long int TIME_SCALE = 1000; // 1ms symulacji == 1s prawdziwa
-		friend class Controller;
-		friend class View; // to tylko teraz do ulatwienia sporego testu
 
 		typedef boost::shared_ptr<Vehicle> PCar;
 		typedef std::map<std::string, PCar> MCar;
 		typedef boost::shared_ptr<Walker> PWalker;
 		typedef std::map<std::string, PWalker> MWalker;
+		typedef boost::shared_ptr<Graph> PGraph;
+		typedef boost::tuple<Point, double, double, double> TCamera; // pos, range, dir, angle
+		typedef std::vector<TCamera> VTCamera;
+		typedef boost::tuple<Point, double, OBJECTS> TObject;	// pos, angle, size
+		typedef std::vector<TObject> VTObject;
 
+		private:
 		Dispatcher dispatcher_;
+		PGraph streets_;
 		MCar cars_;
 		MWalker walkers_;
-		Graph streets_;
-
-		bool loop_; // zapetlenie wlasnie
-
+		
 		boost::condition_variable updateCondition_;
 		long long int elapsedMicroseconds_;
 		boost::mutex updateMutex_;
+		bool loop_;
 
 		public:
 		Model();
@@ -45,8 +48,14 @@ namespace zpr
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
 		void switchLoop();
 		void nextStep(long long int elapsed_time);
+		void addCamera(const Dispatcher::PCamera camera);
+		void addObject(const PCar car);
+		void addObject(const PWalker walker);
 
-		Graph& streets() { return streets_; } // testowe do view
+		PGraph streets();
+		void streets(const PGraph graph);
+		VTCamera cameras();
+		VTObject objects();
 
 		void operator()();
 		void scheduleUpdate(long long int elapsedMicroseconds);

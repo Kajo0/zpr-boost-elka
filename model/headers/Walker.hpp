@@ -18,6 +18,8 @@ namespace zpr
 		~Walker();
 		Walker(const Walker &other);
 		Walker& operator=(const Walker &other);
+
+		OBJECTS type();
 		
 		const std::string& id() const;
 		void reset();

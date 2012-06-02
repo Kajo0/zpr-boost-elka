@@ -193,12 +193,12 @@ namespace zpr
 	// taki zarys tylk ozmienic dostep do tych rzeczy i mamy wizualizacje
 	void View::refresh()
 	{
-		Graph g = model_.streets();
+		Model::PGraph g = model_.streets();
 		ALLEGRO_TRANSFORM rotate_transformation;
 
 		al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
 
-		for (Graph::MVertices::const_iterator it = g.vertices_.begin(); it != g.vertices_.end(); ++it)
+		for (Graph::MVertices::const_iterator it = g->vertices_.begin(); it != g->vertices_.end(); ++it)
 		{
 			double w = 10 * SCALER;
 			for (Graph::MVertices::const_iterator i = it->second->edges_.begin(); i != it->second->edges_.end(); ++i)
@@ -208,64 +208,42 @@ namespace zpr
 			}
 			al_draw_filled_circle(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, w / 2, al_map_rgb(200, 200, 200));
 		}
-		
-		for (Model::MCar::const_iterator it = model_.cars_.begin(); it != model_.cars_.end(); ++it)
+
+		Model::VTObject objects = model_.objects();
+		for (Model::VTObject::const_iterator it = objects.begin(); it != objects.end(); ++it)
 		{
-			//al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(0, 53, 206));
-			// to wywale do funkcji jakos ale zeby rozroznialo obiekt to mozna byc tez rysowanie wywalic do funkcji
 			al_identity_transform(&rotate_transformation);
-			al_translate_transform(&rotate_transformation, -it->second->position().x_ * SCALER, -it->second->position().y_ * SCALER);
-			al_rotate_transform(&rotate_transformation, it->second->angle());
-			al_translate_transform(&rotate_transformation, it->second->position().x_ * SCALER, it->second->position().y_ * SCALER);
+			al_translate_transform(&rotate_transformation, -it->get<0>().x_ * SCALER, -it->get<0>().y_ * SCALER);
+			al_rotate_transform(&rotate_transformation, it->get<1>());
+			al_translate_transform(&rotate_transformation, it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER);
 			al_use_transform(&rotate_transformation);
 
-			al_draw_filled_rectangle((it->second->position().x_ - 2) * SCALER, (it->second->position().y_ - 1.5) * SCALER,
-										(it->second->position().x_ + 2) * SCALER, (it->second->position().y_ + 1.5) * SCALER,
-										al_map_rgb(0, 53, 206));
+			switch (it->get<2>())
+			{
+				case SMALLCAR:
+				case BIGCAR: al_draw_filled_rectangle((it->get<0>().x_ - 2) * SCALER, (it->get<0>().y_ - 1.5) * SCALER,
+														(it->get<0>().x_ + 2) * SCALER, (it->get<0>().y_ + 1.5) * SCALER,
+														al_map_rgb(0, 53, 206));
+					break;
+				case WALKER: al_draw_filled_triangle((it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ - 1) * SCALER,
+													(it->get<0>().x_ + 3) * SCALER, it->get<0>().y_ * SCALER,
+													(it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ + 1) * SCALER,
+													al_map_rgb(200, 53, 206));
+					break;
+			}
 			
 			al_identity_transform(&rotate_transformation);
 			al_use_transform(&rotate_transformation);
-			
-			int height = al_get_font_line_height(font_);
-			std::string position = it->second->position().str();
-			std::string velocity = "v = " + (boost::format("%6.3f") % it->second->velocity_).str() + " maxV = " + (boost::format("%6.3f") % it->second->maxSpeed_).str();
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_ * SCALER, it->second->position().y_ * SCALER, ALLEGRO_ALIGN_CENTRE, it->second->id().c_str());
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_ * SCALER, (it->second->position().y_) * SCALER + height, ALLEGRO_ALIGN_CENTRE, position.c_str());
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_ * SCALER, (it->second->position().y_) * SCALER + height + height, ALLEGRO_ALIGN_CENTRE, velocity.c_str());
 		}
 
-		for (Model::MWalker::const_iterator it = model_.walkers_.begin(); it != model_.walkers_.end(); ++it)
+		Model::VTCamera cameras = model_.cameras();
+		for (Model::VTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
 		{
-			//al_draw_filled_circle(it->second->position().x_, it->second->position().y_, 5, al_map_rgb(200, 53, 206));
-			//TODO copy pase remove
-			al_identity_transform(&rotate_transformation);
-			al_translate_transform(&rotate_transformation, -it->second->position().x_ * SCALER, -it->second->position().y_ * SCALER);
-			al_rotate_transform(&rotate_transformation, it->second->angle());
-			al_translate_transform(&rotate_transformation, it->second->position().x_ * SCALER, it->second->position().y_ * SCALER);
-			al_use_transform(&rotate_transformation);
-			
-			al_draw_filled_triangle((it->second->position().x_ - 1) * SCALER, (it->second->position().y_ - 1) * SCALER,
-									(it->second->position().x_ + 3) * SCALER, it->second->position().y_ * SCALER,
-									(it->second->position().x_ - 1) * SCALER, (it->second->position().y_ + 1) * SCALER,
-									al_map_rgb(200, 53, 206));
-			
-			al_identity_transform(&rotate_transformation);
-			al_use_transform(&rotate_transformation);
+			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 5, al_map_rgb(255,0,0));
 
-			int height = al_get_font_line_height(font_);
-			std::string description = "x = " + (boost::format("%6.3f") % it->second->position().x_).str() + " y = " + (boost::format("%6.3f") % it->second->position().y_).str();
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_ * SCALER, it->second->position().y_ * SCALER, ALLEGRO_ALIGN_CENTRE, it->second->id().c_str());
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position().x_ * SCALER, (it->second->position().y_) * SCALER + height, ALLEGRO_ALIGN_CENTRE, description.c_str());
-		}
-
-		for (Dispatcher::MCamera::const_iterator it = model_.dispatcher_.cameras_.begin(); it != model_.dispatcher_.cameras_.end(); ++it)
-		{
-			al_draw_filled_circle(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, 5, al_map_rgb(255,0,0));
-
-			al_draw_filled_pieslice(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, it->second->range_ * SCALER,
-						it->second->direction_ - it->second->angle_ / 2, it->second->angle_,
-						al_map_rgba(200,0,0,10));
-			al_draw_text(font_, al_map_rgb(0,0,0), it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, ALLEGRO_ALIGN_CENTRE, boost::lexical_cast<std::string>(it->second->id()).c_str());
+			al_draw_filled_pieslice(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, it->get<1>() * SCALER,
+									it->get<2>() - it->get<3>() / 2, it->get<3>(),
+									al_map_rgba(200,0,0,10));
 		}
 
 		drawMenu();

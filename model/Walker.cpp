@@ -12,6 +12,11 @@ namespace zpr
 	}
 
 	Walker::~Walker() {}
+	
+	OBJECTS Walker::type()
+	{
+		return OBJECTS::WALKER;
+	}
 
 	Walker::Walker(const Walker &other)
 	{
