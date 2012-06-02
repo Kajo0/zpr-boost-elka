@@ -9,6 +9,7 @@
 		<range>35.0</range>
 		<precision>0.80</precision>
 	</camera>
+	
 	<camera>
 		<id>1</id>
 		<position x="160" y="70" />
@@ -17,6 +18,7 @@
 		<range>10.0</range>
 		<precision>0.93</precision>
 	</camera>
+	
 	<camera>
 		<id>3</id>
 		<position x="80" y="150" />
@@ -25,6 +27,7 @@
 		<range>20.0</range>
 		<precision>0.98</precision>
 	</camera>
+	
 	<camera>
 		<id>4</id>
 		<position x="65" y="165" />
@@ -33,6 +36,7 @@
 		<range>40.0</range>
 		<precision>0.5</precision>
 	</camera>
+	
 	<camera>
 		<id>5</id>
 		<position x="100" y="50" />
@@ -41,6 +45,7 @@
 		<range>40.0</range>
 		<precision>0.75</precision>
 	</camera>
+	
 	<camera>
 		<id>6</id>
 		<position x="165" y="170" />

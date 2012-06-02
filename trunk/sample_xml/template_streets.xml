@@ -3,14 +3,14 @@
 
 <map>
 	<nodes>
-		<node x="1.0" y="1.0">1</node>	<!-- x, y, nodeID -->
+		<node x="1.0" y="1.0">1</node>	<!-- x, y, id wierzcholka -->
 		<node x="1.0" y="2.0">2</node>
 		<node x="2.0" y="2.0">3</node>
 		<node x="2.0" y="1.0">4</node>
 	</nodes>
 
-	<edges>
-		<edge from="1" to="2" />	<!-- modeFrom -> nodeTo; jednokierunkowe, graf skierowany -->
+	<edges>						<!-- krawedzie - graf nieskierowany -->
+		<edge from="1" to="2" />		<!-- krawedz pomiedzy wierzcholkami (from):(to) -->
 		<edge from="2" to="3" />
 		<edge from="3" to="4" />
 	</edges>

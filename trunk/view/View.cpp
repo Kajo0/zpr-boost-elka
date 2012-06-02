@@ -7,27 +7,21 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 #include <boost/make_shared.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/format.hpp>
 #include <boost/filesystem.hpp>
-#include "Base.hpp"
-#include "Track.hpp"
-#include "Walker.hpp"
-#include "SmallCar.hpp"
 
 namespace zpr
 {
-	const int View::WINDOW_WIDTH		= 800;
-	const int View::WINDOW_HEIGHT		= 600;
-	const int View::VISUALISATION_WIDTH	= 600;
+	const int View::WINDOW_WIDTH			= 800;
+	const int View::WINDOW_HEIGHT			= 600;
+	const int View::VISUALISATION_WIDTH		= 600;
 	const int View::VISUALISATION_HEIGHT	= 600;
 	const int View::ALLEGRO_EVENT_TIMEOUT	= 10;
 	const int View::SCALER = VISUALISATION_WIDTH / 200;
 
-	AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str())
-	{}
+	AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str()) {}
 
 	AllegroRectangle::AllegroRectangle(const Point & topLeft, const Point & bottomRight) :topLeft_(topLeft), bottomRight_(bottomRight) {}
+
 	AllegroRectangle::AllegroRectangle(int x1, int y1, int x2, int y2) :topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)) {}
 
 	bool AllegroRectangle::inside(const Point & check) const
@@ -78,7 +72,7 @@ namespace zpr
 		//al_init_image_addon();
 
 		// ponizej z nieznanych przyczyn current_path mi zwraca sciezke do katalogu z projektem a nie o poziom dalej do /debug...
-		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 10, 0);//al_load_ttf_font("times.ttf", 12, 0);
+		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 15, 0);//al_load_ttf_font("times.ttf", 12, 0);
 		if(!font_)
 			throw AllegroException("Failed to initialize font!");
 
@@ -196,7 +190,14 @@ namespace zpr
 		Model::PGraph g = model_.streets();
 		ALLEGRO_TRANSFORM rotate_transformation;
 
-		al_clear_to_color( al_map_rgb(0,100,0) ); // clear na zielono
+		static ALLEGRO_COLOR WALKER_COLOR		= al_map_rgb(200, 53, 206);
+		static ALLEGRO_COLOR BIGCAR_COLOR		= al_map_rgb(0, 53, 206);
+		static ALLEGRO_COLOR SMALLCAR_COLOR		= al_map_rgb(255, 126, 0);
+		static ALLEGRO_COLOR CAMERA_COLOR		= al_map_rgba(200,0,0,10);
+		static ALLEGRO_COLOR GROUND_COLOR		= al_map_rgb(0,100,0);
+		static ALLEGRO_COLOR STREETS_COLOR		= al_map_rgb(200, 200, 200);
+
+		al_clear_to_color(GROUND_COLOR);
 
 		for (Graph::MVertices::const_iterator it = g->vertices_.begin(); it != g->vertices_.end(); ++it)
 		{
@@ -204,9 +205,9 @@ namespace zpr
 			for (Graph::MVertices::const_iterator i = it->second->edges_.begin(); i != it->second->edges_.end(); ++i)
 			{
 				al_draw_line(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER,
-								i->second->position_.x_ * SCALER, i->second->position_.y_ * SCALER, al_map_rgb(200,200,200), w);
+								i->second->position_.x_ * SCALER, i->second->position_.y_ * SCALER, STREETS_COLOR, w);
 			}
-			al_draw_filled_circle(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, w / 2, al_map_rgb(200, 200, 200));
+			al_draw_filled_circle(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, w / 2, STREETS_COLOR);
 		}
 
 		Model::VTObject objects = model_.objects();
@@ -220,15 +221,18 @@ namespace zpr
 
 			switch (it->get<2>())
 			{
-				case SMALLCAR:
+				case SMALLCAR: al_draw_filled_rectangle((it->get<0>().x_ - 1.5) * SCALER, (it->get<0>().y_ - 1) * SCALER,
+														(it->get<0>().x_ + 1.5) * SCALER, (it->get<0>().y_ + 1) * SCALER,
+														SMALLCAR_COLOR);
+					break;
 				case BIGCAR: al_draw_filled_rectangle((it->get<0>().x_ - 2) * SCALER, (it->get<0>().y_ - 1.5) * SCALER,
 														(it->get<0>().x_ + 2) * SCALER, (it->get<0>().y_ + 1.5) * SCALER,
-														al_map_rgb(0, 53, 206));
+														BIGCAR_COLOR);
 					break;
 				case WALKER: al_draw_filled_triangle((it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ - 1) * SCALER,
 													(it->get<0>().x_ + 3) * SCALER, it->get<0>().y_ * SCALER,
 													(it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ + 1) * SCALER,
-													al_map_rgb(200, 53, 206));
+													WALKER_COLOR);
 					break;
 			}
 			
@@ -239,11 +243,11 @@ namespace zpr
 		Model::VTCamera cameras = model_.cameras();
 		for (Model::VTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
 		{
-			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 5, al_map_rgb(255,0,0));
+			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 5, CAMERA_COLOR);
 
 			al_draw_filled_pieslice(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, it->get<1>() * SCALER,
 									it->get<2>() - it->get<3>() / 2, it->get<3>(),
-									al_map_rgba(200,0,0,10));
+									CAMERA_COLOR);
 		}
 
 		drawMenu();
@@ -252,18 +256,22 @@ namespace zpr
 
 	void View::drawMenu()
 	{
-		al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, al_map_rgb(0, 0, 0));
-		startButton.drawFilled(al_map_rgb(255,0,0));
-		stopButton.drawFilled(al_map_rgb(255,0,0));
-		restartButton.drawFilled(al_map_rgb(255,0,0));
-		loopButton.drawFilled(al_map_rgb(255,0,0));
-		exitButton.drawFilled(al_map_rgb(255,0,0));
+		static ALLEGRO_COLOR BUTTON_COLOR	= al_map_rgb(110, 190, 230);
+		static ALLEGRO_COLOR MENU_BCG_COLOR	= al_map_rgb(100, 100, 100);
+		static ALLEGRO_COLOR FONT_COLOR		= al_map_rgb(255, 255, 255);
 
-		al_draw_text(font_, al_map_rgb(255,255,255), startButton.topLeft_.x_, startButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Start");
-		al_draw_text(font_, al_map_rgb(255,255,255), stopButton.topLeft_.x_, stopButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Stop");
-		al_draw_text(font_, al_map_rgb(255,255,255), restartButton.topLeft_.x_, restartButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Restart");
-		al_draw_text(font_, al_map_rgb(255,255,255), loopButton.topLeft_.x_, loopButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Zapetlenie");
-		al_draw_text(font_, al_map_rgb(255,255,255), exitButton.topLeft_.x_, exitButton.topLeft_.y_, ALLEGRO_ALIGN_LEFT, "Koniec");
+		al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MENU_BCG_COLOR);
+		startButton.drawFilled(BUTTON_COLOR);
+		stopButton.drawFilled(BUTTON_COLOR);
+		restartButton.drawFilled(BUTTON_COLOR);
+		loopButton.drawFilled(BUTTON_COLOR);
+		exitButton.drawFilled(BUTTON_COLOR);
+
+		al_draw_text(font_, FONT_COLOR, (startButton.topLeft_.x_ + startButton.bottomRight_.x_) / 2, (startButton.topLeft_.y_ + startButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Start");
+		al_draw_text(font_, FONT_COLOR, (stopButton.topLeft_.x_ + stopButton.bottomRight_.x_) / 2, (stopButton.topLeft_.y_ + stopButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Pause");
+		al_draw_text(font_, FONT_COLOR, (restartButton.topLeft_.x_ + restartButton.bottomRight_.x_) / 2, (restartButton.topLeft_.y_ + restartButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Restart");
+		al_draw_text(font_, FONT_COLOR, (loopButton.topLeft_.x_ + loopButton.bottomRight_.x_) / 2, (loopButton.topLeft_.y_ + loopButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Loop");
+		al_draw_text(font_, FONT_COLOR, (exitButton.topLeft_.x_ + exitButton.bottomRight_.x_) / 2, (exitButton.topLeft_.y_ + exitButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Finish");
 	}
 
 }

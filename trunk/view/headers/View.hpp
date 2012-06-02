@@ -13,13 +13,12 @@ namespace zpr
 
 	class AllegroException : public std::exception
 	{
-	public:
+		public:
 		AllegroException(const std::string & message);
 	};
 
 	struct AllegroRectangle
 	{
-	public:
 		Point topLeft_, bottomRight_;
 		AllegroRectangle(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0);
 		AllegroRectangle(const Point & topLeft, const Point & bottomRight);
@@ -30,7 +29,6 @@ namespace zpr
 
 	struct AllegroButton
 	{
-	public:
 		AllegroRectangle area_;
 		std::string title_;
 		// TODO
