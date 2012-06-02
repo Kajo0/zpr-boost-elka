@@ -19,7 +19,7 @@ namespace zpr
 		typedef boost::shared_ptr<Camera> PCamera;
 		typedef std::map<int, PCamera> MCamera;
 
-	private:public:
+	private:public: // TODO wywalic jakos
 		MCamera cameras_;
 
 		public:

@@ -7,4 +7,9 @@ namespace zpr
 	}
 
 	BigCar::~BigCar() {}
+	
+	OBJECTS BigCar::type()
+	{
+		return OBJECTS::BIGCAR;
+	}
 }

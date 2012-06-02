@@ -16,6 +16,56 @@ namespace zpr
 		updateCondition_.notify_one();
 	}
 
+	Model::PGraph Model::streets()
+	{
+		return streets_;
+	}
+
+	void Model::streets(const PGraph graph)
+	{
+		streets_ = graph;
+	}
+
+	void Model::addCamera(const Dispatcher::PCamera camera)
+	{
+		dispatcher_.addCamera(camera); // tak wiem.. , ale nie iwem jak to inaczej :P
+	}
+
+	void Model::addObject(const PCar car)
+	{
+		cars_.insert(std::make_pair(car->id(), car));
+	}
+
+	void Model::addObject(const PWalker walker)
+	{
+		walkers_.insert(std::make_pair(walker->id(), walker));
+	}
+
+	// position, range, direction, angle
+	Model::VTCamera Model::cameras()
+	{
+		Model::VTCamera tmp;
+
+		for (Dispatcher::MCamera::const_iterator it = dispatcher_.cameras_.begin(); it != dispatcher_.cameras_.end(); ++it)
+			tmp.push_back(boost::make_tuple(it->second->position(), it->second->range(), it->second->direction(), it->second->angle()));
+
+		return tmp;
+	}
+
+	// position, angle, type
+	Model::VTObject Model::objects()
+	{
+		Model::VTObject tmp;
+
+		for (MCar::const_iterator it = cars_.begin(); it != cars_.end(); ++it)
+			tmp.push_back(boost::make_tuple(it->second->position(), it->second->angle(), it->second->type()));
+
+		for (MWalker::const_iterator it = walkers_.begin(); it != walkers_.end(); ++it)
+			tmp.push_back(boost::make_tuple(it->second->position(), it->second->angle(), it->second->type()));
+
+		return tmp;
+	}
+
 	void Model::operator()()
 	{
 		try

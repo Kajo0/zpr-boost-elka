@@ -11,7 +11,7 @@ namespace zpr
 	 */
 	class Camera
 	{
-	public:
+		private:
 		const int id_;
 		Point position_;
 		double direction_;
@@ -23,6 +23,10 @@ namespace zpr
 		Camera(int id, Point position, double direction, double angle, double range, double precision);
 
 		int id() const;
+		double range() const;
+		double angle() const;
+		double direction() const;
+		const Point position() const;
 		bool spotted(const Voyager & object) const;
 		double noise() const;
 	};

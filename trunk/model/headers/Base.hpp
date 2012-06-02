@@ -6,7 +6,7 @@
 namespace zpr
 {
 	// to gdzies trzeba dac w ogole do tej abstract factory
-	enum objects { WALKER, SMALLCAR, BIGCAR, CAMERA };
+	enum OBJECTS { WALKER, SMALLCAR, BIGCAR, CAMERA };
 
 	/**
 	  * Basic structure identyfing object's position

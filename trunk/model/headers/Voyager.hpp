@@ -15,7 +15,7 @@ namespace zpr
 		public:
 		typedef boost::shared_ptr<Track> PTrack;
 
-	public://protected:
+		protected:
 		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
 		double velocity_;
 		double angle_;
@@ -27,6 +27,8 @@ namespace zpr
 		public:
 		Voyager(double velocity = 0.0, Point position = Point());
 		virtual ~Voyager() = 0;
+
+		virtual OBJECTS type() = 0;
 		
 		virtual const std::string& id() const = 0;
 		const Point& position() const;
