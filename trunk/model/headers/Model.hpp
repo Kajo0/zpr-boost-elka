@@ -40,13 +40,14 @@ namespace zpr
 		boost::condition_variable updateCondition_;
 		long long int elapsedMicroseconds_;
 		boost::mutex updateMutex_;
-		bool loop_;
-
+		bool loop_, active_, log_;
+	friend class Dispatcher;
 		public:
 		Model();
 
 		void start(); // wyzerowanie wszystkiego, ustawienie na pozycjach begin wszystkich obiektow
 		void switchLoop();
+		void setActive(bool active);
 		void nextStep(long long int elapsed_time);
 		void addCamera(const Dispatcher::PCamera camera);
 		void addObject(const PCar car);
@@ -59,6 +60,7 @@ namespace zpr
 
 		void operator()();
 		void scheduleUpdate(long long int elapsedMicroseconds);
+		void scheduleLog(long long int elapsedMicroseconds);
 	};
 }
 

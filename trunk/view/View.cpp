@@ -113,7 +113,7 @@ namespace zpr
 
 			refresh();
 
-			while(run)
+			while(run && !boost::this_thread::interruption_requested())
 			{
 				//// Waiting for refresh signal
 				{
