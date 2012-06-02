@@ -26,6 +26,11 @@ namespace zpr
 		track_ = track;
 	}
 
+	double Voyager::velocity() const
+	{
+		return velocity_;
+	}
+
 	bool Voyager::finished()
 	{
 		return finished_;

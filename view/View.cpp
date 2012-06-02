@@ -8,6 +8,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <boost/make_shared.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace zpr
 {
@@ -234,10 +235,11 @@ namespace zpr
 													(it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ + 1) * SCALER,
 													WALKER_COLOR);
 					break;
-			}
-			
+			}			
 			al_identity_transform(&rotate_transformation);
 			al_use_transform(&rotate_transformation);
+			al_draw_text(font_, al_map_rgb(0, 0, 0), it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, ALLEGRO_ALIGN_CENTRE, it->get<3>().c_str());
+			//al_draw_text(font_, al_map_rgb(0, 0, 0), it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER + 15, ALLEGRO_ALIGN_CENTRE, boost::lexical_cast<std::string>(it->get<4>()).c_str());
 		}
 
 		Model::VTCamera cameras = model_.cameras();

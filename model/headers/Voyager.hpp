@@ -33,6 +33,7 @@ namespace zpr
 		virtual const std::string& id() const = 0;
 		const Point& position() const;
 		double angle() const;
+		double velocity() const;
 		void track(const PTrack track);
 		virtual void reset() = 0; // daje na poczatek i stopuje
 		virtual void move(long long int elapsed_time) = 0;	// oczywiscie w milisekundach

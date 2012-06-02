@@ -14,7 +14,7 @@ namespace zpr
 		double acceleration_;
 		double weight_;
 		double maxSpeed_;
-		const std::string registration_;
+		/*const*/ std::string registration_;
 		bool break_;
 
 		public:

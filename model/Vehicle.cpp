@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include <boost/lexical_cast.hpp>
+
 namespace zpr
 {
 	Vehicle::Vehicle(std::string &id, double acceleration, double weight, double maxSpeed)
@@ -33,6 +35,24 @@ namespace zpr
 
 		double on_bezier = track_->positionOnTrack( percentDistanceTraveled_ ).second;
 		
+
+
+
+		// M Testy
+		/*double tprzysp = maxSpeed_ / acceleration_;
+
+		double testTick = (velocity_ * dt) / track_->length();
+		Point testPosition_ = track_->positionOnTrack(testTick).first;
+		
+		double testAngle = Point::angle(position_, testPosition_);
+		if(testAngle < 0.01)
+			registration_ = "ZERO";
+		else
+			registration_ = boost::lexical_cast<std::string>(testAngle);//"zakret";*/
+		//
+
+
+
 		// spr hamowanie ale tylko jak nie hamuje juz i nie jest na bezierze
 		if (!break_ && !on_bezier)
 		{

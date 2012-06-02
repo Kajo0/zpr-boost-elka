@@ -22,13 +22,11 @@ namespace zpr
 		static const long long int TIME_SCALE = 1000; // 1ms symulacji == 1s prawdziwa
 
 		typedef boost::shared_ptr<Vehicle> PCar;
-		typedef std::map<std::string, PCar> MCar;
 		typedef boost::shared_ptr<Walker> PWalker;
-		typedef std::map<std::string, PWalker> MWalker;
 		typedef boost::shared_ptr<Graph> PGraph;
 		typedef boost::tuple<Point, double, double, double> TCamera; // pos, range, dir, angle
 		typedef std::vector<TCamera> VTCamera;
-		typedef boost::tuple<Point, double, OBJECTS> TObject;	// pos, angle, size
+		typedef boost::tuple<Point, double, OBJECTS, std::string, double> TObject;	// pos, angle, size, name, velocity
 		typedef std::vector<TObject> VTObject;
 
 		typedef boost::shared_ptr<Voyager> PVoyager;
