@@ -8,6 +8,7 @@
 
 namespace zpr
 {
+	class Model; // tmp
 	/**
 	 * Holds cameras and manages them
 	 */
@@ -25,6 +26,7 @@ namespace zpr
 		public:
 		void addCamera(const PCamera camera);
 		void reportObject(const Voyager & object);
+		void log(Model & model);
 	};
 }
 

@@ -38,8 +38,8 @@ namespace zpr
 		void runThreads();	// starts all dependent threads - model, view and timer
 		void endThreads();	// interrupts and waits for run threads to complete
 
-		void start();	// make the simulation active
-		void stop();	// pause the simulation
+		//void start();	// make the simulation active
+		//void stop();	// pause the simulation
 
 		Model model_;
 		View view_;

@@ -3,7 +3,7 @@
 
 namespace zpr
 {
-	Model::Model() : elapsedMicroseconds_(-1), loop_(false)
+	Model::Model() : elapsedMicroseconds_(-1), loop_(false), active_(false), log_(false)
 	{
 	}
 
@@ -12,6 +12,15 @@ namespace zpr
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
 			elapsedMicroseconds_ = elapsedMicroseconds;
+		}
+		updateCondition_.notify_one();
+	}
+
+	void Model::scheduleLog(long long int elapsedMicroseconds)
+	{
+		{
+			boost::lock_guard<boost::mutex> lock(updateMutex_);
+			log_ = true;
 		}
 		updateCondition_.notify_one();
 	}
@@ -70,16 +79,23 @@ namespace zpr
 	{
 		try
 		{
-			while(1)
+			while(!boost::this_thread::interruption_requested())
 			{
 				//// Waiting for update signal
 				{
 					boost::unique_lock<boost::mutex> lock(updateMutex_);
-					while(elapsedMicroseconds_ < 0)
+					while(elapsedMicroseconds_ < 0 && log_ == false)
 						updateCondition_.wait(lock);
 					
-					nextStep(elapsedMicroseconds_/1000);
+					if(active_)
+					{
+						if(elapsedMicroseconds_ >= 0)
+							nextStep(elapsedMicroseconds_/1000);
+						else if(log_)
+							dispatcher_.log(*this);
+					}
 					elapsedMicroseconds_ = -1;
+					log_ = false;
 				}
 			}
 		}
@@ -110,6 +126,11 @@ namespace zpr
 	void Model::switchLoop()
 	{
 		loop_ = !loop_;
+	}
+
+	void Model::setActive(bool active)
+	{
+		active_ = active;
 	}
 
 	void Model::nextStep(long long int elapsed_time)

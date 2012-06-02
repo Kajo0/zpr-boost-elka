@@ -18,7 +18,7 @@
 
 namespace zpr
 {
-	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true), timer_(boost::chrono::milliseconds(10))
+	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)//, timer_(boost::chrono::milliseconds(10))
 	{
 		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
 
@@ -51,9 +51,9 @@ namespace zpr
 
 		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
 		
-		timer_.AddListener(boost::bind(&Model::scheduleUpdate, &model_, _1));
-		timer_.AddListener(boost::bind(&View::scheduleRefresh, &view_, _1));
-		
+		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleUpdate, &model_, _1), boost::chrono::milliseconds(10)));
+		timer_.AddListener(TimerListener(boost::bind(&View::scheduleRefresh, &view_, _1), boost::chrono::milliseconds(10)));
+		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleLog, &model_, _1), boost::chrono::milliseconds(1000)));
 	}
 	
 	void Controller::scheduleEvent(const boost::shared_ptr<Event> & newEvent)
@@ -86,7 +86,7 @@ namespace zpr
 	void Controller::run()
 	{
 		runThreads();
-		while(run_)
+		while(run_ && !boost::this_thread::interruption_requested())
 		{
 			
 			boost::unique_lock<boost::mutex> lock(eventMutex_);
@@ -102,18 +102,20 @@ namespace zpr
 
 	void Controller::Process(EventStart&)
 	{
-		timer_.start();
+		//timer_.start();
+		model_.setActive(true);
 	}
 
 	void Controller::Process(EventStop&)
 	{
-		timer_.stop();
+		model_.setActive(false);
+		//timer_.stop();
 	}
 
 	void Controller::Process(EventRestart&)
 	{
-		timer_.step(0);
 		model_.start();
+		view_.scheduleRefresh(0);
 	}
 
 	void Controller::Process(EventClose&)

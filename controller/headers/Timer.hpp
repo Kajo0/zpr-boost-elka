@@ -7,29 +7,39 @@
 
 namespace zpr
 {
+	typedef boost::chrono::high_resolution_clock::time_point TimePoint;
+	typedef boost::chrono::high_resolution_clock::duration Duration;
+		
+	class TimerListener
+	{
+	public:
+		TimerListener(boost::function<void (long long int)> listener, const Duration & frequency);
+		bool check(const TimePoint & now); // microseconds since simulation start
+
+	private:
+		TimePoint previousTrigger_;
+		Duration frequency_;
+		boost::function<void (long long int)> listener_;
+	};
+
 	class Timer
 	{
 	public:
-		typedef boost::chrono::high_resolution_clock::time_point TimePoint;
-		typedef boost::chrono::high_resolution_clock::duration Duration;
-
-		Timer(const Duration & frequency);
+		Timer();
 		
-		void start();
-		void stop();
-		void step(long long int elapsed);
+		//void start();
+		//void stop();
 		long long int elapsed() const; // microseconds
 		
-		void AddListener(boost::function<void (long long int)> listener); // microseconds
+		void AddListener(TimerListener listener); // microseconds
 		void operator()();
 		
 	private:
-		TimePoint Now() const;
+		TimePoint now() const;
 		
-		bool active_;
-		Duration frequency_;
+		//bool active_;
 		TimePoint started_;
-		std::deque<boost::function<void (long long int)> > listeners_;
+		std::deque<TimerListener> listeners_;
 	};
 }
 #endif // TIMER_HPP
