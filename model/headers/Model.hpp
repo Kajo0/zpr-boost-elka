@@ -31,11 +31,14 @@ namespace zpr
 		typedef boost::tuple<Point, double, OBJECTS> TObject;	// pos, angle, size
 		typedef std::vector<TObject> VTObject;
 
+		typedef boost::shared_ptr<Voyager> PVoyager;
+
 		private:
 		Dispatcher dispatcher_;
 		PGraph streets_;
-		MCar cars_;
-		MWalker walkers_;
+		std::deque<PVoyager> objects_;
+		//MCar cars_;
+		//MWalker walkers_;
 		
 		boost::condition_variable updateCondition_;
 		long long int elapsedMicroseconds_;
@@ -49,9 +52,10 @@ namespace zpr
 		void switchLoop();
 		void setActive(bool active);
 		void nextStep(long long int elapsed_time);
-		void addCamera(const Dispatcher::PCamera camera);
-		void addObject(const PCar car);
-		void addObject(const PWalker walker);
+		void addCamera(const Dispatcher::PCamera & camera);
+		void addObject(const PVoyager & object);
+		//void addObject(const PCar car);
+		//void addObject(const PWalker walker);
 
 		PGraph streets();
 		void streets(const PGraph graph);
