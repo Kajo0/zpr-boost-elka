@@ -31,12 +31,11 @@ namespace zpr
 
 		public:
 		/**
-		 * Voyager constructor - default idle on (0, 0)
+		 * Voyager constructor.
 		 *
-		 * @param velocity object velocity
-		 * @param position object position
+		 * @param track object track
 		 */
-		Voyager(double velocity = 0.0, Point position = Point());
+		Voyager(const PTrack & track);
 		virtual ~Voyager() = 0;
 		
 		/**
@@ -70,14 +69,6 @@ namespace zpr
 		 */
 		double velocity() const;
 
-		
-		/**
-		 * Assign new track onto voyager
-		 *
-		 * @param new track
-		 */
-		void track(const PTrack track);
-		
 		/**
 		 * Reset object state
 		 */

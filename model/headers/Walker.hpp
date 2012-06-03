@@ -20,8 +20,9 @@ namespace zpr
 		 *
 		 * @param name walker name / id
 		 * @param velocity walker velocity [km/h]
+		 * @param track object track
 		 */
-		Walker(const std::string &name, double velocity);
+		Walker(const std::string &name, double velocity, const PTrack & track);
 		~Walker();
 		
 		/**

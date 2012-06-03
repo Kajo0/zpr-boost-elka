@@ -18,9 +18,9 @@ namespace zpr
 		 * @param acceleration cars acceleration
 		 * @param weight cars weight
 		 * @param maxSpeed maximum cars velocity
+		 * @param track object track
 		 */
-		BigCar(const std::string &id, double acceleration, double weight, double maxSpeed);
-		~BigCar();
+		BigCar(const std::string &id, double acceleration, double weight, double maxSpeed, const PTrack & track);
 		
 		/**
 		 * Check object type (enum)

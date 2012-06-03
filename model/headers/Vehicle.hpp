@@ -30,9 +30,9 @@ namespace zpr
 		 * @param acceleration vehicle acceleration [m/s]
 		 * @param weight vehicle weight [kg]
 		 * @param maxSpeed vehicle maximum velocity [km/h]
+		 * @param track object track
 		 */
-		Vehicle(const std::string &id, double acceleration, double weight, double maxSpeed);
-		virtual ~Vehicle();
+		Vehicle(const std::string &id, double acceleration, double weight, double maxSpeed, const PTrack & track);
 		
 		/**
 		 *

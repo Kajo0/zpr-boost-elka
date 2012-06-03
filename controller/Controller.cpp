@@ -18,38 +18,29 @@
 
 namespace zpr
 {
-	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)//, timer_(boost::chrono::milliseconds(10))
+	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)
 	{
-		//logger tez bezie przechowywal przebieg dzialania aplikacji -> bledy jakie ludek zrobil w trakcie
-
-		std::string paths[] = { "xml_data/dispatcher.xml", "xml_data/streets.xml", "xml_data/objects.xml" };
-		std::string mesgs[] = { "Retype path (ex. '", "') or type 'q' to exit:\n\t", "No matching path like: " };
+		std::string paths[3] = { "xml_data/dispatcher.xml", "xml_data/streets.xml", "xml_data/objects.xml" };
+		std::string mesgs[3] = { "Retype path (ex. '", "') or type 'q' to exit:\n\t", "No matching path like: " };
 		
-		// to na razie
 		for (int i = 0; i < 3; ++i)
 		{
-			while ( !boost::filesystem::exists(path / paths[i]) )
+			while (!boost::filesystem::exists(path / paths[i]))
 			{
-				std::cout<<mesgs[2]<<paths[i]<<std::endl;
+				std::cout << mesgs[2] << paths[i] << std::endl;
+				std::cout << mesgs[0] << paths[i] << mesgs[1];
+				std::cin >> paths[i];
 
-				std::cout<<mesgs[0]<<paths[i]<<mesgs[1];
-				std::cin>>paths[i];
-
-				if (paths[i] == "q")
-				{
-					std::string msg = "Quit without starting application while trying to load ";
-					msg.append(paths[i]);
-					throw(std::exception(msg.c_str()));
-				}
+				if(paths[i] == "q")
+					throw(std::runtime_error(("Quit without starting application while trying to load " + paths[i]).c_str()));
 			}
 		}
 
-		// punkt wyjscia z programu jest jeden, zandych exit(0); stad wyjatki poleca do maina
 		parseDispatcher(path / paths[0]);
 		parseMap(path / paths[1]);
 		parseObjects(path / paths[2]);
 
-		model_.start();	// ustawienie na poczatku - tylko test pozycjonowania
+		model_.start();
 		
 		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleUpdate, &model_, _1), boost::chrono::milliseconds(10)));
 		timer_.AddListener(TimerListener(boost::bind(&View::scheduleRefresh, &view_, _1), boost::chrono::milliseconds(10)));
@@ -85,45 +76,55 @@ namespace zpr
 
 	void Controller::run()
 	{
-		runThreads();
-		while(run_ && !boost::this_thread::interruption_requested())
+		try
 		{
+			runThreads();
+			while(run_ && !boost::this_thread::interruption_requested())
+			{
 			
-			boost::unique_lock<boost::mutex> lock(eventMutex_);
-			while(eventQueue_.empty())
-				eventCondition_.wait(lock);
+				boost::unique_lock<boost::mutex> lock(eventMutex_);
+				while(eventQueue_.empty())
+					eventCondition_.wait(lock);
 					
-			boost::shared_ptr<Event> ev = eventQueue_.front();
-			eventQueue_.pop();
-			ev->accept(*this);
+				boost::shared_ptr<Event> ev = eventQueue_.front();
+				eventQueue_.pop();
+				ev->accept(*this);
+			}
+		}
+		catch(boost::thread_interrupted)
+		{
+			// thread interrupted
+			// closes gracefully
+		}
+		catch(...)
+		{
+			Logger::getInstance().error("Unknown Controller exception.");
 		}
 		endThreads();
 	}
 
-	void Controller::Process(EventStart&)
+	void Controller::Process(const EventStart&)
 	{
-		//timer_.start();
 		model_.setActive(true);
 	}
 
-	void Controller::Process(EventStop&)
+	void Controller::Process(const EventStop&)
 	{
 		model_.setActive(false);
-		//timer_.stop();
 	}
 
-	void Controller::Process(EventRestart&)
+	void Controller::Process(const EventRestart&)
 	{
 		model_.start();
 		view_.scheduleRefresh(0);
 	}
 
-	void Controller::Process(EventClose&)
+	void Controller::Process(const EventClose&)
 	{
 		run_ = false;
 	}
 
-	void Controller::Process(EventLoop&)
+	void Controller::Process(const EventLoop&)
 	{
 		model_.switchLoop();
 	}
@@ -132,34 +133,27 @@ namespace zpr
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
-		Dispatcher::PCamera cam;
 	
 		try
 		{
 			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
-
-			BOOST_FOREACH( ptree::value_type &v, pt.get_child("dispatcher") )
+			BOOST_FOREACH(ptree::value_type &v, pt.get_child("dispatcher"))
 			{
 				// get cam parameteres
 				int id = v.second.get<int>("id");
-				Point position( v.second.get<double>("position.<xmlattr>.x"), v.second.get<double>("position.<xmlattr>.y") );
+				Point position(v.second.get<double>("position.<xmlattr>.x"), v.second.get<double>("position.<xmlattr>.y"));
 				double direction = v.second.get<double>("direction");
 				double angle = v.second.get<double>("angle");
 				double range = v.second.get<double>("range");
 				double precision = v.second.get<double>("precision");
 
 				// add camera
-				model_.addCamera( Dispatcher::PCamera(new Camera(id, position, direction, angle, range, precision)) );
+				model_.addCamera(Dispatcher::PCamera(new Camera(id, position, direction, angle, range, precision)));
 			}
 		}
 		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			std::string msg = e.what();
-			msg.append(" : in file (");
-			msg.append(path.string());
-			msg.append(")");
-
-			throw std::exception(msg.c_str());
+			throw std::runtime_error((std::string(e.what()) + " : in file (" + path.string() + ")").c_str());
 		}
 	}
 
@@ -167,54 +161,30 @@ namespace zpr
 	{
 		using boost::property_tree::ptree;
 		ptree pt;
-		Model::PGraph graph;
-	
+
 		try
 		{
 			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
-			//std::vector<std::pair<int, Point>> vertices;
-			//std::vector<std::pair<int, int>> edges;
-
-			graph.reset(new Graph());
+			Model::PGraph graph(new Graph());
 
 			BOOST_FOREACH( ptree::value_type &v, pt.get_child("map") )
 			{
 				if ( v.first == "nodes" )
-				{
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("") )
 					{
-						int id = vv.second.get<int>("");
 						Point position( vv.second.get<double>("<xmlattr>.x"), vv.second.get<double>("<xmlattr>.y") );
-						//std::cout<<"\tID: "<<id<<" x: "<<position.x_<<" y: "<<position.y_<<"\n";
-						//vertices.push_back(std::make_pair(id, position));
-
-						graph->addVertex(id, position);
+						graph->addVertex(vv.second.get<int>(""), position);
 					}
-				}
 				else if ( v.first == "edges" )
-				{
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("") )
-					{
-						int from = vv.second.get<int>("<xmlattr>.from");
-						int to = vv.second.get<int>("<xmlattr>.to");
-						//std::cout<<"\tFrom: "<<from<<" To: "<<to<<"\n";
-						//edges.push_back(std::make_pair(from, to));
-
-						graph->addEdge(from, to);
-					}
-				}
+						graph->addEdge(vv.second.get<int>("<xmlattr>.from"), vv.second.get<int>("<xmlattr>.to"));
 			}
 
 			model_.streets(graph);
 		}
 		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			std::string msg = e.what();
-			msg.append(" : in file (");
-			msg.append(path.string());
-			msg.append(")");
-
-			throw std::exception(msg.c_str());
+			throw std::runtime_error((std::string(e.what()) + " : in file (" + path.string() + ")").c_str());
 		}
 	}
 
@@ -226,37 +196,24 @@ namespace zpr
 		try
 		{
 			read_xml(path.string(), pt, boost::property_tree::xml_parser::no_comments);
-
-			BOOST_FOREACH( ptree::value_type &v, pt.get_child("objects") )
+			BOOST_FOREACH(ptree::value_type &v, pt.get_child("objects"))
 			{
-				if ( v.second.get<std::string>("<xmlattr>.type") == "car" )
+				if (v.second.get<std::string>("<xmlattr>.type") == "car")
 				{
 					std::string id = v.second.get<std::string>("id");
 					double acceleration = v.second.get<double>("parameters.acceleration");
 					double weight = v.second.get<double>("parameters.weight");
-					std::string size = v.second.get<std::string>("parameters.size"); // potem enum jakis trza ogarnac
+					std::string size = v.second.get<std::string>("parameters.size");
 					double mspeed = v.second.get<double>("parameters.maxspeed");
-
-					// TODO - tu wstaw fabryke jakos, ja tego nie widze za bardzo dla naszej aplikacyjki ale trzeba ladniej to zrobic :/
-					// przyspieszenie jakos z masy i max predkosci wyliczamy czy kak ?
-					Model::PCar car;
-					if (size == "big")
-						car.reset( new BigCar( id, acceleration, weight, mspeed ) );
-					else if (size == "small")
-						car.reset( new SmallCar( id, acceleration, weight, mspeed ) );
 					
 					Voyager::PTrack track(new VehicleTrack());
-					car->track(track);
+					BOOST_FOREACH(ptree::value_type &vv, v.second.get_child("track"))
+						track->addPoint(Point(vv.second.get<double>("<xmlattr>.x"), vv.second.get<double>("<xmlattr>.y")));
 
-					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
-					{
-						Point point( vv.second.get<double>("<xmlattr>.x"),
-									vv.second.get<double>("<xmlattr>.y") );
-
-						track->addPoint(point);
-					}
-
-					model_.addObject(car);
+					if(size == "big")
+						model_.addObject(Model::PVoyager(new BigCar(id, acceleration, weight, mspeed, track)));
+					else
+						model_.addObject(Model::PVoyager(new SmallCar(id, acceleration, weight, mspeed, track)));
 				}
 				else if ( v.second.get<std::string>("<xmlattr>.type") == "walker" )
 				{
@@ -264,29 +221,16 @@ namespace zpr
 					double mspeed = v.second.get<double>("parameters.maxspeed");
 
 					Voyager::PTrack track(new WalkerTrack());
-					
-					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("track") )
-					{
-						Point point( vv.second.get<double>("<xmlattr>.x"),
-									vv.second.get<double>("<xmlattr>.y") );
-							
-						track->addPoint(point);
-					}
-					Model::PWalker walker(new Walker(id, mspeed));
-					walker->track(track);
-					
-					model_.addObject(walker);
+					BOOST_FOREACH(ptree::value_type &vv, v.second.get_child("track"))
+						track->addPoint(Point(vv.second.get<double>("<xmlattr>.x"), vv.second.get<double>("<xmlattr>.y")));
+
+					model_.addObject(Model::PVoyager(new Walker(id, mspeed, track)));
 				}
 			}
 		}
 		catch (boost::property_tree::ptree_bad_path &e)
 		{
-			std::string msg = e.what();
-			msg.append(" : in file (");
-			msg.append(path.string());
-			msg.append(")");
-
-			throw std::exception(msg.c_str());
+			throw std::runtime_error((std::string(e.what()) + " : in file (" + path.string() + ")").c_str());
 		}
 	}
 }
