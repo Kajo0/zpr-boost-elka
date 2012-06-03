@@ -15,7 +15,6 @@ namespace zpr
 
 	void Dispatcher::addCamera(const PCamera camera)
 	{
-		// nie duplikujemy wartosci - jak jest juz o takim id to nie zamieni
 		cameras_.insert(std::pair<int, PCamera>(camera->id(), camera));
 	}
 

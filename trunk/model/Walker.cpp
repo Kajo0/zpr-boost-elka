@@ -42,6 +42,5 @@ namespace zpr
 
 		if(percentDistanceTraveled_ > 1.0)
 			finished_ = true;
-		//	reset(); // petla -> mozliwosc zapetlenia a nie zapetlenie.
 	}
 }

@@ -38,7 +38,7 @@ namespace zpr
 
 	void Model::addCamera(const Dispatcher::PCamera & camera)
 	{
-		dispatcher_.addCamera(camera); // tak wiem.. , ale nie iwem jak to inaczej :P
+		dispatcher_.addCamera(camera);
 	}
 
 	void Model::addObject(const PVoyager & object)
@@ -55,13 +55,11 @@ namespace zpr
 		return tmp;
 	}
 
-	// position, angle, type, velocity
 	Model::VTObject Model::objects() const
 	{
 		Model::VTObject tmp;
 		BOOST_FOREACH(const PVoyager & voyager, objects_)
 			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type(), voyager->id(), voyager->velocity()));
-			// bindable, ale bez przesady
 
 		return tmp;
 	}

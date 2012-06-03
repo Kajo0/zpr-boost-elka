@@ -58,7 +58,7 @@ namespace zpr
 		{
 			length = Point::distance(begin_, end_);
 		}
-		else // calka chyba z beziera
+		else
 		{
 			Point a, b;
 			a.x_ = begin_.x_ - 2 * control_.x_ + end_.x_;

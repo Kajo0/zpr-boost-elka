@@ -20,7 +20,7 @@ namespace zpr
 		/**
 		 * Allegro exception c-tor
 		 */
-		AllegroException(const std::string & message);
+		//AllegroException(const std::string & message);
 	};
 
 	/**
@@ -91,7 +91,7 @@ namespace zpr
 		/** Timeout to check allegro events in view */
 		const static int ALLEGRO_EVENT_TIMEOUT;
 		/** Value to scale data on the view visualisation screen */
-		const static int SCALER;
+		const static double SCALER;
 
 		/** Allegro display field */
 		ALLEGRO_DISPLAY *display_;

@@ -17,9 +17,9 @@ namespace zpr
 	const int View::VISUALISATION_WIDTH		= 600;
 	const int View::VISUALISATION_HEIGHT	= 600;
 	const int View::ALLEGRO_EVENT_TIMEOUT	= 10;
-	const int View::SCALER = VISUALISATION_WIDTH / 200;
+	const double View::SCALER = (double) VISUALISATION_WIDTH / 700;
 
-	AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str()) {}
+	//AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str()) {}
 
 	AllegroRectangle::AllegroRectangle(const Point & topLeft, const Point & bottomRight) :topLeft_(topLeft), bottomRight_(bottomRight) {}
 
@@ -54,49 +54,67 @@ namespace zpr
 
 	void View::initializeGraphics()
 	{
-		if(!al_init()) // there is no view :(
-			throw AllegroException("Failed to initialize allegro!");
+		if(!al_init()) {
+			Logger::getInstance().error("Failed to initialize allegro!");
+			throw AllegroException();
+		}
 
 		display_ = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
-		if(!display_)
-			throw AllegroException("Failed to create display!");
+		if(!display_) {
+			Logger::getInstance().error("Failed to create display!");
+			throw AllegroException();
+		}
 
 		eventQueue_ = al_create_event_queue();
-		if(!eventQueue_)
-			throw AllegroException("Failed to create event_queue!");
+		if(!eventQueue_) {
+			Logger::getInstance().error("Failed to create event_queue!");
+			throw AllegroException();
+		}
 		
-		if(!al_init_primitives_addon())	// init dla prymitowow
-			throw AllegroException("Failed to initialize addons!");
+		if(!al_init_primitives_addon()) {
+			Logger::getInstance().error("Failed to initialize addons!");
+			throw AllegroException();
+		}
 		al_init_font_addon();
-		if(!al_init_ttf_addon())
-			throw AllegroException("Failed to initialize TTF addon!");
-		//al_init_image_addon();
 
-		// ponizej z nieznanych przyczyn current_path mi zwraca sciezke do katalogu z projektem a nie o poziom dalej do /debug...
-		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 15, 0);//al_load_ttf_font("times.ttf", 12, 0);
-		if(!font_)
-			throw AllegroException("Failed to initialize font!");
+		if(!al_init_ttf_addon()) {
+			Logger::getInstance().error("Failed to initialize TTF addon!");
+			throw AllegroException();
+		}
 
-		if(!al_install_keyboard())
-			throw AllegroException("Failed to install keyboard!");
-		if(!al_install_mouse())
-			throw AllegroException("Failed to install mouse!");
+		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 15, 0);
+		if(!font_) {
+			Logger::getInstance().error("Failed to initialize font!");
+			throw AllegroException();
+		}
+
+		if(!al_install_keyboard()) {
+			Logger::getInstance().error("Failed to install keyboard!");
+			throw AllegroException();
+		}
+
+		if(!al_install_mouse()) {
+			Logger::getInstance().error("Failed to install mouse!");
+			throw AllegroException();
+		}
 
 		al_set_window_title(display_, "ZPR::Symulator");
-		al_register_event_source(eventQueue_, al_get_display_event_source(display_)); // bind displaya do eventow kolejki
+		al_register_event_source(eventQueue_, al_get_display_event_source(display_));
 		al_register_event_source(eventQueue_, al_get_mouse_event_source());
 		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
 	}
 
 	void View::closeGraphics()
 	{
-		al_destroy_event_queue(eventQueue_);
-		al_destroy_display(display_);
+		if (eventQueue_)
+			al_destroy_event_queue(eventQueue_);
+		if (display_)
+			al_destroy_display(display_);
 	}
 
 	void View::scheduleRefresh(long long int elapsed_microseconds)
 	{
-		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
+		{
 			boost::lock_guard<boost::mutex> lock(refreshMutex_);
 			elapsedMicroseconds_ = elapsed_microseconds;
 		}
@@ -116,7 +134,7 @@ namespace zpr
 
 			while(run && !boost::this_thread::interruption_requested())
 			{
-				//// Waiting for refresh signal
+				// Waiting for refresh signal
 				{
 					boost::unique_lock<boost::mutex> lock(refreshMutex_);
 					//while(elapsedMicroseconds_ < 0)
@@ -129,10 +147,9 @@ namespace zpr
 					}
 				}
 				
-				//// Allegro event queue checking
+				// Allegro event queue checking
 				while(al_get_next_event(eventQueue_, &allegroEvent))
 				{
-					//std::cout << "event" << std::endl;
 					if(allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 					{
 						controller_.scheduleEvent(boost::make_shared<EventClose>());
@@ -168,9 +185,9 @@ namespace zpr
 				}
 			}
 		}
-		catch(zpr::AllegroException & e)
+		catch(zpr::AllegroException &)
 		{
-			std::cout<<e.what()<<std::endl;
+			//std::cout<<e.what()<<std::endl;
 		}
 		catch(boost::thread_interrupted)
 		{
@@ -178,14 +195,12 @@ namespace zpr
 		}
 		catch(...)
 		{
-			Logger::getInstance().message("Unknown View exception.");
+			Logger::getInstance().error("Unknown View exception.");
 		}
 		closeGraphics();
 		std::cout << "View thread ending." << std::endl;
 	}
 
-
-	// taki zarys tylk ozmienic dostep do tych rzeczy i mamy wizualizacje
 	void View::refresh()
 	{
 		Model::PGraph g = model_.streets();
@@ -245,7 +260,7 @@ namespace zpr
 		Model::VTCamera cameras = model_.cameras();
 		for (Model::VTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
 		{
-			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 5, CAMERA_COLOR);
+			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 2 * SCALER, CAMERA_COLOR);
 
 			al_draw_filled_pieslice(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, it->get<1>() * SCALER,
 									it->get<2>() - it->get<3>() / 2, it->get<3>(),
@@ -253,7 +268,7 @@ namespace zpr
 		}
 
 		drawMenu();
-		al_flip_display();	// swap buffers
+		al_flip_display();
 	}
 
 	void View::drawMenu()
