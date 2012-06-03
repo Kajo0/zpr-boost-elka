@@ -8,8 +8,8 @@ namespace zpr
 
 	SmallCar::~SmallCar() {}
 	
-	OBJECTS SmallCar::type()
+	OBJECTS SmallCar::type() const
 	{
-		return OBJECTS::SMALLCAR;
+		return SMALLCAR;
 	}
 }

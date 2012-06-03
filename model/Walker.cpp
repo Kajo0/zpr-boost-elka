@@ -5,7 +5,7 @@
 
 namespace zpr
 {
-	Walker::Walker(std::string &name, double velocity): name_(name), Voyager(velocity)
+	Walker::Walker(const std::string &name, double velocity): name_(name), Voyager(velocity)
 	{
 		track_ = PTrack( new WalkerTrack() );
 		velocity_ = velocity;
@@ -13,18 +13,9 @@ namespace zpr
 
 	Walker::~Walker() {}
 	
-	OBJECTS Walker::type()
+	OBJECTS Walker::type() const
 	{
-		return OBJECTS::WALKER;
-	}
-
-	Walker::Walker(const Walker &other)
-	{
-	}
-
-	Walker& Walker::operator=(const Walker &other)
-	{
-		return *this;
+		return WALKER;
 	}
 
 	const std::string& Walker::id() const

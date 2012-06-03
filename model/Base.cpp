@@ -41,9 +41,4 @@ namespace zpr
 		return "x = " + (boost::format("%6.3f") % x_).str() + ", y = " + (boost::format("%6.3f") % y_).str();
 	}
 
-	std::ostream& operator<<(std::ostream &os, const Point &point)
-	{
-		os<< point.str();
-		return os;
-	}
 }

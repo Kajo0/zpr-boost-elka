@@ -6,15 +6,28 @@
 namespace zpr
 {
 	/**
-	 * Sth about
+	 * Class representing big car in simulation
 	 */
 	class BigCar: public Vehicle
 	{
 		public:
-		BigCar(std::string &id, double acceleration, double weight, double maxSpeed);
+		/**
+		 * Construct big car object
+		 * 
+		 * @param id cars registration
+		 * @param acceleration cars acceleration
+		 * @param weight cars weight
+		 * @param maxSpeed maximum cars velocity
+		 */
+		BigCar(const std::string &id, double acceleration, double weight, double maxSpeed);
 		~BigCar();
 		
-		OBJECTS type();
+		/**
+		 * Check object type (enum)
+		 *
+		 * @return this object type
+		 */
+		OBJECTS type() const;
 	};
 }
 

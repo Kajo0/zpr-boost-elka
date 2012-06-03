@@ -2,14 +2,14 @@
 
 namespace zpr
 {
-	BigCar::BigCar(std::string &id, double acceleration, double weight, double maxSpeed): Vehicle(id, acceleration, weight, maxSpeed)
+	BigCar::BigCar(const std::string &id, double acceleration, double weight, double maxSpeed): Vehicle(id, acceleration, weight, maxSpeed)
 	{
 	}
 
 	BigCar::~BigCar() {}
 	
-	OBJECTS BigCar::type()
+	OBJECTS BigCar::type() const
 	{
-		return OBJECTS::BIGCAR;
+		return BIGCAR;
 	}
 }

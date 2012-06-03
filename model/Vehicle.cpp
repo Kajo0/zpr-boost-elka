@@ -7,7 +7,7 @@
 
 namespace zpr
 {
-	Vehicle::Vehicle(std::string &id, double acceleration, double weight, double maxSpeed)
+	Vehicle::Vehicle(const std::string &id, double acceleration, double weight, double maxSpeed)
 		: registration_(id), acceleration_(acceleration), weight_(weight), maxSpeed_(maxSpeed * (10.0 / 36.0)), break_(false)
 	{
 		track_ = PTrack(new VehicleTrack());

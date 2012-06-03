@@ -54,7 +54,7 @@ namespace zpr
 					boost::this_thread::yield();
 					boost::this_thread::sleep(boost::posix_time::milliseconds(SLEEP_TIME));
 				}
-
+				
 				std::for_each(listeners_.begin(), listeners_.end(), boost::bind(&TimerListener::check, _1, now()));
 			}
 		}
