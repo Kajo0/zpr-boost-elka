@@ -23,8 +23,6 @@ namespace zpr
 		public:
 		typedef boost::shared_ptr<Graph> PGraph;
 		typedef boost::shared_ptr<Voyager> PVoyager;
-		typedef boost::tuple<Point, double, double, double> TCamera; // position, range, direction, angle
-		typedef std::deque<TCamera> DTCamera;
 		typedef boost::tuple<Point, double, OBJECTS, std::string, double> TObject;	// position, angle, type/size, name/id, velocity
 		typedef std::deque<TObject> DTObject;
 		
@@ -110,7 +108,7 @@ namespace zpr
 		 * @return tuple of infromation:
 		 *			<position, range, direction, angle>
 		 */
-		DTCamera cameras() const;
+		Dispatcher::DTCamera cameras() const;
 		
 		/**
 		 * Get essential information about objects to draw them on screen

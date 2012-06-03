@@ -20,6 +20,15 @@ namespace zpr
 		cameras_.push_back(camera);
 	}
 
+	Dispatcher::DTCamera Dispatcher::cameras() const
+	{
+		DTCamera tmp;
+		BOOST_FOREACH(const PCamera & camera, cameras_)
+			tmp.push_back(boost::make_tuple(camera->position(), camera->range(), camera->direction(), camera->angle()));
+
+		return tmp;
+	}
+
 	void Dispatcher::log(long long int simulationTime, const Model::DTObject & objects)
 	{
 		static boost::random::uniform_01<boost::random::mt19937> distribution(boost::random::mt19937(static_cast<unsigned int>(std::time(0))));
