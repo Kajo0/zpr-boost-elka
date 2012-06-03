@@ -78,7 +78,7 @@ namespace zpr
 					if(active_)
 					{
 						if(elapsedMicroseconds_ >= 0)
-							nextStep(elapsedMicroseconds_/1000);
+							nextStep(elapsedMicroseconds_ / 1000);
 						else if(logTime_ >= 0)
 							dispatcher_.log(logTime_, objects());
 					}

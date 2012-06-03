@@ -25,11 +25,9 @@ namespace zpr
 	/************************
 	*	BezierSegment		*
 	*************************/
-	BezierSegment::BezierSegment(const Point begin, const Point end, const Point control): control_(control), Segment(begin, end)
+	BezierSegment::BezierSegment(const Point begin, const Point end, const Point control) : control_(control), Segment(begin, end)
 	{
 	}
-
-	BezierSegment::~BezierSegment() {}
 
 	Point BezierSegment::position(double percent)
 	{
@@ -101,11 +99,9 @@ namespace zpr
 	/************************
 	*	StraightSegment		*
 	*************************/
-	StraightSegment::StraightSegment(const Point begin, const Point end): Segment(begin, end)
+	StraightSegment::StraightSegment(const Point begin, const Point end) : Segment(begin, end)
 	{
 	}
-
-	StraightSegment::~StraightSegment() {}
 
 	Point StraightSegment::position(double percent)
 	{

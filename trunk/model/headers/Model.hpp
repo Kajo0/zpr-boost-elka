@@ -21,8 +21,6 @@ namespace zpr
 	class Model
 	{
 		public:
-		static const long long int TIME_SCALE = 1000; // TODO uzyc tego ?!
-
 		typedef boost::shared_ptr<Graph> PGraph;
 		typedef boost::shared_ptr<Voyager> PVoyager;
 		typedef boost::tuple<Point, double, double, double> TCamera; // position, range, direction, angle
