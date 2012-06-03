@@ -50,7 +50,6 @@ namespace zpr
 
 
 
-		// spr hamowanie ale tylko jak nie hamuje juz i nie jest na bezierze
 		if (!break_ && !on_bezier)
 		{
 			// Vk -> max predkosc na bezierze
