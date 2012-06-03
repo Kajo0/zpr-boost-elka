@@ -31,13 +31,15 @@ namespace zpr
 					
 
 					double noise = it.second->noise() * CAMERA_DISTORTION_RATIO;
-					std::string msg = "czas: "; // tu wziac time z timera jak tam liczy w ogole , a jak nie to musi liczyc
-					//msg += 
+					std::string msg = "czas: "; // TODO tu wziac time z timera jak tam liczy w ogole , a jak nie to musi liczyc
 					msg += "Camera (";
 					msg += boost::lexical_cast<std::string>(it.second->id());
 					msg += ") saw: ";
 					msg += boost::lexical_cast<std::string>(object->id());
-					msg += " on (" + (object->position() + Point(distribution() * noise, distribution() * noise)).str() + ")";
+					msg += " on\t(" + (object->position() + Point(distribution() * noise, distribution() * noise)).str() + ")";
+					msg += "\t{ real position: [";
+					msg += object->position().str();
+					msg += "] }";
 
 					Logger::getInstance().message(msg);
 
@@ -45,9 +47,5 @@ namespace zpr
 				}
 		}
 	}
-
-	void Dispatcher::reportObject(const Voyager & object)
-	{
-		
-	}
+	
 }

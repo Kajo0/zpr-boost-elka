@@ -94,11 +94,11 @@ namespace zpr
 		al_destroy_display(display_);
 	}
 
-	void View::scheduleRefresh(long long int elapsedMicroseconds)
+	void View::scheduleRefresh(long long int elapsed_microseconds)
 	{
 		{ // ta klamra moze byc potrzebna dla locka, ale czy na pewno tego nie wiem.
 			boost::lock_guard<boost::mutex> lock(refreshMutex_);
-			elapsedMicroseconds_ = elapsedMicroseconds;
+			elapsedMicroseconds_ = elapsed_microseconds;
 		}
 		refreshCondition_.notify_one();
 	}
