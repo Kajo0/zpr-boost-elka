@@ -8,16 +8,16 @@ namespace zpr
 	{
 	}
 
-	void Model::scheduleUpdate(long long int elapsedMicroseconds)
+	void Model::scheduleUpdate(long long int elapsed_microseconds)
 	{
 		{
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
-			elapsedMicroseconds_ = elapsedMicroseconds;
+			elapsedMicroseconds_ = elapsed_microseconds;
 		}
 		updateCondition_.notify_one();
 	}
 
-	void Model::scheduleLog(long long int elapsedMicroseconds)
+	void Model::scheduleLog(long long int elapsed_microseconds)
 	{
 		{
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
@@ -123,7 +123,6 @@ namespace zpr
 				voyager->move(elapsed_time);
 			else if(loop_)
 				voyager->reset();
-			dispatcher_.reportObject(*voyager);
 		}
 	}
 }

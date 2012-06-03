@@ -9,11 +9,13 @@
 namespace zpr
 {
 	class Model; // tmp
+
 	/**
 	 * Holds cameras and manages them
 	 */
 	class Dispatcher
 	{
+		/** Size of maximum camera inaccuracy [m] */
 		static const double CAMERA_DISTORTION_RATIO;
 
 		public:
@@ -21,11 +23,23 @@ namespace zpr
 		typedef std::map<int, PCamera> MCamera;
 
 	private:public: // TODO wywalic jakos
+		/** Dispatcher's cameras */
 		MCamera cameras_;
 
 		public:
+		/**
+		 * Adds camera into dispatcher
+		 *
+		 * @param camera camera to add
+		 */
 		void addCamera(const PCamera camera);
-		void reportObject(const Voyager & object);
+
+		/**
+		 * Check if there is any object in range of each camera
+		 * If there is, calculate camera seeing distortion and log it out
+		 *
+		 * @param model simulation model
+		 */
 		void log(Model & model);
 	};
 }
