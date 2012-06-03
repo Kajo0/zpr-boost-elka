@@ -11,18 +11,43 @@ namespace zpr
 	class Walker : public Voyager
 	{
 		protected:
+		/** Walker name */
 		const std::string name_;
 
 		public:
-		Walker(std::string &name, double velocity);
+		/**
+		 * Walker constructor
+		 *
+		 * @param name walker name / id
+		 * @param velocity walker velocity [km/h]
+		 */
+		Walker(const std::string &name, double velocity);
 		~Walker();
-		Walker(const Walker &other);
-		Walker& operator=(const Walker &other);
-
-		OBJECTS type();
 		
+		/**
+		 * Check object type (enum)
+		 *
+		 * @return this object type
+		 */
+		OBJECTS type() const;
+		
+		/**
+		 *
+		 * @return walker name / id
+		 */
 		const std::string& id() const;
+
+		/**
+		 * Reset walker state, back it on the beginning of track
+		 */
 		void reset();
+
+		/**
+		 * Next simulator iteration
+		 * Walker moves depend on elapsed time
+		 *
+		 * @param elapsed_time time which elapsed since last update (or to simulate movement)
+		 */
 		void move(long long int elapsed_time);
 	};
 }

@@ -16,27 +16,85 @@ namespace zpr
 		typedef boost::shared_ptr<Track> PTrack;
 
 		protected:
-		Point position_;	// kazdy ma pozycje, predkosc(tylko ze pieszemu nie zmieniamy) i trase - i walker i vehicle, wiec tu moze byc
+		/** Object position [m] */
+		Point position_;
+		/** Object velocity [m/s] */
 		double velocity_;
+		/** Object direction [radians] */
 		double angle_;
+		/** Percent of traveled track distance [%] */
 		double percentDistanceTraveled_;
+		/** Object route */
 		PTrack track_;
-
-		bool finished_;	// czy skonczyl trase
+		/** Finished track flag */
+		bool finished_;
 
 		public:
+		/**
+		 * Voyager constructor - default idle on (0, 0)
+		 *
+		 * @param velocity object velocity
+		 * @param position object position
+		 */
 		Voyager(double velocity = 0.0, Point position = Point());
 		virtual ~Voyager() = 0;
-
-		virtual OBJECTS type() = 0;
 		
+		/**
+		 * Check object type (enum)
+		 *
+		 * @return this object type
+		 */
+		virtual OBJECTS type() const = 0;
+		
+		/**
+		 *
+		 * @return object id
+		 */
 		virtual const std::string& id() const = 0;
+
+		/**
+		 *
+		 * @return actual position
+		 */
 		const Point& position() const;
+
+		/**
+		 *
+		 * @return actual direction
+		 */
 		double angle() const;
+		
+		/**
+		 *
+		 * @return actual velocity
+		 */
 		double velocity() const;
+
+		
+		/**
+		 * Assign new track onto voyager
+		 *
+		 * @param new track
+		 */
 		void track(const PTrack track);
-		virtual void reset() = 0; // daje na poczatek i stopuje
-		virtual void move(long long int elapsed_time) = 0;	// oczywiscie w milisekundach
+		
+		/**
+		 * Reset object state
+		 */
+		virtual void reset() = 0;
+
+		/**
+		 * Next simulator iteration
+		 * Object moves depend on elapsed time
+		 *
+		 * @param elapsed_time time which elapsed since last update (or to simulate movement)
+		 */
+		virtual void move(long long int elapsed_time) = 0;
+
+		/**
+		 *
+		 * @return true if object finished track, false otherwise
+		 */
 		bool finished();
 	};
 }
