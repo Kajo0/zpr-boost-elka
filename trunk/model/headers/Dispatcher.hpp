@@ -21,7 +21,7 @@ namespace zpr
 
 	public:
 		typedef boost::shared_ptr<Camera> PCamera;
-		typedef boost::tuple<Point, double, double, double> TCamera; // position, range, direction, angle
+		typedef boost::tuple<Point, double, double, double, int> TCamera; // position, range, direction, angle, id
 		typedef std::deque<TCamera> DTCamera;	
 
 		/**
@@ -35,7 +35,7 @@ namespace zpr
 		 * Get essential information about cameras to draw them on screen
 		 *
 		 * @return tuple of infromation:
-		 *			<position, range, direction, angle>
+		 *			<position, range, direction, angle, id>
 		 */
 		DTCamera cameras() const;
 

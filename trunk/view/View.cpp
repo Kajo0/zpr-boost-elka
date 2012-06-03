@@ -256,6 +256,7 @@ namespace zpr
 			al_draw_filled_pieslice(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, it->get<1>() * SCALER,
 									it->get<2>() - it->get<3>() / 2, it->get<3>(),
 									CAMERA_COLOR);
+			al_draw_text(font_, al_map_rgb(0, 0, 0), it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, ALLEGRO_ALIGN_CENTRE, ("Camera: " + boost::lexical_cast<std::string>(it->get<4>())).c_str());
 		}
 
 		drawMenu();
