@@ -106,7 +106,7 @@ namespace zpr
 		 * Get essential information about cameras to draw them on screen
 		 *
 		 * @return tuple of infromation:
-		 *			<position, range, direction, angle>
+		 *			<position, range, direction, angle, id>
 		 */
 		Dispatcher::DTCamera cameras() const;
 		

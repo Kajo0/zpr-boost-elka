@@ -24,7 +24,7 @@ namespace zpr
 	{
 		DTCamera tmp;
 		BOOST_FOREACH(const PCamera & camera, cameras_)
-			tmp.push_back(boost::make_tuple(camera->position(), camera->range(), camera->direction(), camera->angle()));
+			tmp.push_back(boost::make_tuple(camera->position(), camera->range(), camera->direction(), camera->angle(), camera->id()));
 
 		return tmp;
 	}

@@ -61,7 +61,7 @@ namespace zpr
 
 			double max_velocity_on_bezier = maxSpeed_ * (nextangle.second / 3.141); // % zakretu % maxSpeeda - do tylu ma zwolnic
 			// licze tu czas jak dlugo hamuje z liniowy hamowaniem- > hamuje tak szybko jak przyspiesza
-			double breaking_time = (velocity_ - max_velocity_on_bezier) / acceleration_; //zfizykuj to !!!!!!!!!!!!!!!
+			double breaking_time = (velocity_ - max_velocity_on_bezier) / acceleration_;
 
 			if (velocity_ > max_velocity_on_bezier)
 			{
