@@ -6,7 +6,7 @@
 namespace zpr
 {
 	/**
-	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
+	 * Class representing vechicles in city.
 	 */
 	class Vehicle : public Voyager
 	{

@@ -76,7 +76,6 @@ namespace zpr
 		 * @param control control point
 		 */
 		BezierSegment(const Point begin, const Point end, const Point control);
-		~BezierSegment();
 		
 		/**
 		 * Calculate position on segment by given % of it
@@ -119,7 +118,6 @@ namespace zpr
 		 * @param end end point
 		 */
 		StraightSegment(const Point begin, const Point end);
-		~StraightSegment();
 		
 		/**
 		 *
