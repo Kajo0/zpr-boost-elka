@@ -9,13 +9,6 @@
 
 namespace zpr
 {
-	/**
-	 * Private constructor to make only one
-	 * instance of logger - Singleton
-	 *
-	 * Creates file named as ${actual timestamp}.txt
-	 * if succeeded write log there, otherwise write onto std::cout
-	 */
 	Logger::Logger(): count_(0), output_(&std::cout)
 	{
 		std::ofstream *out = new std::ofstream();
@@ -34,9 +27,6 @@ namespace zpr
 
 	Logger::Logger(const Logger &other) {}
 
-	/**
-	 * Close file stream and delete handle
-	 */
 	Logger::~Logger()
 	{
 		try
@@ -46,21 +36,12 @@ namespace zpr
 		} catch(std::exception &) {} //was cout, do nothing
 	}
 
-	/**
-	 * @return Logger instance
-	 */
 	Logger& Logger::getInstance()
 	{
 		static Logger instance;
 		return instance;
 	}
 
-	/**
-	 * Logs message into file or if IOException
-	 * (in constructor) onto user stdout
-	 *
-	 * @param msg message to log
-	 */
 	void Logger::message(const char *msg) const
 	{
 		boost::mutex::scoped_lock scoped_lock(ioMutex_);
@@ -68,11 +49,6 @@ namespace zpr
 		*output_<<" "<<count_++<<":\t"<<msg<<"\n";
 	}
 
-	/**
-	 * Overloaded, do the same as other message
-	 *
-	 * @param msg message to log
-	 */
 	void Logger::message(const std::string &msg) const
 	{
 		message(msg.c_str());
