@@ -26,7 +26,7 @@ namespace zpr
 		updateCondition_.notify_one();
 	}
 
-	Model::PGraph Model::streets()
+	Model::PGraph Model::streets() const
 	{
 		return streets_;
 	}
@@ -46,7 +46,7 @@ namespace zpr
 		objects_.push_back(object);
 	}
 
-	Model::VTCamera Model::cameras()
+	Model::VTCamera Model::cameras() const
 	{
 		Model::VTCamera tmp;
 		BOOST_FOREACH(const Dispatcher::MCamera::value_type & camera, dispatcher_.cameras_)
@@ -55,12 +55,13 @@ namespace zpr
 		return tmp;
 	}
 
-	// position, angle, type
-	Model::VTObject Model::objects()
+	// position, angle, type, velocity
+	Model::VTObject Model::objects() const
 	{
 		Model::VTObject tmp;
-		BOOST_FOREACH(PVoyager & voyager, objects_)
+		BOOST_FOREACH(const PVoyager & voyager, objects_)
 			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type(), voyager->id(), voyager->velocity()));
+			// bindable, ale bez przesady
 
 		return tmp;
 	}
@@ -71,7 +72,6 @@ namespace zpr
 		{
 			while(!boost::this_thread::interruption_requested())
 			{
-				//// Waiting for update signal
 				{
 					boost::unique_lock<boost::mutex> lock(updateMutex_);
 					while(elapsedMicroseconds_ < 0 && log_ == false)
@@ -92,12 +92,12 @@ namespace zpr
 		catch(boost::thread_interrupted)
 		{
 			// thread interruption
+			// closes gracefully
 		}
 		catch(...)
 		{
-			std::cout<<"Unknown Model exception.\n";
+			Logger::getInstance().error("Unknown Model exception.");
 		}
-		std::cout << "Model thread ending." << std::endl;
 	}
 
 	void Model::start()

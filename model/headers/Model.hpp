@@ -103,7 +103,7 @@ namespace zpr
 		/**
 		 * @return graph of streets
 		 */
-		PGraph streets();
+		PGraph streets() const;
 
 		/**
 		 * Set new streets graph into model
@@ -118,7 +118,7 @@ namespace zpr
 		 * @return tuple of infromation:
 		 *			<position, range, direction, angle>
 		 */
-		VTCamera cameras();
+		VTCamera cameras() const;
 		
 		/**
 		 * Get essential information about objects to draw them on screen
@@ -126,7 +126,7 @@ namespace zpr
 		 * @return tuple of infromation:
 		 *			<position, angle, type/size, name/id, velocity>
 		 */
-		VTObject objects();
+		VTObject objects() const;
 
 		/**
 		 * Model main loop

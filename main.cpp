@@ -1,10 +1,21 @@
+//#define TESTING
+
+//#include "Test.hpp"
+#include "Controller.hpp"
+
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <cstdlib>
 
-#include "Controller.hpp"
+//#include <boost/test/minimal.hpp>
+//#include <boost/test/minimal.hpp>
 
+//#ifdef TESTING
+//#include <boost/test/minimal.hpp>
+//int test_main(int argc, char** const)
+//#else
 int main(int, char **)
+//#endif 
 {
 	try
 	{

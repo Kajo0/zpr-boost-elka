@@ -1,21 +1,20 @@
 #include "Controller.hpp"
-#include "Logger.hpp"
-#include <boost/foreach.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-#include <vector>
-#include <boost/bind.hpp>
-#include <boost/foreach.hpp>
-#include <boost/bind/bind.hpp>
-//TODO fabryczka jakos
 #include "SmallCar.hpp"
 #include "BigCar.hpp"
 #include "Walker.hpp"
 #include "Voyager.hpp"
 #include "Track.hpp"
-#include "Timer.hpp"
 #include "Graph.hpp"
+#include "Timer.hpp"
+#include "Logger.hpp"
+//#include "Test.hpp"
 
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/bind.hpp>
+#include <boost/foreach.hpp>
+//#include <boost/test/minimal.hpp>
 namespace zpr
 {
 	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)
@@ -89,6 +88,8 @@ namespace zpr
 				boost::shared_ptr<Event> ev = eventQueue_.front();
 				eventQueue_.pop();
 				ev->accept(*this);
+
+				//BOOST_ERROR("Unknown Controller exception.");
 			}
 		}
 		catch(boost::thread_interrupted)
