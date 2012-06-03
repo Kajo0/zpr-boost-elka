@@ -32,8 +32,5 @@ int main(int, char **)
 		std::cout << "\n\nNieznany wyjatek symulacji. Program zakonczono gwaltownie." << std::endl;
 	}
 
-	std::cout << "\n\nWczytanie inta konczy program." << std::endl;
-	int i;
-	std::cin >> i;
 	return EXIT_SUCCESS;
 }
