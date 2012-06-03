@@ -247,8 +247,8 @@ namespace zpr
 			//al_draw_text(font_, al_map_rgb(0, 0, 0), it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER + 15, ALLEGRO_ALIGN_CENTRE, boost::lexical_cast<std::string>(it->get<4>()).c_str());
 		}
 
-		Model::DTCamera cameras = model_.cameras();
-		for (Model::DTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
+		Dispatcher::DTCamera cameras = model_.cameras();
+		for (Dispatcher::DTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
 		{
 			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 2 * SCALER, CAMERA_COLOR);
 

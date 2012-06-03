@@ -46,13 +46,9 @@ namespace zpr
 		objects_.push_back(object);
 	}
 
-	Model::DTCamera Model::cameras() const
+	Dispatcher::DTCamera Model::cameras() const
 	{
-		Model::DTCamera tmp;
-		BOOST_FOREACH(const Dispatcher::PCamera & camera, dispatcher_.cameras_)
-			tmp.push_back(boost::make_tuple(camera->position(), camera->range(), camera->direction(), camera->angle()));
-
-		return tmp;
+		return dispatcher_.cameras();
 	}
 
 	Model::DTObject Model::objects() const
