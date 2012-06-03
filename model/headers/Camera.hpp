@@ -2,7 +2,6 @@
 #define CAMERA_HPP
 
 #include "Base.hpp"
-#include "Voyager.hpp"
 
 namespace zpr
 {
@@ -73,7 +72,7 @@ namespace zpr
 		 *
 		 * @return true if in range, false otherwise
 		 */
-		bool spotted(const Voyager & object) const;
+		bool inRange(const Point & object) const;
 
 		
 		/**

@@ -1,6 +1,4 @@
 #include "Camera.hpp"
-#include <iostream>
-#include <string>
 
 namespace zpr
 {
@@ -34,10 +32,10 @@ namespace zpr
 		return position_;
 	}
 
-	bool Camera::spotted(const Voyager & object) const
+	bool Camera::inRange(const Point & object) const
 	{
-		if(range_ >= Point::distance(position_, object.position()))
-			if(inRange(direction_ - angle_ / 2.0, direction_ + angle_ / 2.0, Point::angle(position_, object.position())))
+		if(range_ >= Point::distance(position_, object))
+			if(zpr::inRange(direction_ - angle_ / 2.0, direction_ + angle_ / 2.0, Point::angle(position_, object)))
 				return true;
 		return false;
 	}

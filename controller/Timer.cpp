@@ -7,15 +7,15 @@
 
 namespace zpr
 {
-	TimerListener::TimerListener(const boost::function<void (long long int)> & listener, const Duration & frequency) : listener_(listener), frequency_(frequency)
+	TimerListener::TimerListener(const boost::function<void (long long int, long long int)> & listener, const Duration & frequency) : listener_(listener), frequency_(frequency)
 	{}
 
-	bool TimerListener::check(const TimePoint & now)
+	bool TimerListener::check(const Duration & simulationTime)
 	{
-		if((now - previousTrigger_) > frequency_)
+		if((simulationTime - previousTrigger_) > frequency_)
 		{
-			listener_(boost::chrono::duration_cast<boost::chrono::microseconds>(now - previousTrigger_).count());
-			previousTrigger_ = now;
+			listener_(boost::chrono::duration_cast<boost::chrono::microseconds>(simulationTime).count(), boost::chrono::duration_cast<boost::chrono::microseconds>(simulationTime - previousTrigger_).count());
+			previousTrigger_ = simulationTime;
 			return true;
 		}
 		return false;
@@ -24,9 +24,9 @@ namespace zpr
 	Timer::Timer() : started_(now())
 	{}
 	
-	long long int Timer::simulationTime() const
+	Duration Timer::simulationTime() const
 	{
-		return boost::chrono::duration_cast<boost::chrono::microseconds>(now() - started_).count();
+		return now() - started_;
 	}
 
 	void Timer::AddListener(const TimerListener & listener)
@@ -55,7 +55,7 @@ namespace zpr
 					boost::this_thread::sleep(SLEEP_TIME);
 				}
 				
-				std::for_each(listeners_.begin(), listeners_.end(), boost::bind(&TimerListener::check, _1, now()));
+				std::for_each(listeners_.begin(), listeners_.end(), boost::bind(&TimerListener::check, _1, simulationTime()));
 			}
 		}
 		catch(boost::thread_interrupted)

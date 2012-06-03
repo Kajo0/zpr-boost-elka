@@ -21,23 +21,23 @@ namespace zpr
 	public:
 		/**
 		 * Constructor creating single listener.
-		 * @param listener	function runned when event occurs - takes time since last occurence as parameter (approximately equals to frequency)
+		 * @param listener	function runned when event occurs - takes current simulation time and time since last occurence as parameter (approximately equals to frequency)
 		 * @param frequency	timeout between two listener calls
 		 */
-		TimerListener(const boost::function<void (long long int)> & listener, const Duration & frequency);
+		TimerListener(const boost::function<void (long long int, long long int)> & listener, const Duration & frequency);
 
 		/**
 		 * For each timers tick checks whether timeout between calls has ended.
-		 * @param now	new tick considered as microseconds since simulation start
-		 * @return	true if handler called (timeout passed), false otherwise
+		 * @param simulationTime	time elapsed since starf of the simulation
+		 * @return			true if handler called (timeout passed), false otherwise
 		 */
-		bool check(const TimePoint & now);
+		bool check(const Duration & simulationTime);
 
 	private:
 		/**
-		 * Point in time representing last listener call.
+		 * Simulation time representing last listener call.
 		 */
-		TimePoint previousTrigger_;
+		Duration previousTrigger_;
 		
 		/**
 		 * Timeout between subsequent listener calls.
@@ -47,7 +47,7 @@ namespace zpr
 		/**
 		 * Events listener. Function called each time when timeout passed.
 		 */
-		boost::function<void (long long int)> listener_;
+		boost::function<void (long long int, long long int)> listener_;
 	};
 
 	/**
@@ -67,9 +67,9 @@ namespace zpr
 
 		/**
 		 * Returns time since simulation start.
-		 * @return	time since simulation's start in microseconds.
+		 * @return	time since simulation's start
 		 */
-		long long int simulationTime() const;
+		Duration simulationTime() const;
 		
 		/**
 		 * Adds new TimerListener to listeners set.

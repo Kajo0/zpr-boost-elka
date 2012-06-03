@@ -1,15 +1,16 @@
 #ifndef DISPATCHER_HPP
 #define DISPATCHER_HPP
 
-#include <map>
 #include "Camera.hpp"
-#include "Voyager.hpp"
 #include <boost/shared_ptr.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <deque>
 
 namespace zpr
-{
-	class Model; // tmp
-
+{	
+	typedef boost::tuple<Point, double, OBJECTS, std::string, double> TObject;	// position, angle, type/size, name/id, velocity
+	typedef std::deque<TObject> DTObject;
+		
 	/**
 	 * Holds cameras and manages them
 	 */
@@ -20,11 +21,10 @@ namespace zpr
 
 		public:
 		typedef boost::shared_ptr<Camera> PCamera;
-		typedef std::map<int, PCamera> MCamera;
 
 	private:public: // TODO wywalic jakos
 		/** Dispatcher's cameras */
-		MCamera cameras_;
+		std::deque<PCamera> cameras_;
 
 		public:
 		/**
@@ -32,15 +32,16 @@ namespace zpr
 		 *
 		 * @param camera camera to add
 		 */
-		void addCamera(const PCamera camera);
+		void addCamera(const PCamera & camera);
 
 		/**
 		 * Check if there is any object in range of each camera
 		 * If there is, calculate camera seeing distortion and log it out
 		 *
-		 * @param model simulation model
+		 * @param simulationTime time since start of the simulation in us
+		 * @param objects set of objects' data, that should be checked whether in range
 		 */
-		void log(Model & model);
+		void log(long long int simulationTime, const DTObject & objects);
 	};
 }
 

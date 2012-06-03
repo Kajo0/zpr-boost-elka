@@ -6,7 +6,7 @@
 namespace zpr
 {
 	/**
-	 * Sth about cars
+	 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! TODO
 	 */
 	class Vehicle : public Voyager
 	{
@@ -52,6 +52,56 @@ namespace zpr
 		 * @param elapsed_time time which elapsed since last update (or to simulate movement)
 		 */
 		void move(long long int elapsed_time);
+	};
+
+	/**
+	 * Class representing small car in simulation
+	 */
+	class SmallCar: public Vehicle
+	{
+		public:
+		/**
+		 * Construct small car object
+		 * 
+		 * @param id cars registration
+		 * @param acceleration cars acceleration
+		 * @param weight cars weight
+		 * @param maxSpeed maximum cars velocity
+		 * @param track object track
+		 */
+		SmallCar(std::string &id, double acceleration, double weight, double maxSpeed, const PTrack & track);
+		
+		/**
+		 * Check object type (enum)
+		 *
+		 * @return this object type
+		 */
+		OBJECTS type() const;
+	};
+
+	/**
+	 * Class representing big car in simulation
+	 */
+	class BigCar: public Vehicle
+	{
+		public:
+		/**
+		 * Construct big car object
+		 * 
+		 * @param id cars registration
+		 * @param acceleration cars acceleration
+		 * @param weight cars weight
+		 * @param maxSpeed maximum cars velocity
+		 * @param track object track
+		 */
+		BigCar(const std::string &id, double acceleration, double weight, double maxSpeed, const PTrack & track);
+		
+		/**
+		 * Check object type (enum)
+		 *
+		 * @return this object type
+		 */
+		OBJECTS type() const;
 	};
 }
 
