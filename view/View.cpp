@@ -63,7 +63,7 @@ namespace zpr
 
 		al_init_font_addon();
 
-		font_ = al_load_bitmap_font((boost::filesystem::current_path() / "a4_font.tga").string().c_str());
+		font_ = al_load_bitmap_font((boost::filesystem::path(__FILE__).remove_filename().parent_path() / "a4_font.tga").string().c_str());
 		if(!font_)
 			throw AllegroException("Failed to initialize font!");
 
