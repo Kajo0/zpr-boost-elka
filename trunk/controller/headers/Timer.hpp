@@ -7,7 +7,9 @@
 
 namespace zpr
 {
+	/** TimePoint represent points in time accordingly to used internal timer */
 	typedef boost::chrono::high_resolution_clock::time_point TimePoint;
+	/** Duration represents times durations accordingly to used internal timer */
 	typedef boost::chrono::high_resolution_clock::duration Duration;
 	
 	/**

@@ -2,11 +2,9 @@
 
 namespace zpr
 {
-	SmallCar::SmallCar(std::string &id, double acceleration, double weight, double maxSpeed): Vehicle(id, acceleration, weight, maxSpeed)
+	SmallCar::SmallCar(std::string &id, double acceleration, double weight, double maxSpeed, const PTrack & track) : Vehicle(id, acceleration, weight, maxSpeed, track)
 	{
 	}
-
-	SmallCar::~SmallCar() {}
 	
 	OBJECTS SmallCar::type() const
 	{

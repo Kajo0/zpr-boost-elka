@@ -42,7 +42,7 @@ namespace zpr
 	void Timer::operator()()
 	{
 		static const Duration TICK = boost::chrono::milliseconds(1);
-		static const Duration SLEEP_TIME = boost::chrono::milliseconds(1);
+		static const boost::posix_time::time_duration SLEEP_TIME = boost::posix_time::milliseconds(1);
 		try
 		{
 			while(!boost::this_thread::interruption_requested())
@@ -52,7 +52,7 @@ namespace zpr
 				while(nextTick > now())
 				{
 					boost::this_thread::yield();
-					boost::this_thread::sleep(boost::posix_time::milliseconds(SLEEP_TIME));
+					boost::this_thread::sleep(SLEEP_TIME);
 				}
 				
 				std::for_each(listeners_.begin(), listeners_.end(), boost::bind(&TimerListener::check, _1, now()));
@@ -65,7 +65,7 @@ namespace zpr
 		}
 		catch(...)
 		{
-			std::cout << "Unknown Timer exception." << std::endl;
+			Logger::getInstance().error("Unknown Timer exception.");
 		}
 	}
 }

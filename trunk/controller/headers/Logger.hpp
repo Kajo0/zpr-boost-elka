@@ -18,6 +18,8 @@ namespace zpr
 		std::ostream *output_;
 		/** Input Output control mutex */
 		mutable boost::mutex ioMutex_;
+		/** Standard error stream control mutex */
+		mutable boost::mutex stderrMutex_;
 
 		public:
 			
@@ -40,6 +42,18 @@ namespace zpr
 		 * @param msg message to log
 		 */
 		void message(const std::string &msg) const;
+
+		/**
+		 * Logs error message into standard error stream
+		 * @param msg error message to log
+		 */
+		void error(const char *msg) const;
+
+		/**
+		 * Logs error message into standard error stream
+		 * @param msg error message to log
+		 */
+		void error(const std::string &msg) const;
 
 		private:
 			

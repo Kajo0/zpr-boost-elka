@@ -1,3 +1,5 @@
+#include "Logger.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -5,7 +7,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/filesystem.hpp>
-#include "Logger.hpp"
+
 
 namespace zpr
 {
@@ -52,5 +54,15 @@ namespace zpr
 	void Logger::message(const std::string &msg) const
 	{
 		message(msg.c_str());
+	}
+
+	void Logger::error(const char *msg) const
+	{
+		std::cerr << msg << std::endl;
+	}
+
+	void Logger::error(const std::string &msg) const
+	{
+		std::cerr << msg << std::endl;
 	}
 }
