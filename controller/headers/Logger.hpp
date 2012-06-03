@@ -20,14 +20,43 @@ namespace zpr
 		mutable boost::mutex ioMutex_;
 
 		public:
+			
+		/**
+		 * @return Logger instance
+		 */
 		static Logger& getInstance();
+		
+		/**
+		 * Logs message into file or if IOException
+		 * (in constructor) onto user stdout
+		 *
+		 * @param msg message to log
+		 */
 		void message(const char *msg) const;
+		
+		/**
+		 * Overloaded, do the same as other message
+		 *
+		 * @param msg message to log
+		 */
 		void message(const std::string &msg) const;
 
 		private:
+			
+		/**
+		 * Private constructor to make only one
+		 * instance of logger - Singleton
+		 *
+		 * Creates file named as ${actual timestamp}.txt
+		 * if succeeded write log there, otherwise write onto std::cout
+		 */
 		Logger();
 		Logger(const Logger &other);
 		const Logger& operator=(const Logger &other);
+		
+		/**
+		 * Close file stream and delete handle
+		 */
 		~Logger();
 	};
 }
