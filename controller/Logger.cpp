@@ -7,7 +7,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/filesystem.hpp>
-
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace zpr
 {
@@ -16,9 +16,8 @@ namespace zpr
 		std::ofstream *out = new std::ofstream();
 		
 		boost::filesystem::path log_path = boost::filesystem::path(__FILE__).remove_filename().parent_path();
-		log_path /= boost::lexical_cast<std::string>(time(0));
+		log_path /= to_iso_string(boost::posix_time::second_clock::local_time());
 		log_path.replace_extension(".txt");
-
 		out->open(log_path.string().c_str(), std::ios_base::app);
 
 		if (out->is_open())
