@@ -5,7 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_image.h>
 #include <boost/make_shared.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
@@ -17,7 +17,7 @@ namespace zpr
 	const int View::VISUALISATION_WIDTH		= 600;
 	const int View::VISUALISATION_HEIGHT	= 600;
 	const int View::ALLEGRO_EVENT_TIMEOUT	= 10;
-	const double View::SCALER = (double) VISUALISATION_WIDTH / 700;
+	const double View::SCALER = (double) VISUALISATION_WIDTH / 200;
 
 	AllegroException::AllegroException(const std::string & message) : std::runtime_error(message.c_str()) {}
 
@@ -58,12 +58,12 @@ namespace zpr
 		if(!al_init_primitives_addon())
 			throw AllegroException("Failed to initialize addons!");
 
+		if (!al_init_image_addon())
+			throw AllegroException("Failed to initialize addons!");
+
 		al_init_font_addon();
 
-		if(!al_init_ttf_addon())
-			throw AllegroException("Failed to initialize TTF addon!");
-
-		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 15, 0);
+		font_ = al_load_bitmap_font((boost::filesystem::current_path() / "a4_font.tga").string().c_str());
 		if(!font_)
 			throw AllegroException("Failed to initialize font!");
 

@@ -1,4 +1,5 @@
 ﻿#include "Segment.hpp"
+#include <math.h>
 
 namespace zpr
 {
