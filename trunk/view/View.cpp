@@ -19,89 +19,81 @@ namespace zpr
 	const int View::ALLEGRO_EVENT_TIMEOUT	= 10;
 	const double View::SCALER = (double) VISUALISATION_WIDTH / 700;
 
-	//AllegroException::AllegroException(const std::string & message) : std::exception(message.c_str()) {}
+	AllegroException::AllegroException(const std::string & message) : std::runtime_error(message.c_str()) {}
 
-	AllegroRectangle::AllegroRectangle(const Point & topLeft, const Point & bottomRight) :topLeft_(topLeft), bottomRight_(bottomRight) {}
+	TextRectangle::TextRectangle(int x1, int y1, int x2, int y2, ALLEGRO_COLOR color, const std::string & text)
+		: color_(color), topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)), text_(text)
+	{
+	}
 
-	AllegroRectangle::AllegroRectangle(int x1, int y1, int x2, int y2) :topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)) {}
-
-	bool AllegroRectangle::inside(const Point & check) const
+	bool TextRectangle::inside(const Point & check) const
 	{
 		return inRange(topLeft_.x_, bottomRight_.x_, check.x_) && inRange(topLeft_.y_, bottomRight_.y_, check.y_);
 	}
 
-	void AllegroRectangle::drawFilled(const ALLEGRO_COLOR & color) const
+	void TextRectangle::draw(const ALLEGRO_FONT * const font, const ALLEGRO_COLOR & fontColor) const
 	{
-		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color);
+		al_draw_filled_rectangle(topLeft_.x_, topLeft_.y_, bottomRight_.x_, bottomRight_.y_, color_);
+		if(font)
+			al_draw_text(font, fontColor, (topLeft_.x_ + bottomRight_.x_) / 2, (topLeft_.y_ + bottomRight_.y_) / 2 - font->height / 2, ALLEGRO_ALIGN_CENTRE, text_.c_str());
 	}
 
 	View::View(Controller & controller, Model & model) : controller_(controller), model_(model), display_(NULL), eventQueue_(NULL), font_(NULL), elapsedMicroseconds_(-1)					
 	{
-		menuArea = AllegroRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-		
-		int xMargin = 20, yMargin = 20, height = 40;
-		int yOffset = yMargin;
-		startButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
-		yOffset += height + yMargin;
-		stopButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
-		yOffset += height + yMargin;
-		restartButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
-		yOffset += height + yMargin;
-		loopButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
-		yOffset += height + yMargin;
-		exitButton = AllegroRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height);
 	}
 
 	void View::initializeGraphics()
 	{
-		if(!al_init()) {
-			Logger::getInstance().error("Failed to initialize allegro!");
-			throw AllegroException();
-		}
+		if(!al_init())
+			throw AllegroException("Failed to initialize allegro!");
 
 		display_ = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
-		if(!display_) {
-			Logger::getInstance().error("Failed to create display!");
-			throw AllegroException();
-		}
+		if(!display_)
+			throw AllegroException("Failed to create display!");
 
 		eventQueue_ = al_create_event_queue();
-		if(!eventQueue_) {
-			Logger::getInstance().error("Failed to create event_queue!");
-			throw AllegroException();
-		}
+		if(!eventQueue_)
+			throw AllegroException("Failed to create event_queue!");
 		
-		if(!al_init_primitives_addon()) {
-			Logger::getInstance().error("Failed to initialize addons!");
-			throw AllegroException();
-		}
+		if(!al_init_primitives_addon())
+			throw AllegroException("Failed to initialize addons!");
+
 		al_init_font_addon();
 
-		if(!al_init_ttf_addon()) {
-			Logger::getInstance().error("Failed to initialize TTF addon!");
-			throw AllegroException();
-		}
+		if(!al_init_ttf_addon())
+			throw AllegroException("Failed to initialize TTF addon!");
 
 		font_ = al_load_ttf_font((boost::filesystem::current_path() / "Consolas.ttf").string().c_str(), 15, 0);
-		if(!font_) {
-			Logger::getInstance().error("Failed to initialize font!");
-			throw AllegroException();
-		}
+		if(!font_)
+			throw AllegroException("Failed to initialize font!");
 
-		if(!al_install_keyboard()) {
-			Logger::getInstance().error("Failed to install keyboard!");
-			throw AllegroException();
-		}
+		if(!al_install_keyboard())
+			throw AllegroException("Failed to install keyboard!");
 
-		if(!al_install_mouse()) {
-			Logger::getInstance().error("Failed to install mouse!");
-			throw AllegroException();
-		}
+		if(!al_install_mouse())
+			throw AllegroException("Failed to install mouse!");
 
 		al_set_window_title(display_, "ZPR::Symulator");
 		al_register_event_source(eventQueue_, al_get_display_event_source(display_));
 		al_register_event_source(eventQueue_, al_get_mouse_event_source());
 		al_register_event_source(eventQueue_, al_get_keyboard_event_source());
+
+		static ALLEGRO_COLOR BUTTON_COLOR	= al_map_rgb(110, 190, 230);
+		static ALLEGRO_COLOR MENU_BCG_COLOR	= al_map_rgb(100, 100, 100);
+
+		menuArea = TextRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MENU_BCG_COLOR);
+		
+		int xMargin = 20, yMargin = 20, height = 40;
+		int yOffset = yMargin;
+		startButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Start");
+		yOffset += height + yMargin;
+		stopButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Pause");
+		yOffset += height + yMargin;
+		restartButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Restart");
+		yOffset += height + yMargin;
+		loopButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Loop");
+		yOffset += height + yMargin;
+		exitButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Finish");
 	}
 
 	void View::closeGraphics()
@@ -112,7 +104,7 @@ namespace zpr
 			al_destroy_display(display_);
 	}
 
-	void View::scheduleRefresh(long long int elapsed_microseconds)
+	void View::scheduleRefresh(long long int simulationTime, long long int elapsed_microseconds)
 	{
 		{
 			boost::lock_guard<boost::mutex> lock(refreshMutex_);
@@ -192,13 +184,13 @@ namespace zpr
 		catch(boost::thread_interrupted)
 		{
 			// thread interruption
+			// closes gracefully
 		}
 		catch(...)
 		{
 			Logger::getInstance().error("Unknown View exception.");
 		}
 		closeGraphics();
-		std::cout << "View thread ending." << std::endl;
 	}
 
 	void View::refresh()
@@ -226,8 +218,8 @@ namespace zpr
 			al_draw_filled_circle(it->second->position_.x_ * SCALER, it->second->position_.y_ * SCALER, w / 2, STREETS_COLOR);
 		}
 
-		Model::VTObject objects = model_.objects();
-		for (Model::VTObject::const_iterator it = objects.begin(); it != objects.end(); ++it)
+		Model::DTObject objects = model_.objects();
+		for (Model::DTObject::const_iterator it = objects.begin(); it != objects.end(); ++it)
 		{
 			al_identity_transform(&rotate_transformation);
 			al_translate_transform(&rotate_transformation, -it->get<0>().x_ * SCALER, -it->get<0>().y_ * SCALER);
@@ -257,8 +249,8 @@ namespace zpr
 			//al_draw_text(font_, al_map_rgb(0, 0, 0), it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER + 15, ALLEGRO_ALIGN_CENTRE, boost::lexical_cast<std::string>(it->get<4>()).c_str());
 		}
 
-		Model::VTCamera cameras = model_.cameras();
-		for (Model::VTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
+		Model::DTCamera cameras = model_.cameras();
+		for (Model::DTCamera::const_iterator it = cameras.begin(); it != cameras.end(); ++it)
 		{
 			al_draw_filled_circle(it->get<0>().x_ * SCALER, it->get<0>().y_ * SCALER, 2 * SCALER, CAMERA_COLOR);
 
@@ -273,22 +265,14 @@ namespace zpr
 
 	void View::drawMenu()
 	{
-		static ALLEGRO_COLOR BUTTON_COLOR	= al_map_rgb(110, 190, 230);
-		static ALLEGRO_COLOR MENU_BCG_COLOR	= al_map_rgb(100, 100, 100);
 		static ALLEGRO_COLOR FONT_COLOR		= al_map_rgb(255, 255, 255);
 
-		al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MENU_BCG_COLOR);
-		startButton.drawFilled(BUTTON_COLOR);
-		stopButton.drawFilled(BUTTON_COLOR);
-		restartButton.drawFilled(BUTTON_COLOR);
-		loopButton.drawFilled(BUTTON_COLOR);
-		exitButton.drawFilled(BUTTON_COLOR);
-
-		al_draw_text(font_, FONT_COLOR, (startButton.topLeft_.x_ + startButton.bottomRight_.x_) / 2, (startButton.topLeft_.y_ + startButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Start");
-		al_draw_text(font_, FONT_COLOR, (stopButton.topLeft_.x_ + stopButton.bottomRight_.x_) / 2, (stopButton.topLeft_.y_ + stopButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Pause");
-		al_draw_text(font_, FONT_COLOR, (restartButton.topLeft_.x_ + restartButton.bottomRight_.x_) / 2, (restartButton.topLeft_.y_ + restartButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Restart");
-		al_draw_text(font_, FONT_COLOR, (loopButton.topLeft_.x_ + loopButton.bottomRight_.x_) / 2, (loopButton.topLeft_.y_ + loopButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Loop");
-		al_draw_text(font_, FONT_COLOR, (exitButton.topLeft_.x_ + exitButton.bottomRight_.x_) / 2, (exitButton.topLeft_.y_ + exitButton.bottomRight_.y_) / 2 - font_->height / 2, ALLEGRO_ALIGN_CENTRE, "Finish");
+		//al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, al_map_rgb(255, 255, 255));
+		menuArea.draw();
+		startButton.draw(font_, FONT_COLOR);
+		stopButton.draw(font_, FONT_COLOR);
+		restartButton.draw(font_, FONT_COLOR);
+		loopButton.draw(font_, FONT_COLOR);
+		exitButton.draw(font_, FONT_COLOR);
 	}
-
 }

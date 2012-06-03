@@ -5,8 +5,7 @@
 #include "Vehicle.hpp"
 #include "Walker.hpp"
 #include "Graph.hpp"
-#include <map>
-#include <vector>
+#include <deque>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -24,18 +23,15 @@ namespace zpr
 		public:
 		static const long long int TIME_SCALE = 1000; // TODO uzyc tego ?!
 
-		typedef boost::shared_ptr<Vehicle> PCar;
-		typedef boost::shared_ptr<Walker> PWalker;
 		typedef boost::shared_ptr<Graph> PGraph;
-		typedef boost::tuple<Point, double, double, double> TCamera; // position, range, direction, angle
-		typedef std::vector<TCamera> VTCamera;
-		typedef boost::tuple<Point, double, OBJECTS, std::string, double> TObject;	// position, angle, type/size, name/id, velocity
-		typedef std::vector<TObject> VTObject;
-
 		typedef boost::shared_ptr<Voyager> PVoyager;
-
+		typedef boost::tuple<Point, double, double, double> TCamera; // position, range, direction, angle
+		typedef std::deque<TCamera> DTCamera;
+		typedef boost::tuple<Point, double, OBJECTS, std::string, double> TObject;	// position, angle, type/size, name/id, velocity
+		typedef std::deque<TObject> DTObject;
+		
 		private:
-		/** Dispatcher to managing cameras */
+		/** Dispatcher for managing cameras */
 		Dispatcher dispatcher_;
 		/** Graph representing streets in model */
 		PGraph streets_;
@@ -43,6 +39,8 @@ namespace zpr
 		std::deque<PVoyager> objects_;
 		/** Time from start of simulation [us] */
 		long long int elapsedMicroseconds_;
+		/** Simulation logging time */
+		long long int logTime_;
 		/** Model's update condition */
 		boost::condition_variable updateCondition_;
 		/** Model's update mutex */
@@ -51,11 +49,7 @@ namespace zpr
 		bool loop_;
 		/** Simulation activity flag */
 		bool active_;
-		/** Simulation logging flag */
-		bool log_;
-
-		friend class Dispatcher; // TODO ?
-
+		
 		public:
 		/**
 		 * Model c-tor
@@ -118,7 +112,7 @@ namespace zpr
 		 * @return tuple of infromation:
 		 *			<position, range, direction, angle>
 		 */
-		VTCamera cameras() const;
+		DTCamera cameras() const;
 		
 		/**
 		 * Get essential information about objects to draw them on screen
@@ -126,7 +120,7 @@ namespace zpr
 		 * @return tuple of infromation:
 		 *			<position, angle, type/size, name/id, velocity>
 		 */
-		VTObject objects() const;
+		DTObject objects() const;
 
 		/**
 		 * Model main loop
@@ -136,14 +130,15 @@ namespace zpr
 		/**
 		 * Notify object to update
 		 *
+		 * @param simulationTime time since start of the simulation
 		 * @param elapsed_microseconds elapsed time in microseconds
 		 */
-		void scheduleUpdate(long long int elapsed_microseconds);
+		void scheduleUpdate(long long int simulationTime, long long int elapsed_microseconds);
 		
 		/**
 		 * Notify logger to update
 		 */
-		void scheduleLog(long long int elapsed_microseconds); // TODO po co te us ?
+		void scheduleLog(long long int simulationTime, long long int elapsed_microseconds);
 	};
 }
 

@@ -1,6 +1,4 @@
 #include "Controller.hpp"
-#include "SmallCar.hpp"
-#include "BigCar.hpp"
 #include "Walker.hpp"
 #include "Voyager.hpp"
 #include "Track.hpp"
@@ -41,9 +39,9 @@ namespace zpr
 
 		model_.start();
 		
-		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleUpdate, &model_, _1), boost::chrono::milliseconds(10)));
-		timer_.AddListener(TimerListener(boost::bind(&View::scheduleRefresh, &view_, _1), boost::chrono::milliseconds(10)));
-		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleLog, &model_, _1), boost::chrono::milliseconds(1000)));
+		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleUpdate, &model_, _1, _2), boost::chrono::milliseconds(10)));
+		timer_.AddListener(TimerListener(boost::bind(&View::scheduleRefresh, &view_, _1, _2), boost::chrono::milliseconds(10)));
+		timer_.AddListener(TimerListener(boost::bind(&Model::scheduleLog, &model_, _1, _2), boost::chrono::milliseconds(1000)));
 	}
 	
 	void Controller::scheduleEvent(const boost::shared_ptr<Event> & newEvent)
@@ -117,7 +115,7 @@ namespace zpr
 	void Controller::Process(const EventRestart&)
 	{
 		model_.start();
-		view_.scheduleRefresh(0);
+		view_.scheduleRefresh(0, 0);
 	}
 
 	void Controller::Process(const EventClose&)

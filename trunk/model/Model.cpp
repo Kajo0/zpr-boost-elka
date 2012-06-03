@@ -4,11 +4,11 @@
 
 namespace zpr
 {
-	Model::Model() : elapsedMicroseconds_(-1), loop_(false), active_(false), log_(false)
+	Model::Model() : elapsedMicroseconds_(-1), logTime_(-1), loop_(false), active_(false)
 	{
 	}
 
-	void Model::scheduleUpdate(long long int elapsed_microseconds)
+	void Model::scheduleUpdate(long long int simulationTime, long long int elapsed_microseconds)
 	{
 		{
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
@@ -17,11 +17,11 @@ namespace zpr
 		updateCondition_.notify_one();
 	}
 
-	void Model::scheduleLog(long long int elapsed_microseconds)
+	void Model::scheduleLog(long long int simulationTime, long long int elapsed_microseconds)
 	{
 		{
 			boost::lock_guard<boost::mutex> lock(updateMutex_);
-			log_ = true;
+			logTime_ = simulationTime;
 		}
 		updateCondition_.notify_one();
 	}
@@ -46,18 +46,18 @@ namespace zpr
 		objects_.push_back(object);
 	}
 
-	Model::VTCamera Model::cameras() const
+	Model::DTCamera Model::cameras() const
 	{
-		Model::VTCamera tmp;
-		BOOST_FOREACH(const Dispatcher::MCamera::value_type & camera, dispatcher_.cameras_)
-			tmp.push_back(boost::make_tuple(camera.second->position(), camera.second->range(), camera.second->direction(), camera.second->angle()));
+		Model::DTCamera tmp;
+		BOOST_FOREACH(const Dispatcher::PCamera & camera, dispatcher_.cameras_)
+			tmp.push_back(boost::make_tuple(camera->position(), camera->range(), camera->direction(), camera->angle()));
 
 		return tmp;
 	}
 
-	Model::VTObject Model::objects() const
+	Model::DTObject Model::objects() const
 	{
-		Model::VTObject tmp;
+		Model::DTObject tmp;
 		BOOST_FOREACH(const PVoyager & voyager, objects_)
 			tmp.push_back(boost::make_tuple(voyager->position(), voyager->angle(), voyager->type(), voyager->id(), voyager->velocity()));
 
@@ -72,18 +72,18 @@ namespace zpr
 			{
 				{
 					boost::unique_lock<boost::mutex> lock(updateMutex_);
-					while(elapsedMicroseconds_ < 0 && log_ == false)
+					while(elapsedMicroseconds_ < 0 && logTime_ < 0)
 						updateCondition_.wait(lock);
 					
 					if(active_)
 					{
 						if(elapsedMicroseconds_ >= 0)
 							nextStep(elapsedMicroseconds_/1000);
-						else if(log_)
-							dispatcher_.log(*this);
+						else if(logTime_ >= 0)
+							dispatcher_.log(logTime_, objects());
 					}
 					elapsedMicroseconds_ = -1;
-					log_ = false;
+					logTime_ = -1;
 				}
 			}
 		}

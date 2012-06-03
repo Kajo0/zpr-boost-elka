@@ -14,33 +14,38 @@ namespace zpr
 	/**
 	 * Class representing exceptions thrown while allegro working
 	 */
-	class AllegroException : public std::exception
+	class AllegroException : public std::runtime_error
 	{
 		public:
 		/**
 		 * Allegro exception c-tor
 		 */
-		//AllegroException(const std::string & message);
+		AllegroException(const std::string & message);
 	};
 
 	/**
 	 * Struct representing rectange witch location
 	 */
-	struct AllegroRectangle
+	struct TextRectangle
 	{
 		/** Top left corner */
 		Point topLeft_;
 		/** Bottom roight corner */
 		Point bottomRight_;
+		/** Text to be displayed */
+		std::string text_;
+		/** Color of drawn rectangle */
+		ALLEGRO_COLOR color_;
 		/**
 		 * Rectange c-tor
 		 *
+		 * @param color color of the rectangle
 		 * @param x1 top left corner x coordinate
 		 * @param y1 top left corner y coordinate
 		 * @param x2 bottom right corner x coordinate
 		 * @param y2 bottom right corner y coordinate
 		 */
-		AllegroRectangle(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0);
+		TextRectangle(int x1 = 0, int y1 = 0, int x2 = 0, int y2 = 0, ALLEGRO_COLOR color = al_map_rgb(255, 255, 255), const std::string & text = std::string());
 		
 		/**
 		 * Rectange c-tor
@@ -48,7 +53,7 @@ namespace zpr
 		 * @param topLeft top left corner coordinate
 		 * @param bottomRight bottom right corner coordinate
 		 */
-		AllegroRectangle(const Point & topLeft, const Point & bottomRight);
+		TextRectangle(const Point & topLeft, const Point & bottomRight);
 		
 		/**
 		 * Check if given point is inside of rectangle
@@ -59,20 +64,9 @@ namespace zpr
 		bool inside(const Point & check) const;
 
 		/**
-		 * Draws rectange on screen with given color
-		 *
-		 * @param color background rect. color
+		 * Draws rectange on screen with fixed color
 		 */
-		void drawFilled(const ALLEGRO_COLOR & color) const;
-	};
-
-	//TODO remove ?!
-	struct AllegroButton
-	{
-		AllegroRectangle area_;
-		std::string title_;
-		// TODO
-		void draw(const ALLEGRO_COLOR & color) const;
+		void draw(const ALLEGRO_FONT * const font = NULL, const ALLEGRO_COLOR & fontColor = al_map_rgb(255, 255, 255)) const;
 	};
 
 	/**
@@ -133,17 +127,17 @@ namespace zpr
 		long long int elapsedMicroseconds_;
 
 		/** Menu area rect */
-		AllegroRectangle menuArea;
+		TextRectangle menuArea;
 		/** Resume button rect */
-		AllegroRectangle startButton;
+		TextRectangle startButton;
 		/** Pause button rect */
-		AllegroRectangle stopButton;
+		TextRectangle stopButton;
 		/** Restart button rect */
-		AllegroRectangle restartButton;
+		TextRectangle restartButton;
 		/** Loop button rect */
-		AllegroRectangle loopButton;
+		TextRectangle loopButton;
 		/** Exit button rect */
-		AllegroRectangle exitButton;
+		TextRectangle exitButton;
 
 		public:
 		/**
@@ -162,9 +156,10 @@ namespace zpr
 		/**
 		 * View refresh schedule notification
 		 *
-		 * @param elapsed_microseconds elapsed time in microseconds
+		 * @param simulationTime	time since start of the simulation
+		 * @param elapsed_microseconds	elapsed time in microseconds
 		 */
-		void scheduleRefresh(long long int elapsed_microseconds);
+		void scheduleRefresh(long long int simulationTime, long long int elapsed_microseconds);
 	};
 }
 #endif // VIEW_HPP
