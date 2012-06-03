@@ -81,10 +81,9 @@ namespace zpr
 		static ALLEGRO_COLOR BUTTON_COLOR	= al_map_rgb(110, 190, 230);
 		static ALLEGRO_COLOR MENU_BCG_COLOR	= al_map_rgb(100, 100, 100);
 
-		menuArea = TextRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MENU_BCG_COLOR);
-		
 		int xMargin = 20, yMargin = 20, height = 40;
 		int yOffset = yMargin;
+		menuArea = TextRectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, MENU_BCG_COLOR);
 		startButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Start");
 		yOffset += height + yMargin;
 		stopButton = TextRectangle(VISUALISATION_WIDTH + xMargin, yOffset, WINDOW_WIDTH - xMargin, yOffset + height, BUTTON_COLOR, "Pause");
@@ -144,16 +143,14 @@ namespace zpr
 				{
 					if(allegroEvent.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 					{
-						controller_.scheduleEvent(boost::make_shared<EventClose>());
-						std::cout << "Close pressed" << std::endl;
+						//controller_.scheduleEvent(boost::make_shared<EventClose>());
 						run = false;
 					}
 					else if(allegroEvent.type == ALLEGRO_EVENT_KEY_UP)
 					{
 						if(allegroEvent.keyboard.keycode == ALLEGRO_KEY_ESCAPE)
 						{
-							controller_.scheduleEvent(boost::make_shared<EventClose>());
-							std::cout << "Escape pressed" << std::endl;
+							//controller_.scheduleEvent(boost::make_shared<EventClose>());
 							run = false;
 						}
 					}
@@ -162,24 +159,24 @@ namespace zpr
 						Point p(allegroEvent.mouse.x, allegroEvent.mouse.y);
 						if(startButton.inside(p))
 							controller_.scheduleEvent(boost::make_shared<EventStart>());
-						if(stopButton.inside(p))
+						else if(stopButton.inside(p))
 							controller_.scheduleEvent(boost::make_shared<EventStop>());
-						if(restartButton.inside(p))
+						else if(restartButton.inside(p))
 							controller_.scheduleEvent(boost::make_shared<EventRestart>());
-						if(exitButton.inside(p))
+						else if(exitButton.inside(p))
 						{
-							controller_.scheduleEvent(boost::make_shared<EventClose>());
+							//controller_.scheduleEvent(boost::make_shared<EventClose>());
 							run = false;
 						}
-						if(loopButton.inside(p))
+						else if(loopButton.inside(p))
 							controller_.scheduleEvent(boost::make_shared<EventLoop>());
 					}
 				}
 			}
 		}
-		catch(zpr::AllegroException &)
+		catch(zpr::AllegroException &e)
 		{
-			//std::cout<<e.what()<<std::endl;
+			Logger::getInstance().error(e.what());
 		}
 		catch(boost::thread_interrupted)
 		{
@@ -191,6 +188,7 @@ namespace zpr
 			Logger::getInstance().error("Unknown View exception.");
 		}
 		closeGraphics();
+		controller_.scheduleEvent(boost::make_shared<EventClose>());
 	}
 
 	void View::refresh()
@@ -266,8 +264,6 @@ namespace zpr
 	void View::drawMenu()
 	{
 		static ALLEGRO_COLOR FONT_COLOR		= al_map_rgb(255, 255, 255);
-
-		//al_draw_filled_rectangle(VISUALISATION_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT, al_map_rgb(255, 255, 255));
 		menuArea.draw();
 		startButton.draw(font_, FONT_COLOR);
 		stopButton.draw(font_, FONT_COLOR);
