@@ -85,8 +85,6 @@ namespace zpr
 				boost::shared_ptr<Event> ev = eventQueue_.front();
 				eventQueue_.pop();
 				ev->accept(*this);
-
-				//BOOST_ERROR("Unknown Controller exception.");
 			}
 		}
 		catch(boost::thread_interrupted)
