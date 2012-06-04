@@ -32,10 +32,11 @@ namespace zpr
 		Point topLeft_;
 		/** Bottom roight corner */
 		Point bottomRight_;
-		/** Text to be displayed */
-		std::string text_;
 		/** Color of drawn rectangle */
 		ALLEGRO_COLOR color_;
+		/** Text to be displayed */
+		std::string text_;
+		
 		/**
 		 * Rectange c-tor
 		 *
@@ -87,17 +88,17 @@ namespace zpr
 		/** Value to scale data on the view visualisation screen */
 		const static double SCALER;
 
+		/** Simulator controller */
+		Controller & controller_;
+		/** Simulator model */
+		Model & model_;
+
 		/** Allegro display field */
 		ALLEGRO_DISPLAY *display_;
 		/** Allegro event queue */
 		ALLEGRO_EVENT_QUEUE *eventQueue_;
 		/** Allegro font field */
 		ALLEGRO_FONT *font_;
-		
-		/** Simulator controller */
-		Controller & controller_;
-		/** Simulator model */
-		Model & model_;
 
 		/**
 		 * Init allegro functionality

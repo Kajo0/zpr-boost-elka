@@ -76,10 +76,7 @@ namespace zpr
 		 * @param path	path to application's working directory
 		 */
 		void parseObjects(const boost::filesystem::path & path);
-
-		/** Indicates whether simulation is runned. */
-		bool run_;
-
+				
 		/** Contains model assiociated data. */
 		Model model_;
 		/** Responsible for presenting model_ data graphically. */
@@ -99,6 +96,9 @@ namespace zpr
 		std::queue<boost::shared_ptr<Event> > eventQueue_;
 		/** Mutex used to secure acces to eventCondition_ and eventQueue_.*/
 		boost::mutex eventMutex_;
+
+		/** Indicates whether simulation is runned. */
+		bool run_;
 	};
 }
 #endif // CONTROLLER_HPP

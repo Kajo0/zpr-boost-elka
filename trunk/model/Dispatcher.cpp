@@ -39,8 +39,8 @@ namespace zpr
 				if(camera->inRange(object.get<0>()))
 				{
 					double noise = camera->noise() * CAMERA_DISTORTION_RATIO;
-					std::string msg = (boost::format("%6.3f") % (simulationTime / 1000.0)).str();
-					msg += " Camera (" + boost::lexical_cast<std::string>(camera->id());
+					std::string msg = (boost::format("%6.3f") % (simulationTime / 1000000.0)).str();
+					msg += "s Camera (" + boost::lexical_cast<std::string>(camera->id());
 					msg += ") reports: " + boost::lexical_cast<std::string>(object.get<3>());
 					msg += " on\t(" + (object.get<0>() + Point((distribution() - 0.5) * noise, (distribution() - 0.5) * noise)).str() + ")";
 					msg += "\t{ real position: [" + object.get<0>().str() + "] }";

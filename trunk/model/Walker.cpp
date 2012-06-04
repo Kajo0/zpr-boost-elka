@@ -5,7 +5,7 @@
 
 namespace zpr
 {
-	Walker::Walker(const std::string &name, double velocity, const PTrack & track): name_(name), Voyager(track)
+	Walker::Walker(const std::string &name, double velocity, const PTrack & track) : Voyager(track), name_(name)
 	{
 		velocity_ = velocity;
 	}
