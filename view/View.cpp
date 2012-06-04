@@ -45,7 +45,8 @@ namespace zpr
 
 	void View::initializeGraphics()
 	{
-		if(!al_init())
+		if(!al_install_system(ALLEGRO_VERSION_INT, NULL))
+		//if(!al_init())
 			throw AllegroException("Failed to initialize allegro!");
 
 		display_ = al_create_display(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -98,10 +99,19 @@ namespace zpr
 
 	void View::closeGraphics()
 	{
+		al_uninstall_mouse();
+		al_uninstall_keyboard();
+		al_unregister_event_source(eventQueue_, al_get_display_event_source(display_));//
+		al_destroy_font(font_);
+		al_shutdown_font_addon();
+		al_shutdown_image_addon();
+		al_shutdown_primitives_addon();
+
 		if (eventQueue_)
 			al_destroy_event_queue(eventQueue_);
 		if (display_)
 			al_destroy_display(display_);
+		al_uninstall_system();
 	}
 
 	void View::scheduleRefresh(long long int simulationTime, long long int elapsed_microseconds)

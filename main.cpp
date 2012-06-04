@@ -16,6 +16,14 @@
 		BOOST_CHECK(Point(1,0) + Point(0,1) == Point(1,1));
 		BOOST_CHECK(Point(0,0) + Point(10,10) == Point(10,10));
 
+		Point p1(0, 0), p2(3,4);
+		BOOST_CHECK(Point::distance(p1, p2) == 5.000);
+		BOOST_CHECK(Point::distance(Point(1, 1), Point(4, 5)) == 5.000);
+		BOOST_CHECK(Point::distance(Point(-1, -1), Point(-4, -5)) == 5.000);
+		BOOST_CHECK(Point::distance(Point(5, 12), Point(0,0)) == 13.000);
+		
+		BOOST_CHECK(Point::angle(Point(0, 0), Point(1, 1)) > 0.785 && Point::angle(Point(0, 0), Point(1, 1)) < 0.790);
+
 		std::cout << "\n\nWaiting for int..." << std::endl;
 		int i;
 		std::cin >> i;
