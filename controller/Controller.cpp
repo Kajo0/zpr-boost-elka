@@ -5,14 +5,13 @@
 #include "Graph.hpp"
 #include "Timer.hpp"
 #include "Logger.hpp"
-//#include "Test.hpp"
 
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
-//#include <boost/test/minimal.hpp>
+
 namespace zpr
 {
 	Controller::Controller(const boost::filesystem::path & path) : view_(*this, model_), run_(true)
