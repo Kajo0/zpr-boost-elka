@@ -175,8 +175,10 @@ namespace zpr
 						graph->addVertex(vv.second.get<int>(""), position);
 					}
 				else if ( v.first == "edges" )
+					{
 					BOOST_FOREACH( ptree::value_type &vv, v.second.get_child("") )
 						graph->addEdge(vv.second.get<int>("<xmlattr>.from"), vv.second.get<int>("<xmlattr>.to"));
+					}
 			}
 
 			model_.streets(graph);

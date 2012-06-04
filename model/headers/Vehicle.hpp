@@ -11,14 +11,14 @@ namespace zpr
 	class Vehicle : public Voyager
 	{
 		protected:
+		/** Vehicle registration */
+		const std::string registration_;
 		/** Vehicle acceleration [m/s] */
 		double acceleration_;
 		/** Vehicle weight [kg] */
 		double weight_;
 		/** Vehicle maximum velocity [m/s] */
 		double maxSpeed_;
-		/** Vehicle registration */
-		const std::string registration_;
 		/** Breaking flag */
 		bool break_;
 

@@ -23,7 +23,7 @@ namespace zpr
 	AllegroException::AllegroException(const std::string & message) : std::runtime_error(message.c_str()) {}
 
 	TextRectangle::TextRectangle(int x1, int y1, int x2, int y2, ALLEGRO_COLOR color, const std::string & text)
-		: color_(color), topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)), text_(text)
+		: topLeft_(Point(x1, y1)), bottomRight_(Point(x2, y2)), color_(color), text_(text)
 	{
 	}
 
@@ -240,6 +240,8 @@ namespace zpr
 													(it->get<0>().x_ + 3) * SCALER, it->get<0>().y_ * SCALER,
 													(it->get<0>().x_ - 1) * SCALER, (it->get<0>().y_ + 1) * SCALER,
 													WALKER_COLOR);
+					break;
+				default:
 					break;
 			}			
 			al_identity_transform(&rotate_transformation);

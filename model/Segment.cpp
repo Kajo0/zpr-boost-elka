@@ -6,7 +6,7 @@ namespace zpr
 	/************************
 	*	Segment				*
 	************************/
-	Segment::Segment(const Point begin, const Point end): begin_(begin), end_(end)
+	Segment::Segment(const Point begin, const Point end) : begin_(begin), end_(end)
 	{
 	}
 
@@ -25,7 +25,7 @@ namespace zpr
 	/************************
 	*	BezierSegment		*
 	*************************/
-	BezierSegment::BezierSegment(const Point begin, const Point end, const Point control) : control_(control), Segment(begin, end)
+	BezierSegment::BezierSegment(const Point begin, const Point end, const Point control) : Segment(begin, end), control_(control)
 	{
 	}
 

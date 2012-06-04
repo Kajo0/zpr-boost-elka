@@ -40,14 +40,14 @@ namespace zpr
 		Duration previousTrigger_;
 		
 		/**
-		 * Timeout between subsequent listener calls.
-		 */
-		Duration frequency_;
-
-		/**
 		 * Events listener. Function called each time when timeout passed.
 		 */
 		boost::function<void (long long int, long long int)> listener_;
+
+		/**
+		 * Timeout between subsequent listener calls.
+		 */
+		Duration frequency_;
 	};
 
 	/**
